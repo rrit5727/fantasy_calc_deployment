@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .trade-option {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Input</h1>
+    
+    <form id="tradeForm">
+        <div class="form-group">
+            <label for="player1">Player 1 to Trade Out:</label>
+            <input type="text" id="player1" name="player1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="player2">Player 2 to Trade Out (optional):</label>
+            <input type="text" id="player2" name="player2">
+        </div>
+        
+        <div class="form-group">
+            <label for="strategy">Strategy:</label>
+            <select id="strategy" name="strategy">
+                <option value="1">Maximize value (BPRE)</option>
+                <option value="2">Maximize base stats</option>
+                <option value="3">Hybrid approach</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Trade Type:</label><br>
+            <input type="radio" id="likeForLike" name="tradeType" value="likeForLike" checked>
+            <label for="likeForLike">Like-for-Like</label><br>
+            <input type="radio" id="positionalSwap" name="tradeType" value="positionalSwap">
+            <label for="positionalSwap">Positional Swap</label>
+        </div>
+
+        <div class="form-group">
+            <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList">
+            <label for="restrictToTeamList">Restrict choices to players named in Team lists</label>
+        </div>
+
+        <div class="form-group">
+            <input type="checkbox" id="applyLockout" name="applyLockout">
+            <label for="applyLockout">Apply lockout restriction</label>
+        </div>
+
+        <div class="form-group" id="simulateDateTimeGroup">
+            <label for="simulateDateTime">Simulate Current Date/Time:</label>
+            <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
+        </div>
+
+        <div class="form-group" id="positionSelection" style="display: none;">
+            <label for="positions">Select Positions for Swap:</label>
+            <select id="positions" name="positions" multiple>
+                <option value="HOK">HOK</option>
+                <option value="HLF">HLF</option>
+                <option value="CTR">CTR</option>
+                <option value="WFB">WFB</option>
+                <option value="EDG">EDG</option>
+                <option value="MID">MID</option>
+            </select>
+        </div>
+        
+        <button type="submit">Calculate Trade Options</button>
+    </form>
+
+    <div id="results" class="results"></div>
+
+    <script>
+        $(document).ready(function() {
+            // Fetch player names for autocomplete
+            $.ajax({
+                url: '/players',
+                method: 'GET',
+                success: function(playerNames) {
+                    // Initialize autocomplete for player input fields
+                    $('#player1, #player2').autocomplete({
+                        source: playerNames
+                    });
+                },
+                error: function(xhr) {
+                    console.error('Error fetching player names:', xhr.responseText);
+                }
+            });
+
+            // Show/hide position selection based on trade type
+            $('input[name="tradeType"]').change(function() {
+                if ($(this).val() === 'positionalSwap') {
+                    $('#positionSelection').show();
+                } else {
+                    $('#positionSelection').hide();
+                }
+            });
+
+            // Show/hide simulate date/time based on lockout restriction
+            $('#applyLockout').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#simulateDateTimeGroup').show();
+                } else {
+                    $('#simulateDateTimeGroup').hide();
+                }
+            });
+
+            $('#tradeForm').on('submit', function(e) {
+                e.preventDefault();
+                $('#results').html('Calculating...');
+                
+                // Serialize form data
+                let formData = $(this).serializeArray();
+                
+                // Remove player2 from formData if it's empty
+                formData = formData.filter(field => !(field.name === 'player2' && !field.value));
+                
+                // Add simulated date/time to form data if lockout is enabled
+                if ($('#applyLockout').is(':checked')) {
+                    let simulateDateTime = $('#simulateDateTime').val();
+                    if (simulateDateTime) {
+                        formData.push({ name: 'simulateDateTime', value: simulateDateTime });
+                    }
+                }
+                
+                $.ajax({
+                    url: '/calculate',
+                    method: 'POST',
+                    data: $.param(formData),
+                    success: function(options) {
+                        let html = '<h2>Trade Options</h2>';
+                        
+                        options.forEach((option, index) => {
+                            html += `
+                                <div class="trade-option">
+                                    <h3>Option ${index + 1}</h3>
+                                    <h4>Players to trade in:</h4>
+                                    ${option.players.map(player => `
+                                        <div>
+                                            <strong>${player.name}</strong> (${player.position})
+                                            <br>
+                                            Price: $${player.price.toLocaleString()}
+                                            <br>
+                                            Base: ${player.total_base.toFixed(1)}
+                                            <br>
+                                            ${player.avg_base ? `Average Base: ${player.avg_base.toFixed(1)}<br>` : ''}
+                                            ${player.base_premium ? `Base Premium: ${player.base_premium.toFixed(1)}<br>` : ''}
+                                            ${player.consecutive_good_weeks ? `Consecutive Good Weeks: ${player.consecutive_good_weeks}` : ''}
+                                        </div>
+                                    `).join('<br>')}
+                                    <br>
+                                    <div>
+                                        Total Price: $${option.total_price.toLocaleString()}
+                                        <br>
+                                        Salary Remaining: $${option.salary_remaining.toLocaleString()}
+                                        <br>
+                                        ${option.total_avg_base ? `Combined Average Base: ${option.total_avg_base.toFixed(1)}` : ''}
+                                        ${option.combo_avg_bpre ? `<br>Combined Base Premium: ${option.combo_avg_bpre.toFixed(1)}` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        $('#results').html(html);
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'An error occurred while calculating trade options.';
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            errorMessage = xhr.responseJSON.error;
+                        }
+                        $('#results').html(`<div class="error">${errorMessage}</div>`);
+                    }
+                });
+            });
+
+            // Add these functions to your existing JavaScript
+        
+            function checkPlayerLockout(playerInput) {
+                const playerName = playerInput.val();
+                const simulateDateTime = $('#simulateDateTime').val();
+                
+                if (!playerName || !$('#applyLockout').is(':checked')) {
+                    removeErrorMessage(playerInput);
+                    return;
+                }
+                
+                $.ajax({
+                    url: '/check_player_lockout',
+                    method: 'POST',
+                    data: {
+                        player_name: playerName,
+                        simulateDateTime: simulateDateTime
+                    },
+                    success: function(response) {
+                        if (response.is_locked) {
+                            showErrorMessage(playerInput, `${playerName}'s lockout has passed`);
+                        } else {
+                            removeErrorMessage(playerInput);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error checking player lockout:', xhr.responseText);
+                    }
+                });
+            }
+            
+            function showErrorMessage(element, message) {
+                // Remove any existing error message
+                removeErrorMessage(element);
+                
+                // Add new error message
+                const errorDiv = $('<div>')
+                    .addClass('player-error')
+                    .css({
+                        'color': 'red',
+                        'font-size': '0.8em',
+                        'margin-top': '5px'
+                    })
+                    .text(message);
+                
+                element.parent().append(errorDiv);
+            }
+            
+            function removeErrorMessage(element) {
+                element.parent().find('.player-error').remove();
+            }
+            
+            // Add these event listeners to your existing code
+            
+            // Check lockout when player name is selected from autocomplete
+            $('#player1, #player2').on('autocompleteselect', function(event, ui) {
+                checkPlayerLockout($(this));
+            });
+            
+            // Check lockout when player name is manually entered
+            $('#player1, #player2').on('change', function() {
+                checkPlayerLockout($(this));
+            });
+            
+            // Modify your existing form submission handler
+            $('#tradeForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // Check if any players are locked when lockout is enabled
+                if ($('#applyLockout').is(':checked')) {
+                    const lockedPlayers = [];
+                    
+                    if ($('#player1').val()) {
+                        const player1Error = $('#player1').parent().find('.player-error');
+                        if (player1Error.length > 0) {
+                            lockedPlayers.push($('#player1').val());
+                        }
+                    }
+                    
+                    if ($('#player2').val()) {
+                        const player2Error = $('#player2').parent().find('.player-error');
+                        if (player2Error.length > 0) {
+                            lockedPlayers.push($('#player2').val());
+                        }
+                    }
+                    
+                    if (lockedPlayers.length > 0) {
+                        $('#results').html(`
+                            <div class="error">
+                                ${lockedPlayers.join(' and ')}'s lockout has expired
+                            </div>
+                        `);
+                        return;
+                    }
+                }
+                
+                // Your existing AJAX call to /calculate goes here
+                // ... rest of your form submission code ...
+                $('#results').html('Calculating...');
+                
+                // Serialize form data
+                let formData = $(this).serializeArray();
+                
+                // Remove player2 from formData if it's empty
+                formData = formData.filter(field => !(field.name === 'player2' && !field.value));
+                
+                // Add simulated date/time to form data if lockout is enabled
+                if ($('#applyLockout').is(':checked')) {
+                    let simulateDateTime = $('#simulateDateTime').val();
+                    if (simulateDateTime) {
+                        formData.push({ name: 'simulateDateTime', value: simulateDateTime });
+                    }
+                }
+                
+                $.ajax({
+                    url: '/calculate',
+                    method: 'POST',
+                    data: $.param(formData),
+                    success: function(options) {
+                        let html = '<h2>Trade Options</h2>';
+                        
+                        options.forEach((option, index) => {
+                            html += `
+                                <div class="trade-option">
+                                    <h3>Option ${index + 1}</h3>
+                                    <h4>Players to trade in:</h4>
+                                    ${option.players.map(player => `
+                                        <div>
+                                            <strong>${player.name}</strong> (${player.position})
+                                            <br>
+                                            Price: $${player.price.toLocaleString()}
+                                            <br>
+                                            Base: ${player.total_base.toFixed(1)}
+                                            <br>
+                                            ${player.avg_base ? `Average Base: ${player.avg_base.toFixed(1)}<br>` : ''}
+                                            ${player.base_premium ? `Base Premium: ${player.base_premium.toFixed(1)}<br>` : ''}
+                                            ${player.consecutive_good_weeks ? `Consecutive Good Weeks: ${player.consecutive_good_weeks}` : ''}
+                                        </div>
+                                    `).join('<br>')}
+                                    <br>
+                                    <div>
+                                        Total Price: $${option.total_price.toLocaleString()}
+                                        <br>
+                                        Salary Remaining: $${option.salary_remaining.toLocaleString()}
+                                        <br>
+                                        ${option.total_avg_base ? `Combined Average Base: ${option.total_avg_base.toFixed(1)}` : ''}
+                                        ${option.combo_avg_bpre ? `<br>Combined Base Premium: ${option.combo_avg_bpre.toFixed(1)}` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        $('#results').html(html);
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'An error occurred while calculating trade options.';
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            errorMessage = xhr.responseJSON.error;
+                        }
+                        $('#results').html(`<div class="error">${errorMessage}</div>`);
+                    }
+                });
+            });
+            
+            // Clear error messages when lockout checkbox is unchecked
+            $('#applyLockout').on('change', function() {
+                if (!$(this).is(':checked')) {
+                    removeErrorMessage($('#player1'));
+                    removeErrorMessage($('#player2'));
+                    $('#results').find('.error').remove();
+                } else {
+                    // Recheck current players when lockout is enabled
+                    if ($('#player1').val()) checkPlayerLockout($('#player1'));
+                    if ($('#player2').val()) checkPlayerLockout($('#player2'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
