@@ -1,0 +1,2 @@
+<antArtifact identifier="procfile" type="application/vnd.ant.code" language="text" title="Heroku Procfile">
+web: gunicorn app:app
