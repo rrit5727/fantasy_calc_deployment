@@ -470,7 +470,11 @@ def generate_comprehensive_trade_options(
                 
                 # Only apply position filtering if required by trade type
                 if traded_out_positions and (trade_type == 'likeForLike' or (trade_type == 'positionalSwap' and len(traded_out_positions) == 2)):
-                    needed_position = [pos for pos in traded_out_positions if pos != value_player['POS1']][0]
+                    needed_positions = [pos for pos in traded_out_positions if pos != value_player['POS1']]
+                    if needed_positions:
+                        needed_position = needed_positions[0]
+                    else:
+                        needed_position = value_player['POS1']  # Allow same position if all are the same
                     filtered_base_players = [p for p in base_players if p['POS1'] == needed_position or 
                                             (pd.notna(p['POS2']) and p['POS2'] == needed_position)]
                 else:
@@ -520,7 +524,11 @@ def generate_comprehensive_trade_options(
                     
                     # Apply position filtering only if required by trade type
                     if traded_out_positions and (trade_type == 'likeForLike' or (trade_type == 'positionalSwap' and len(traded_out_positions) == 2)):
-                        needed_position = [pos for pos in traded_out_positions if pos != first_player['POS1']][0]
+                        needed_positions = [pos for pos in traded_out_positions if pos != first_player['POS1']]
+                        if needed_positions:
+                            needed_position = needed_positions[0]
+                        else:
+                            needed_position = first_player['POS1']  # Allow same position if all are the same
                         remaining_players = [p for p in players_in_level[i+1:] if p['POS1'] == needed_position or 
                                             (pd.notna(p['POS2']) and p['POS2'] == needed_position)]
                     else:
@@ -544,7 +552,11 @@ def generate_comprehensive_trade_options(
                         for next_level in priority_levels[priority_levels.index(level)+1:]:
                             # Apply position filtering only if required by trade type
                             if traded_out_positions and (trade_type == 'likeForLike' or (trade_type == 'positionalSwap' and len(traded_out_positions) == 2)):
-                                needed_position = [pos for pos in traded_out_positions if pos != first_player['POS1']][0]
+                                needed_positions = [pos for pos in traded_out_positions if pos != first_player['POS1']]
+                                if needed_positions:
+                                    needed_position = needed_positions[0]
+                                else:
+                                    needed_position = first_player['POS1']  # Allow same position if all are the same
                                 next_level_players = [p for p in position_filtered_groups[next_level] 
                                                     if p['POS1'] == needed_position or 
                                                     (pd.notna(p['POS2']) and p['POS2'] == needed_position)]
