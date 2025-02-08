@@ -3,6 +3,8 @@ from typing import List, Dict, Tuple
 from dataclasses import dataclass
 from itertools import combinations
 from datetime import datetime
+from functools import lru_cache
+from heapq import nlargest
 
 @dataclass
 class Player:
@@ -47,12 +49,43 @@ def load_data(file_path: str) -> pd.DataFrame:
     
     return df
 
+def precompute_player_stats(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Precompute stats for all players during initial load.
+    """
+    df = df.copy()
+    
+    # Calculate consecutive good weeks
+    df['consecutive_good_weeks'] = df.groupby('Player')['Base exceeds price premium'] \
+        .transform(lambda x: x.rolling(3, min_periods=1).apply(lambda s: (s >= 5).sum()))
+    
+    # Calculate averages
+    df['avg_bpre'] = df.groupby('Player')['Base exceeds price premium'] \
+        .transform(lambda x: x.rolling(2).mean().ffill())
+    df['avg_base'] = df.groupby('Player')['Total base'] \
+        .transform(lambda x: x.rolling(3, min_periods=2).mean().ffill())
+    
+    # Calculate priority levels
+    df['priority_level'] = df.apply(
+        lambda row: assign_priority_level(row, df), 
+        axis=1
+    )
+    
+    return df
+
 def get_rounds_data(df: pd.DataFrame) -> List[pd.DataFrame]:
     """
     Split consolidated data into list of DataFrames by round.
     """
     rounds = sorted(df['Round'].unique())
     return [df[df['Round'] == round_num].copy() for round_num in rounds]
+
+@lru_cache(maxsize=1000)
+def get_player_data(player_name: str) -> dict:
+    """
+    Cache expensive calculations for common players.
+    """
+    return consolidated_data[consolidated_data['Player'] == player_name].iloc[-1].to_dict()
 
 def check_consistent_performance(
     player_name: str,
