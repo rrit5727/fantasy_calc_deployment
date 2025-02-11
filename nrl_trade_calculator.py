@@ -3,8 +3,9 @@ from typing import List, Dict, Tuple
 from dataclasses import dataclass
 from itertools import combinations
 from datetime import datetime
-from functools import lru_cache
-from heapq import nlargest
+from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
 
 @dataclass
 class Player:
@@ -17,61 +18,87 @@ class Player:
     consecutive_good_weeks: int
     age: int
 
-def load_data(file_path: str) -> pd.DataFrame:
-    """
-    Load data from a single file containing multiple rounds.
-    """
-    if file_path.endswith('.csv'):
-        df = pd.read_csv(file_path)
-    else:
-        df = pd.read_excel(file_path)
-        
-    # Clean numeric columns with safe type conversion
-    numeric_columns = ['Base exceeds price premium', 'Total base', 'Price']
-    
-    for col in numeric_columns:
-        if col in df.columns:
-            df[col] = (df[col].astype(str)
-                      .str.replace(',', '')
-                      .str.replace(' ', '')
-                      .str.replace('"', ''))
-            df[col] = pd.to_numeric(df[col], errors='coerce')
-    
-    # Ensure required columns exist
-    required_columns = ['Round', 'Team', 'POS1']  # Added POS1 to required columns
-    for col in required_columns:
-        if col not in df.columns and file_path != 'teamlists.csv':
-            raise ValueError(f"Data must contain a '{col}' column")
-    
-    # Handle POS2 column if present
-    if 'POS2' not in df.columns:
-        df['POS2'] = None  # Create empty POS2 column if not present
-    
-    return df
 
-def precompute_player_stats(df: pd.DataFrame) -> pd.DataFrame:
+def load_data() -> pd.DataFrame:
     """
-    Precompute stats for all players during initial load.
+    Load data from PostgreSQL database and rename columns to match expected names.
+    
+    Returns:
+    pd.DataFrame: DataFrame with standardized column names
     """
-    df = df.copy()
+    # Read database connection parameters from environment
+    load_dotenv()
+    db_params = {
+        'host': os.getenv('DB_HOST'),
+        'database': os.getenv('DB_DATABASE'),
+        'user': os.getenv('DB_USER'),
+        'password': os.getenv('DB_PASSWORD'),
+        'port': os.getenv('DB_PORT')
+    }
     
-    # Calculate consecutive good weeks
-    df['consecutive_good_weeks'] = df.groupby('Player')['Base exceeds price premium'] \
-        .transform(lambda x: x.rolling(3, min_periods=1).apply(lambda s: (s >= 5).sum()))
+    # Create connection string
+    conn_str = f"postgresql://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/{db_params['database']}"
+    engine = create_engine(conn_str)
     
-    # Calculate averages
-    df['avg_bpre'] = df.groupby('Player')['Base exceeds price premium'] \
-        .transform(lambda x: x.rolling(2).mean().ffill())
-    df['avg_base'] = df.groupby('Player')['Total base'] \
-        .transform(lambda x: x.rolling(3, min_periods=2).mean().ffill())
-    
-    # Calculate priority levels
-    df['priority_level'] = df.apply(
-        lambda row: assign_priority_level(row, df), 
-        axis=1
-    )
-    
-    return df
+    try:
+        # First, let's see what columns we actually have in the database
+        with engine.connect() as connection:
+            # Get column names from the table
+            query = """
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_name = 'player_stats';
+            """
+            db_columns = pd.read_sql(query, connection)
+            
+            # Now fetch the actual data
+            query = "SELECT * FROM player_stats;"
+            df = pd.read_sql(query, connection)
+            
+            
+        # Updated column mapping to match the database column names
+        column_mapping = {
+            'Base_exceeds_price_premium': 'Base exceeds price premium',
+            'Total_base': 'Total base',
+            'POS1': 'POS1',  # These don't need to change but included for clarity
+            'Round': 'Round',
+            'Team': 'Team',
+            'Player': 'Player',
+            'Age': 'Age',
+            'Price': 'Price',
+            'POS2': 'POS2'
+        }
+        
+        # Only rename columns that exist in both the DataFrame and mapping
+        existing_columns = {k: v for k, v in column_mapping.items() if k in df.columns}
+        df.rename(columns=existing_columns, inplace=True)
+        
+        # Clean numeric columns
+        numeric_columns = ['Base exceeds price premium', 'Total base', 'Price']
+        for col in numeric_columns:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col].fillna(0), errors='coerce').fillna(0)
+        
+        
+        # Ensure required columns exist
+        required_columns = ['Round', 'Team', 'POS1', 'Player', 'Price', 
+                          'Base exceeds price premium', 'Total base', 'Age']
+        missing_columns = [col for col in required_columns if col not in df.columns]
+        if missing_columns:
+            raise ValueError(f"Missing required columns: {', '.join(missing_columns)}")
+        
+        # Convert Round to integer
+        df['Round'] = df['Round'].astype(int)
+        
+        # Handle POS2 if it exists
+        if 'POS2' not in df.columns:
+            df['POS2'] = None
+            
+        return df
+        
+    except Exception as e:
+        print(f"Error loading data from database: {str(e)}")
+        raise
 
 def get_rounds_data(df: pd.DataFrame) -> List[pd.DataFrame]:
     """
@@ -80,23 +107,14 @@ def get_rounds_data(df: pd.DataFrame) -> List[pd.DataFrame]:
     rounds = sorted(df['Round'].unique())
     return [df[df['Round'] == round_num].copy() for round_num in rounds]
 
-@lru_cache(maxsize=1000)
-def get_player_data(player_name: str) -> dict:
-    """
-    Cache expensive calculations for common players.
-    """
-    return consolidated_data[consolidated_data['Player'] == player_name].iloc[-1].to_dict()
-
-def check_consistent_performance(
-    player_name: str,
-    consolidated_data: pd.DataFrame,
-    min_base_premium: int = 5,
-    required_consecutive_weeks: int = 2
-) -> int:
+def check_consistent_performance(player_name: str, consolidated_data: pd.DataFrame, min_base_premium: int = 5, required_consecutive_weeks: int = 2, player_histories: Dict[str, pd.DataFrame] = None) -> int:
     """
     Check how many consecutive weeks a player has maintained good performance.
     """
-    player_data = consolidated_data[consolidated_data['Player'] == player_name].sort_values('Round')
+    if player_histories is not None and player_name in player_histories:
+        player_data = player_histories[player_name]
+    else:
+        player_data = consolidated_data[consolidated_data['Player'] == player_name].sort_values('Round')
     
     if player_data.empty:
         return 0
@@ -120,7 +138,8 @@ def check_rule_condition(
     base_premium_threshold: int,
     weeks_threshold: int,
     position_requirement: str = None,
-    max_age: int = None
+    max_age: int = None,
+    player_histories: Dict[str, pd.DataFrame] = None
 ) -> bool:
     """
     Check if a player meets the specified rule conditions.
@@ -135,7 +154,11 @@ def check_rule_condition(
     
     # Check consecutive weeks requirement
     player_name = player_data['Player']
-    player_history = consolidated_data[consolidated_data['Player'] == player_name].sort_values('Round')
+    
+    if player_histories is not None and player_name in player_histories:
+        player_history = player_histories[player_name].sort_values('Round')
+    else:
+        player_history = consolidated_data[consolidated_data['Player'] == player_name].sort_values('Round')
     
     # Check if the player has met the threshold for the required consecutive weeks
     current_streak = 0
@@ -163,120 +186,119 @@ def check_rule_condition(
         
     return meets_bpre and meets_weeks and meets_position and meets_age
 
-def assign_priority_level(player_data: pd.Series, consolidated_data: pd.DataFrame) -> int:
+def assign_priority_level(player_data: pd.Series, consolidated_data: pd.DataFrame, player_histories: Dict[str, pd.DataFrame] = None) -> int:
     """
     Assign priority level based on the updated rules.
     """
     # Rule 1: BPRE >= 14 for last 3 weeks
-    if check_rule_condition(player_data, consolidated_data, 14, 3):
+    if check_rule_condition(player_data, consolidated_data, 14, 3, player_histories=player_histories):
         return 1
         
     # Rule 2: BPRE >= 21 for last 2 weeks
-    if check_rule_condition(player_data, consolidated_data, 21, 2):
+    if check_rule_condition(player_data, consolidated_data, 21, 2, player_histories=player_histories):
         return 2
         
     # Rule 3: 2 week Average BPRE >= 26
-    if calculate_average_bpre(player_data['Player'], consolidated_data, 2) >= 26:
+    if calculate_average_bpre(player_data['Player'], consolidated_data, 2, player_histories=player_histories) >= 26:
         return 3
         
     # Rule 4: BPRE >= 12 for last 3 weeks
-    if check_rule_condition(player_data, consolidated_data, 12, 3):
+    if check_rule_condition(player_data, consolidated_data, 12, 3, player_histories=player_histories):
         return 4
         
     # Rule 5: BPRE >= 19 for last 2 weeks
-    if check_rule_condition(player_data, consolidated_data, 19, 2):
+    if check_rule_condition(player_data, consolidated_data, 19, 2, player_histories=player_histories):
         return 5
         
     # Rule 6: 2 week Average BPRE >= 24
-    if calculate_average_bpre(player_data['Player'], consolidated_data, 2) >= 24:
+    if calculate_average_bpre(player_data['Player'], consolidated_data, 2, player_histories=player_histories) >= 24:
         return 6
         
     # Rule 7: BPRE >= 10 for last 3 weeks
-    if check_rule_condition(player_data, consolidated_data, 10, 3):
+    if check_rule_condition(player_data, consolidated_data, 10, 3, player_histories=player_histories):
         return 7
         
     # Rule 8: BPRE >= 17 for last 2 weeks
-    if check_rule_condition(player_data, consolidated_data, 17, 2):
+    if check_rule_condition(player_data, consolidated_data, 17, 2, player_histories=player_histories):
         return 8
         
     # Rule 9: 2 week Average BPRE >= 22
-    if calculate_average_bpre(player_data['Player'], consolidated_data, 2) >= 22:
+    if calculate_average_bpre(player_data['Player'], consolidated_data, 2, player_histories=player_histories) >= 22:
         return 9
         
     # Rule 10: BPRE >= 8 for last 3 weeks
-    if check_rule_condition(player_data, consolidated_data, 8, 3):
+    if check_rule_condition(player_data, consolidated_data, 8, 3, player_histories=player_histories):
         return 10
         
     # Rule 11: BPRE >= 15 for last 2 weeks
-    if check_rule_condition(player_data, consolidated_data, 15, 2):
+    if check_rule_condition(player_data, consolidated_data, 15, 2, player_histories=player_histories):
         return 11
         
     # Rule 12: 2 week Average BPRE >= 20
-    if calculate_average_bpre(player_data['Player'], consolidated_data, 2) >= 20:
+    if calculate_average_bpre(player_data['Player'], consolidated_data, 2, player_histories=player_histories) >= 20:
         return 12
         
     # Rule 13: BPRE >= 6 for last 3 weeks
-    if check_rule_condition(player_data, consolidated_data, 6, 3):
+    if check_rule_condition(player_data, consolidated_data, 6, 3, player_histories=player_histories):
         return 13
         
     # Rule 14: BPRE >= 13 for last 2 weeks
-    if check_rule_condition(player_data, consolidated_data, 13, 2):
+    if check_rule_condition(player_data, consolidated_data, 13, 2, player_histories=player_histories):
         return 14
         
     # Rule 15: 2 week Average BPRE >= 18
-    if calculate_average_bpre(player_data['Player'], consolidated_data, 2) >= 18:
+    if calculate_average_bpre(player_data['Player'], consolidated_data, 2, player_histories=player_histories) >= 18:
         return 15
         
     # Rule 16: BPRE >= 10 for last 2 weeks
-    if check_rule_condition(player_data, consolidated_data, 10, 2):
+    if check_rule_condition(player_data, consolidated_data, 10, 2, player_histories=player_histories):
         return 16
         
     # Rule 17: 2 week Average BPRE >= 15
-    if calculate_average_bpre(player_data['Player'], consolidated_data, 2) >= 15:
+    if calculate_average_bpre(player_data['Player'], consolidated_data, 2, player_histories=player_histories) >= 15:
         return 17
         
     # Rule 18: BPRE >= 8 for last 2 weeks
-    if check_rule_condition(player_data, consolidated_data, 8, 2):
+    if check_rule_condition(player_data, consolidated_data, 8, 2, player_histories=player_histories):
         return 18
         
     # Rule 19: 2 week Average BPRE >= 13
-    if calculate_average_bpre(player_data['Player'], consolidated_data, 2) >= 13:
+    if calculate_average_bpre(player_data['Player'], consolidated_data, 2, player_histories=player_histories) >= 13:
         return 19
         
     # Rule 20: BPRE >= 6 for last 2 weeks
-    if check_rule_condition(player_data, consolidated_data, 6, 2):
+    if check_rule_condition(player_data, consolidated_data, 6, 2, player_histories=player_histories):
         return 20
         
     # Rule 21: 2 week Average BPRE >= 11
-    if calculate_average_bpre(player_data['Player'], consolidated_data, 2) >= 11:
+    if calculate_average_bpre(player_data['Player'], consolidated_data, 2, player_histories=player_histories) >= 11:
         return 21
         
     # Rule 22: BPRE >= 2 for last 3 weeks
-    if check_rule_condition(player_data, consolidated_data, 2, 3):
+    if check_rule_condition(player_data, consolidated_data, 2, 3, player_histories=player_histories):
         return 22
         
     # Rule 23: BPRE >= 4 for last 2 weeks
-    if check_rule_condition(player_data, consolidated_data, 4, 2):
+    if check_rule_condition(player_data, consolidated_data, 4, 2, player_histories=player_histories):
         return 23
         
     # Rule 24: 2 week Average BPRE >= 9
-    if calculate_average_bpre(player_data['Player'], consolidated_data, 2) >= 9:
+    if calculate_average_bpre(player_data['Player'], consolidated_data, 2, player_histories=player_histories) >= 9:
         return 24
         
     # Default - lowest priority
     return 25
 
-def calculate_average_bpre(
-    player_name: str,
-    consolidated_data: pd.DataFrame,
-    lookback_weeks: int = 3
-) -> float:
+def calculate_average_bpre(player_name: str, consolidated_data: pd.DataFrame, lookback_weeks: int = 3, player_histories: Dict[str, pd.DataFrame] = None) -> float:
     """
     Calculate average BPRE for a player over their recent weeks.
     Only calculate the average if the player has played in at least `lookback_weeks` rounds.
     Exclude Mid/EDG players who are 29 years or older.
     """
-    player_data = consolidated_data[consolidated_data['Player'] == player_name].sort_values('Round', ascending=False)
+    if player_histories is not None and player_name in player_histories:
+        player_data = player_histories[player_name].sort_values('Round', ascending=False)
+    else:
+        player_data = consolidated_data[consolidated_data['Player'] == player_name].sort_values('Round', ascending=False)
     
     # Exclude Mid/EDG players who are 29 years or older
     if not player_data.empty:
@@ -291,12 +313,7 @@ def calculate_average_bpre(
     
     return int(recent_data['Base exceeds price premium'].mean())
 
-def calculate_average_base(
-    player_name: str,
-    consolidated_data: pd.DataFrame,
-    lookback_weeks: int = 3,
-    min_games: int = 2  # New parameter to specify minimum games required
-) -> float:
+def calculate_average_base(player_name: str, consolidated_data: pd.DataFrame, lookback_weeks: int = 3, min_games: int = 2, player_histories: Dict[str, pd.DataFrame] = None) -> float:
     """
     Calculate average Total base for a player over their recent weeks.
     Only calculate the average if the player has played in at least `min_games` rounds.
@@ -310,7 +327,10 @@ def calculate_average_base(
     Returns:
     float: Average base value, or 0.0 if minimum games requirement not met
     """
-    player_data = consolidated_data[consolidated_data['Player'] == player_name].sort_values('Round', ascending=False)
+    if player_histories is not None and player_name in player_histories:
+        player_data = player_histories[player_name].sort_values('Round', ascending=False)
+    else:
+        player_data = consolidated_data[consolidated_data['Player'] == player_name].sort_values('Round', ascending=False)
     recent_data = player_data.head(lookback_weeks)
     
     # Check if player has played minimum required games
@@ -318,7 +338,7 @@ def calculate_average_base(
         return int(recent_data['Total base'].mean())
     return 0.0
 
-def print_players_by_rule_level(available_players: pd.DataFrame, consolidated_data: pd.DataFrame, maximize_base: bool = False) -> None:
+def print_players_by_rule_level(available_players: pd.DataFrame, consolidated_data: pd.DataFrame, maximize_base: bool = False, player_histories: Dict[str, pd.DataFrame] = None) -> None:
     """
     Print players that satisfy each rule level, with their relevant stats.
     """
@@ -361,7 +381,7 @@ def print_players_by_rule_level(available_players: pd.DataFrame, consolidated_da
             # Calculate average BPRE for each player and add it to the DataFrame
             level_players = level_players.copy()
             level_players['avg_bpre'] = level_players['Player'].apply(
-                lambda x: calculate_average_bpre(x, consolidated_data)
+                lambda x: calculate_average_bpre(x, consolidated_data, player_histories=player_histories)
             )
             
             # Sort players by average BPRE within the rule level
@@ -821,30 +841,33 @@ def calculate_trade_options(
     available_players['consecutive_good_weeks'] = 0
     
     # Calculate consistency for each player
+    player_histories = {player: group.sort_values('Round') for player, group in consolidated_data.groupby('Player')}
+    
     for idx, player in available_players.iterrows():
         consecutive_weeks = check_consistent_performance(
             player['Player'], 
-            consolidated_data
+            consolidated_data,
+            player_histories=player_histories
         )
         available_players.at[idx, 'consecutive_good_weeks'] = consecutive_weeks
     
     # Calculate averages using all available games in last 3 rounds
     available_players['avg_bpre'] = available_players['Player'].apply(
-        lambda x: calculate_average_bpre(x, consolidated_data)
+        lambda x: calculate_average_bpre(x, consolidated_data, player_histories=player_histories)
     )
     
     available_players['avg_base'] = available_players['Player'].apply(
-        lambda x: calculate_average_base(x, consolidated_data, min_games=min_games)
+        lambda x: calculate_average_base(x, consolidated_data, min_games=min_games, player_histories=player_histories)
     )
 
     # Calculate priority levels
     available_players['priority_level'] = available_players.apply(
-        lambda row: assign_priority_level(row, consolidated_data), 
+        lambda row: assign_priority_level(row, consolidated_data, player_histories=player_histories), 
         axis=1
     )
 
     # Print players by rule level
-    print_players_by_rule_level(available_players, consolidated_data)
+    print_players_by_rule_level(available_players, consolidated_data, player_histories=player_histories)
 
     # Group players by priority level
     priority_groups = {}
@@ -914,11 +937,7 @@ def simulate_rule_levels(consolidated_data: pd.DataFrame, rounds: List[int]) -> 
 
 if __name__ == "__main__":
     try:
-        # Example file path - modify according to your setup
-        file_path = "NRL_stats.xlsx"
-        
-        # Load consolidated data
-        consolidated_data = load_data(file_path)
+        consolidated_data = load_data()  # Removed file_path
         print(f"Successfully loaded data for {consolidated_data['Round'].nunique()} rounds")
         
         # Get user preference for optimization strategy first
