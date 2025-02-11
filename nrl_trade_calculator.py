@@ -26,18 +26,23 @@ def load_data() -> pd.DataFrame:
     Returns:
     pd.DataFrame: DataFrame with standardized column names
     """
-    # Read database connection parameters from environment
     load_dotenv()
-    db_params = {
-        'host': os.getenv('DB_HOST'),
-        'database': os.getenv('DB_DATABASE'),
-        'user': os.getenv('DB_USER'),
-        'password': os.getenv('DB_PASSWORD'),
-        'port': os.getenv('DB_PORT')
-    }
-    
-    # Create connection string
-    conn_str = f"postgresql://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/{db_params['database']}"
+    # If running on Heroku there will be a DATABASE_URL provided by the Postgres add-on.
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        # Handle Heroku's postgres:// URL format
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+        conn_str = database_url
+    else:
+        db_params = {
+            'host': os.getenv('DB_HOST'),
+            'database': os.getenv('DB_DATABASE'),
+            'user': os.getenv('DB_USER'),
+            'password': os.getenv('DB_PASSWORD'),
+            'port': os.getenv('DB_PORT')
+        }
+        conn_str = f"postgresql://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/{db_params['database']}"
     engine = create_engine(conn_str)
     
     try:
