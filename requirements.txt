@@ -18,3 +18,4 @@ et-xmlfile==1.1.0
 packaging==23.2
 psycopg2-binary==2.9.9
 Flask-Caching==2.1.0
+SQLAlchemy==2.0.25
