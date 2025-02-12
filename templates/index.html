@@ -34,19 +34,23 @@
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         .header h1 {
             color: var(--secondary-color);
             font-size: 2.5em;
-            margin-bottom: 10px;
+            margin: 5px 0;
+        }
+
+        .settings-heading {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 20px 0 10px;
         }
 
         .trade-panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            display: block;
             margin-bottom: 30px;
         }
 
@@ -148,6 +152,75 @@
             80% { content: "...."; }
             100% { content: "....."; }
         }
+
+        .settings-panel {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .settings-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .setting-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .setting-btn {
+            flex: 1;
+            background: #f5f5f5;
+            border: 2px solid transparent;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .setting-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .setting-btn:hover:not(.active) {
+            background: #e0e0e0;
+        }
+
+        .banner {
+            background-color: #333;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            color: #00A3E0;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Arial Black', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .players-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .players-row .form-group {
+            flex: 1;
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -162,84 +235,80 @@
     </script>
 </head>
 <body>
+    <header class="banner">
+        <div class="logo">Fantasy Footy Quant</div>
+    </header>
     <div class="container">
         <div class="header">
             <h1>NRL Trade Calculator</h1>
         </div>
 
+        <h2 class="settings-heading">Settings</h2>
         <form id="tradeForm">
-            <div class="trade-panel">
-                <div class="panel">
-                    <div class="panel-title">Players to Trade Out</div>
-                    <div class="form-group">
-                        <label for="player1">Player 1:</label>
-                        <input type="text" id="player1" name="player1" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="player2">Player 2 (Optional):</label>
-                        <input type="text" id="player2" name="player2">
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">Trade Settings</div>
-                    <div class="form-group">
-                        <label for="strategy">Strategy:</label>
-                        <select id="strategy" name="strategy">
-                            <option value="1">Maximize value (BPRE)</option>
-                            <option value="2">Maximize base stats</option>
-                            <option value="3">Hybrid approach</option>
-                        </select>
+            <div class="settings-panel">
+                <div class="settings-grid">
+                    <!-- Strategy Options -->
+                    <div class="setting-row">
+                        <button type="button" class="setting-btn active" data-value="1">Maximize value (BPRE)</button>
+                        <button type="button" class="setting-btn" data-value="2">Maximize base stats</button>
+                        <button type="button" class="setting-btn" data-value="3">Hybrid approach</button>
+                        <input type="hidden" name="strategy" id="strategy" value="1">
                     </div>
 
-                    <div class="form-group">
-                        <label>Trade Type:</label>
-                        <div class="radio-group">
-                            <label>
-                                <input type="radio" id="likeForLike" name="tradeType" value="likeForLike" checked>
-                                Like-for-Like
-                            </label>
-                            <label>
-                                <input type="radio" id="positionalSwap" name="tradeType" value="positionalSwap">
-                                Positional Swap
-                            </label>
+                    <!-- Trade Type -->
+                    <div class="setting-row">
+                        <button type="button" class="setting-btn active" data-value="likeForLike">Like-for-Like</button>
+                        <button type="button" class="setting-btn" data-value="positionalSwap">Positional Swap</button>
+                        <input type="hidden" name="tradeType" id="tradeType" value="likeForLike">
+                    </div>
+
+                    <!-- Position Selection for Positional Swap (initially hidden) -->
+                    <div class="setting-row" id="positionSelectionRow" style="display: none;">
+                        <div class="form-group" style="width: 100%;">
+                            <label for="positions">Select Positions for Swap:</label>
+                            <select id="positions" name="positions" multiple>
+                                <option value="HOK">HOK</option>
+                                <option value="HLF">HLF</option>
+                                <option value="CTR">CTR</option>
+                                <option value="WFB">WFB</option>
+                                <option value="EDG">EDG</option>
+                                <option value="MID">MID</option>
+                            </select>
                         </div>
+                    </div>
+
+                    <!-- Team List and Lockout -->
+                    <div class="setting-row">
+                        <button type="button" class="setting-btn" data-toggle="restrictToTeamList">Team List Only</button>
+                        <button type="button" class="setting-btn" data-toggle="applyLockout">Apply Lockout</button>
+                        <input type="hidden" name="restrictToTeamList" id="restrictToTeamList" value="false">
+                        <input type="hidden" name="applyLockout" id="applyLockout" value="false">
                     </div>
                 </div>
             </div>
 
-            <div class="panel">
-                <div class="panel-title">Additional Options</div>
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList">
-                        Restrict to Team Lists
-                    </label>
+            <div class="trade-panel">
+                <div class="panel">
+                    <div class="panel-title">Players to Trade Out</div>
+                    <div class="players-row">
+                        <div class="form-group">
+                            <label for="player1">Player 1:</label>
+                            <input type="text" id="player1" name="player1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="player2">Player 2 (Optional):</label>
+                            <input type="text" id="player2" name="player2">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="applyLockout" name="applyLockout">
-                        Apply Lockout Restriction
-                    </label>
-                </div>
-
-                <div class="form-group" id="simulateDateTimeGroup" style="display: none;">
-                    <label for="simulateDateTime">Simulate Current Date/Time:</label>
-                    <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
-                </div>
-
-                <div class="form-group" id="positionSelection" style="display: none;">
-                    <label for="positions">Select Positions for Swap:</label>
-                    <select id="positions" name="positions" multiple>
-                        <option value="HOK">HOK</option>
-                        <option value="HLF">HLF</option>
-                        <option value="CTR">CTR</option>
-                        <option value="WFB">WFB</option>
-                        <option value="EDG">EDG</option>
-                        <option value="MID">MID</option>
-                    </select>
+                <div class="panel">
+                    <div class="panel-title">Additional Options</div>
+                    <div class="form-group" id="simulateDateTimeGroup" style="display: none;">
+                        <label for="simulateDateTime">Simulate Current Date/Time:</label>
+                        <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
+                    </div>
                 </div>
             </div>
 
@@ -269,9 +338,9 @@
             // Show/hide position selection based on trade type
             $('input[name="tradeType"]').change(function() {
                 if ($(this).val() === 'positionalSwap') {
-                    $('#positionSelection').show();
+                    $('#positionSelectionRow').slideDown();
                 } else {
-                    $('#positionSelection').hide();
+                    $('#positionSelectionRow').slideUp();
                 }
             });
 
@@ -526,6 +595,37 @@
                     // Recheck current players when lockout is enabled
                     if ($('#player1').val()) checkPlayerLockout($('#player1'));
                     if ($('#player2').val()) checkPlayerLockout($('#player2'));
+                }
+            });
+
+            // Handle setting button clicks
+            $('.setting-btn').click(function() {
+                const $this = $(this);
+                const $row = $this.closest('.setting-row');
+                const value = $this.data('value');
+                const toggle = $this.data('toggle');
+
+                if (value) {
+                    // For mutually exclusive options
+                    $row.find('.setting-btn').removeClass('active');
+                    $this.addClass('active');
+                    $row.find('input[type="hidden"]').val(value);
+                } else if (toggle) {
+                    // For toggleable options
+                    $this.toggleClass('active');
+                    $(`#${toggle}`).val($this.hasClass('active'));
+                }
+
+                // Show/hide position selection if needed
+                if (value === 'positionalSwap') {
+                    $('#positionSelectionRow').slideDown();
+                } else if (value === 'likeForLike') {
+                    $('#positionSelectionRow').slideUp();
+                }
+
+                // Show/hide datetime if lockout is enabled
+                if (toggle === 'applyLockout') {
+                    $('#simulateDateTimeGroup').toggle($this.hasClass('active'));
                 }
             });
         });
