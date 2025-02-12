@@ -3,32 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input</title>
+    <title>NRL Trade Calculator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <style>
+        :root {
+            --primary-color: #00A3E0;
+            --secondary-color: #004C6C;
+            --background-color: #F5F7F9;
+            --text-color: #333;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: var(--secondary-color);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .trade-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .panel-title {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-        .results {
-            margin-top: 20px;
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
-        .trade-option {
+
+        input[type="text"],
+        input[type="datetime-local"],
+        select {
+            width: 100%;
+            padding: 10px;
             border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+            border-radius: var(--border-radius);
+            font-size: 16px;
         }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin: 10px 0;
+        }
+
+        .checkbox-group {
+            margin: 15px 0;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .trade-option {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+        }
+
         .error {
-            color: red;
+            color: #dc3545;
+            background-color: #ffe6e6;
+            padding: 10px;
+            border-radius: var(--border-radius);
             margin-top: 10px;
+        }
+
+        /* Loading animation */
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading:after {
+            content: "...";
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60% { content: "..."; }
+            80% { content: "...."; }
+            100% { content: "....."; }
         }
     </style>
     <!-- Hotjar Tracking Code -->
@@ -44,67 +162,92 @@
     </script>
 </head>
 <body>
-    <h1>Input</h1>
-    
-    <form id="tradeForm">
-        <div class="form-group">
-            <label for="player1">Player 1 to Trade Out:</label>
-            <input type="text" id="player1" name="player1" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="player2">Player 2 to Trade Out (optional):</label>
-            <input type="text" id="player2" name="player2">
-        </div>
-        
-        <div class="form-group">
-            <label for="strategy">Strategy:</label>
-            <select id="strategy" name="strategy">
-                <option value="1">Maximize value (BPRE)</option>
-                <option value="2">Maximize base stats</option>
-                <option value="3">Hybrid approach</option>
-            </select>
+    <div class="container">
+        <div class="header">
+            <h1>NRL Trade Calculator</h1>
         </div>
 
-        <div class="form-group">
-            <label>Trade Type:</label><br>
-            <input type="radio" id="likeForLike" name="tradeType" value="likeForLike" checked>
-            <label for="likeForLike">Like-for-Like</label><br>
-            <input type="radio" id="positionalSwap" name="tradeType" value="positionalSwap">
-            <label for="positionalSwap">Positional Swap</label>
-        </div>
+        <form id="tradeForm">
+            <div class="trade-panel">
+                <div class="panel">
+                    <div class="panel-title">Players to Trade Out</div>
+                    <div class="form-group">
+                        <label for="player1">Player 1:</label>
+                        <input type="text" id="player1" name="player1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="player2">Player 2 (Optional):</label>
+                        <input type="text" id="player2" name="player2">
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList">
-            <label for="restrictToTeamList">Restrict choices to players named in Team lists</label>
-        </div>
+                <div class="panel">
+                    <div class="panel-title">Trade Settings</div>
+                    <div class="form-group">
+                        <label for="strategy">Strategy:</label>
+                        <select id="strategy" name="strategy">
+                            <option value="1">Maximize value (BPRE)</option>
+                            <option value="2">Maximize base stats</option>
+                            <option value="3">Hybrid approach</option>
+                        </select>
+                    </div>
 
-        <div class="form-group">
-            <input type="checkbox" id="applyLockout" name="applyLockout">
-            <label for="applyLockout">Apply lockout restriction</label>
-        </div>
+                    <div class="form-group">
+                        <label>Trade Type:</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" id="likeForLike" name="tradeType" value="likeForLike" checked>
+                                Like-for-Like
+                            </label>
+                            <label>
+                                <input type="radio" id="positionalSwap" name="tradeType" value="positionalSwap">
+                                Positional Swap
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-group" id="simulateDateTimeGroup">
-            <label for="simulateDateTime">Simulate Current Date/Time:</label>
-            <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
-        </div>
+            <div class="panel">
+                <div class="panel-title">Additional Options</div>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList">
+                        Restrict to Team Lists
+                    </label>
+                </div>
 
-        <div class="form-group" id="positionSelection" style="display: none;">
-            <label for="positions">Select Positions for Swap:</label>
-            <select id="positions" name="positions" multiple>
-                <option value="HOK">HOK</option>
-                <option value="HLF">HLF</option>
-                <option value="CTR">CTR</option>
-                <option value="WFB">WFB</option>
-                <option value="EDG">EDG</option>
-                <option value="MID">MID</option>
-            </select>
-        </div>
-        
-        <button type="submit">Calculate Trade Options</button>
-    </form>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="applyLockout" name="applyLockout">
+                        Apply Lockout Restriction
+                    </label>
+                </div>
 
-    <div id="results" class="results"></div>
+                <div class="form-group" id="simulateDateTimeGroup" style="display: none;">
+                    <label for="simulateDateTime">Simulate Current Date/Time:</label>
+                    <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
+                </div>
+
+                <div class="form-group" id="positionSelection" style="display: none;">
+                    <label for="positions">Select Positions for Swap:</label>
+                    <select id="positions" name="positions" multiple>
+                        <option value="HOK">HOK</option>
+                        <option value="HLF">HLF</option>
+                        <option value="CTR">CTR</option>
+                        <option value="WFB">WFB</option>
+                        <option value="EDG">EDG</option>
+                        <option value="MID">MID</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit">Calculate Trade Options</button>
+        </form>
+
+        <div id="results" class="results"></div>
+    </div>
 
     <script>
         $(document).ready(function() {
