@@ -56,7 +56,8 @@ def prepare_trade_option(option: Dict[str, Any]) -> Dict[str, Any]:
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    hotjar_id = os.getenv('HOTJAR_ID')
+    return render_template('index.html', hotjar_id=hotjar_id)
 
 @app.route('/check_player_lockout', methods=['POST'])
 def check_player_lockout():
