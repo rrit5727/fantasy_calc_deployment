@@ -6,6 +6,7 @@ import traceback
 import pandas as pd
 import os
 from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
 
 # Load environment variables
 load_dotenv()
@@ -181,6 +182,28 @@ def get_players():
         return jsonify(player_names)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+def init_db_if_needed():
+    try:
+        with engine.connect() as connection:
+            # Check if table exists
+            result = connection.execute(text("""
+                SELECT EXISTS (
+                    SELECT FROM information_schema.tables 
+                    WHERE table_name = 'player_stats'
+                );
+            """))
+            table_exists = result.scalar()
+            
+            if not table_exists:
+                # Initialize database
+                init_heroku_database()
+    except Exception as e:
+        print(f"Error checking/initializing database: {str(e)}")
+        raise
+
+# Add this line after creating the Flask app
+app.before_first_request(init_db_if_needed)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5002, debug=True)
