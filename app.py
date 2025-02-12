@@ -183,27 +183,51 @@ def get_players():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-def init_db_if_needed():
+def init_app(app):
     try:
-        with engine.connect() as connection:
-            # Check if table exists
-            result = connection.execute(text("""
-                SELECT EXISTS (
-                    SELECT FROM information_schema.tables 
-                    WHERE table_name = 'player_stats'
-                );
-            """))
-            table_exists = result.scalar()
+        with app.app_context():
+            # Check if we're in development environment
+            is_development = os.getenv('FLASK_ENV') == 'development'
             
-            if not table_exists:
-                # Initialize database
-                init_heroku_database()
+            if is_development:
+                db_params = {
+                    'host': os.getenv('DB_HOST'),
+                    'database': os.getenv('DB_DATABASE'),
+                    'user': os.getenv('DB_USER'),
+                    'password': os.getenv('DB_PASSWORD'),
+                    'port': os.getenv('DB_PORT')
+                }
+                conn_str = f"postgresql://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/{db_params['database']}"
+            else:
+                database_url = os.getenv("DATABASE_URL")
+                if database_url:
+                    if database_url.startswith("postgres://"):
+                        database_url = database_url.replace("postgres://", "postgresql://", 1)
+                    conn_str = database_url
+                else:
+                    raise ValueError("DATABASE_URL not found in production environment")
+            
+            engine = create_engine(conn_str)
+            
+            with engine.connect() as connection:
+                # Check if table exists
+                result = connection.execute(text("""
+                    SELECT EXISTS (
+                        SELECT FROM information_schema.tables 
+                        WHERE table_name = 'player_stats'
+                    );
+                """))
+                table_exists = result.scalar()
+                
+                if not table_exists:
+                    # Initialize database
+                    init_heroku_database()
     except Exception as e:
         print(f"Error checking/initializing database: {str(e)}")
         raise
 
-# Add this line after creating the Flask app
-app.before_first_request(init_db_if_needed)
+# Initialize the database when the app starts
+init_app(app)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5002, debug=True)
