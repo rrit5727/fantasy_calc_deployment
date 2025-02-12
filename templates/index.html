@@ -189,6 +189,30 @@
             80% { content: "...."; }
             100% { content: "....."; }
         }
+
+        /* Settings panel styling */
+        .settings-panel {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+
+        /* Button grid layouts */
+        .button-row {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .button-row-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .button-row-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -213,17 +237,25 @@
         <h2 class="settings-title">Settings</h2>
 
         <form id="tradeForm">
-            <!-- Update the trade panel buttons to use the new styling -->
-            <div class="trade-panel">
-                <button type="button" class="button-like" id="maximizeValue">Maximize value (BPRE)</button>
-                <button type="button" class="button-like button-inactive" id="maximizeBase">Maximize base stats</button>
-                <button type="button" class="button-like button-inactive" id="hybridApproach">Hybrid approach</button>
+            <div class="settings-panel">
+                <!-- Trade strategies - 3 buttons in one line -->
+                <div class="button-row button-row-3">
+                    <button type="button" class="button-like" id="maximizeValue">Maximize value (BPRE)</button>
+                    <button type="button" class="button-like button-inactive" id="maximizeBase">Maximize base stats</button>
+                    <button type="button" class="button-like button-inactive" id="hybridApproach">Hybrid approach</button>
+                </div>
                 
-                <button type="button" class="button-like" id="likeForLike">Like-for-Like</button>
-                <button type="button" class="button-like button-inactive" id="positionalSwap">Positional Swap</button>
+                <!-- Trade types - 2 buttons in one line -->
+                <div class="button-row button-row-2">
+                    <button type="button" class="button-like" id="likeForLike">Like-for-Like</button>
+                    <button type="button" class="button-like button-inactive" id="positionalSwap">Positional Swap</button>
+                </div>
                 
-                <button type="button" class="button-like button-inactive" id="teamListOnly">Team List Only</button>
-                <button type="button" class="button-like button-inactive" id="applyLockout">Apply Lockout</button>
+                <!-- Additional options - 2 buttons in one line -->
+                <div class="button-row button-row-2">
+                    <button type="button" class="button-like button-inactive" id="teamListOnly">Team List Only</button>
+                    <button type="button" class="button-like button-inactive" id="applyLockout">Apply Lockout</button>
+                </div>
             </div>
 
             <div class="trade-panel">
