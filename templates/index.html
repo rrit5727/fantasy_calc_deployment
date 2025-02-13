@@ -71,6 +71,7 @@
             width: 100%;
             text-align: center;
             margin: 5px 0;
+            transition: background-color 0.3s ease;
         }
 
         button:hover, .button-like:hover {
@@ -80,6 +81,11 @@
         .button-inactive {
             background-color: #f5f5f5;
             color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .button-inactive:hover {
+            background-color: #e8e8e8;
         }
 
         /* Player input sections */
@@ -213,6 +219,19 @@
         .button-row-2 {
             grid-template-columns: repeat(2, 1fr);
         }
+
+        /* For the button styling */
+        .strategy-btn, .trade-type-btn {
+            border-radius: 8px;
+            padding: 10px 15px;
+            background-color: #d3d3d3; /* light grey for unselected */
+            border: 1px solid #ccc;
+        }
+
+        .strategy-btn.selected, .trade-type-btn.selected {
+            background-color: #00A3E0; /* blue for selected */
+            color: white;
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -240,33 +259,41 @@
             <div class="settings-panel">
                 <div class="panel">
                     <div class="panel-title">Trade Settings</div>
-                    <div class="form-group">
-                        <label for="strategy">Strategy:</label>
-                        <select id="strategy" name="strategy">
-                            <option value="1">Maximize value (BPRE)</option>
-                            <option value="2">Maximize base stats</option>
-                            <option value="3">Hybrid approach</option>
-                        </select>
+
+                    <!-- Strategy selection using buttons -->
+                    <div class="form-group strategy-group">
+                        <label>Strategy:</label>
+                        <div class="button-row button-row-3">
+                            <button type="button" class="button-like strategy-btn selected" data-strategy="1">Maximize value (BPRE)</button>
+                            <button type="button" class="button-like strategy-btn" data-strategy="2">Maximize base stats</button>
+                            <button type="button" class="button-like strategy-btn" data-strategy="3">Hybrid approach</button>
+                        </div>
+                        <!-- Hidden input to store selected strategy -->
+                        <input type="hidden" id="strategy" name="strategy" value="1">
                     </div>
-                    <div class="form-group">
+
+                    <!-- Trade type selection using buttons -->
+                    <div class="form-group trade-type-group">
                         <label>Trade Type:</label>
-                        <div class="radio-group">
-                            <label>
-                                <input type="radio" id="likeForLike" name="tradeType" value="likeForLike" checked>
-                                Like-for-Like
-                            </label>
-                            <label>
-                                <input type="radio" id="positionalSwap" name="tradeType" value="positionalSwap">
-                                Positional Swap
-                            </label>
+                        <div class="button-row button-row-2">
+                            <button type="button" class="button-like trade-type-btn selected" data-type="likeForLike">Like-for-Like</button>
+                            <button type="button" class="button-like trade-type-btn" data-type="positionalSwap">Positional Swap</button>
+                        </div>
+                        <!-- Hidden input to store selected trade type -->
+                        <input type="hidden" id="tradeType" name="tradeType" value="likeForLike">
+                        <!-- Dropdown for positional swap (initially hidden) -->
+                        <div id="positionSelection" style="display:none;">
+                            <label for="positions">Select Positions for Swap:</label>
+                            <select id="positions" name="positions" multiple>
+                                <option value="HOK">HOK</option>
+                                <option value="HLF">HLF</option>
+                                <option value="CTR">CTR</option>
+                                <option value="WFB">WFB</option>
+                                <option value="EDG">EDG</option>
+                                <option value="MID">MID</option>
+                            </select>
                         </div>
                     </div>
-                </div>
-                
-                <!-- You can keep the additional options (if desired) below -->
-                <div class="button-row button-row-2">
-                    <button type="button" class="button-like button-inactive" id="teamListOnly">Team List Only</button>
-                    <button type="button" class="button-like button-inactive" id="applyLockout">Apply Lockout</button>
                 </div>
             </div>
 
@@ -319,6 +346,11 @@
                 </div>
             </div>
 
+            <div class="button-row button-row-2">
+                <button type="button" class="button-like button-inactive" id="teamListOnly">Team List Only</button>
+                <button type="button" class="button-like button-inactive" id="applyLockout">Apply Lockout</button>
+            </div>
+
             <button type="submit">Calculate Trade Options</button>
         </form>
 
@@ -342,18 +374,50 @@
                 }
             });
 
-            // Show/hide position selection based on trade type
-            $('input[name="tradeType"]').change(function() {
-                if ($(this).val() === 'positionalSwap') {
+            // Strategy buttons
+            $('#maximizeValue, #maximizeBase, #hybridApproach').click(function() {
+                // Remove active class from all strategy buttons
+                $('#maximizeValue, #maximizeBase, #hybridApproach').addClass('button-inactive');
+                $(this).removeClass('button-inactive');
+                
+                // Update the strategy dropdown to match
+                let strategyMap = {
+                    'maximizeValue': '1',
+                    'maximizeBase': '2',
+                    'hybridApproach': '3'
+                };
+                $('#strategy').val(strategyMap[this.id]);
+            });
+
+            // Trade type buttons
+            $('#likeForLike, #positionalSwap').click(function() {
+                // Remove active class from all trade type buttons
+                $('#likeForLike, #positionalSwap').addClass('button-inactive');
+                $(this).removeClass('button-inactive');
+                
+                // Update the radio buttons to match
+                $(`input[name="tradeType"][value="${this.id}"]`).prop('checked', true);
+                
+                // Show/hide position selection based on trade type
+                if (this.id === 'positionalSwap') {
                     $('#positionSelection').show();
                 } else {
                     $('#positionSelection').hide();
                 }
             });
 
-            // Show/hide simulate date/time based on lockout restriction
-            $('#applyLockout').change(function() {
-                if ($(this).is(':checked')) {
+            // Additional options buttons
+            $('#teamListOnly').click(function() {
+                $(this).toggleClass('button-inactive');
+                $('#restrictToTeamList').prop('checked', !$(this).hasClass('button-inactive'));
+            });
+
+            $('#applyLockout').click(function() {
+                $(this).toggleClass('button-inactive');
+                let isActive = !$(this).hasClass('button-inactive');
+                $('#applyLockout').prop('checked', isActive);
+                
+                if (isActive) {
                     $('#simulateDateTimeGroup').show();
                 } else {
                     $('#simulateDateTimeGroup').hide();
@@ -602,6 +666,26 @@
                     // Recheck current players when lockout is enabled
                     if ($('#player1').val()) checkPlayerLockout($('#player1'));
                     if ($('#player2').val()) checkPlayerLockout($('#player2'));
+                }
+            });
+
+            // Handle strategy button clicks.
+            $('.strategy-btn').click(function() {
+                $('.strategy-btn').removeClass('selected');
+                $(this).addClass('selected');
+                $('#strategy').val($(this).data('strategy'));
+            });
+
+            // Handle trade type button clicks.
+            $('.trade-type-btn').click(function() {
+                $('.trade-type-btn').removeClass('selected');
+                $(this).addClass('selected');
+                $('#tradeType').val($(this).data('type'));
+                // Show the positions dropdown only for positional swap.
+                if ($(this).data('type') === 'positionalSwap') {
+                    $('#positionSelection').slideDown();
+                } else {
+                    $('#positionSelection').slideUp();
                 }
             });
         });
