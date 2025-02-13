@@ -71,7 +71,6 @@
             width: 100%;
             text-align: center;
             margin: 5px 0;
-            transition: background-color 0.3s ease;
         }
 
         button:hover, .button-like:hover {
@@ -81,11 +80,6 @@
         .button-inactive {
             background-color: #f5f5f5;
             color: #333;
-            border: 1px solid #ddd;
-        }
-
-        .button-inactive:hover {
-            background-color: #e8e8e8;
         }
 
         /* Player input sections */
@@ -244,20 +238,32 @@
 
         <form id="tradeForm">
             <div class="settings-panel">
-                <!-- Trade strategies - 3 buttons in one line -->
-                <div class="button-row button-row-3">
-                    <button type="button" class="button-like" id="maximizeValue">Maximize value (BPRE)</button>
-                    <button type="button" class="button-like button-inactive" id="maximizeBase">Maximize base stats</button>
-                    <button type="button" class="button-like button-inactive" id="hybridApproach">Hybrid approach</button>
+                <div class="panel">
+                    <div class="panel-title">Trade Settings</div>
+                    <div class="form-group">
+                        <label for="strategy">Strategy:</label>
+                        <select id="strategy" name="strategy">
+                            <option value="1">Maximize value (BPRE)</option>
+                            <option value="2">Maximize base stats</option>
+                            <option value="3">Hybrid approach</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Trade Type:</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" id="likeForLike" name="tradeType" value="likeForLike" checked>
+                                Like-for-Like
+                            </label>
+                            <label>
+                                <input type="radio" id="positionalSwap" name="tradeType" value="positionalSwap">
+                                Positional Swap
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Trade types - 2 buttons in one line -->
-                <div class="button-row button-row-2">
-                    <button type="button" class="button-like" id="likeForLike">Like-for-Like</button>
-                    <button type="button" class="button-like button-inactive" id="positionalSwap">Positional Swap</button>
-                </div>
-                
-                <!-- Additional options - 2 buttons in one line -->
+                <!-- You can keep the additional options (if desired) below -->
                 <div class="button-row button-row-2">
                     <button type="button" class="button-like button-inactive" id="teamListOnly">Team List Only</button>
                     <button type="button" class="button-like button-inactive" id="applyLockout">Apply Lockout</button>
@@ -279,63 +285,37 @@
                 </div>
 
                 <div class="panel">
-                    <div class="panel-title">Trade Settings</div>
-                    <div class="form-group">
-                        <label for="strategy">Strategy:</label>
-                        <select id="strategy" name="strategy" style="display: none;">
-                            <option value="1">Maximize value (BPRE)</option>
-                            <option value="2">Maximize base stats</option>
-                            <option value="3">Hybrid approach</option>
+                    <div class="panel-title">Additional Options</div>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList">
+                            Restrict to Team Lists
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="applyLockout" name="applyLockout">
+                            Apply Lockout Restriction
+                        </label>
+                    </div>
+
+                    <div class="form-group" id="simulateDateTimeGroup" style="display: none;">
+                        <label for="simulateDateTime">Simulate Current Date/Time:</label>
+                        <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
+                    </div>
+
+                    <div class="form-group" id="positionSelection" style="display: none;">
+                        <label for="positions">Select Positions for Swap:</label>
+                        <select id="positions" name="positions" multiple>
+                            <option value="HOK">HOK</option>
+                            <option value="HLF">HLF</option>
+                            <option value="CTR">CTR</option>
+                            <option value="WFB">WFB</option>
+                            <option value="EDG">EDG</option>
+                            <option value="MID">MID</option>
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <label>Trade Type:</label>
-                        <div class="radio-group" style="display: none;">
-                            <label>
-                                <input type="radio" id="likeForLike" name="tradeType" value="likeForLike" checked>
-                                Like-for-Like
-                            </label>
-                            <label>
-                                <input type="radio" id="positionalSwap" name="tradeType" value="positionalSwap">
-                                Positional Swap
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <div class="panel-title">Additional Options</div>
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList">
-                        Restrict to Team Lists
-                    </label>
-                </div>
-
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="applyLockout" name="applyLockout">
-                        Apply Lockout Restriction
-                    </label>
-                </div>
-
-                <div class="form-group" id="simulateDateTimeGroup" style="display: none;">
-                    <label for="simulateDateTime">Simulate Current Date/Time:</label>
-                    <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
-                </div>
-
-                <div class="form-group" id="positionSelection" style="display: none;">
-                    <label for="positions">Select Positions for Swap:</label>
-                    <select id="positions" name="positions" multiple>
-                        <option value="HOK">HOK</option>
-                        <option value="HLF">HLF</option>
-                        <option value="CTR">CTR</option>
-                        <option value="WFB">WFB</option>
-                        <option value="EDG">EDG</option>
-                        <option value="MID">MID</option>
-                    </select>
                 </div>
             </div>
 
@@ -362,50 +342,18 @@
                 }
             });
 
-            // Strategy buttons
-            $('#maximizeValue, #maximizeBase, #hybridApproach').click(function() {
-                // Remove active class from all strategy buttons
-                $('#maximizeValue, #maximizeBase, #hybridApproach').addClass('button-inactive');
-                $(this).removeClass('button-inactive');
-                
-                // Update the strategy dropdown to match
-                let strategyMap = {
-                    'maximizeValue': '1',
-                    'maximizeBase': '2',
-                    'hybridApproach': '3'
-                };
-                $('#strategy').val(strategyMap[this.id]);
-            });
-
-            // Trade type buttons
-            $('#likeForLike, #positionalSwap').click(function() {
-                // Remove active class from all trade type buttons
-                $('#likeForLike, #positionalSwap').addClass('button-inactive');
-                $(this).removeClass('button-inactive');
-                
-                // Update the radio buttons to match
-                $(`input[name="tradeType"][value="${this.id}"]`).prop('checked', true);
-                
-                // Show/hide position selection based on trade type
-                if (this.id === 'positionalSwap') {
+            // Show/hide position selection based on trade type
+            $('input[name="tradeType"]').change(function() {
+                if ($(this).val() === 'positionalSwap') {
                     $('#positionSelection').show();
                 } else {
                     $('#positionSelection').hide();
                 }
             });
 
-            // Additional options buttons
-            $('#teamListOnly').click(function() {
-                $(this).toggleClass('button-inactive');
-                $('#restrictToTeamList').prop('checked', !$(this).hasClass('button-inactive'));
-            });
-
-            $('#applyLockout').click(function() {
-                $(this).toggleClass('button-inactive');
-                let isActive = !$(this).hasClass('button-inactive');
-                $('#applyLockout').prop('checked', isActive);
-                
-                if (isActive) {
+            // Show/hide simulate date/time based on lockout restriction
+            $('#applyLockout').change(function() {
+                if ($(this).is(':checked')) {
                     $('#simulateDateTimeGroup').show();
                 } else {
                     $('#simulateDateTimeGroup').hide();
