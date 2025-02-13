@@ -257,6 +257,20 @@
             margin-right: auto;
         }
 
+        /* New styles for the Calculate Trade Options button */
+        .submit-button-container button {
+            background-color: #00A3E0; /* Turquoise/green color */
+            color: white;
+            font-size: 1.1em; /* Slightly larger font size */
+            font-weight: bold; /* Bold text */
+            padding: 12px 20px; /* Ensure consistent padding */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%; /* Full width on larger screens */
+            transition: background-color 0.3s ease;
+        }
+
         .settings-container {
             display: flex;
             flex-direction: column;
@@ -308,6 +322,11 @@
             /* Trade panel takes full width on mobile */
             .trade-panel {
                 width: 100%;
+            }
+
+            /* Submit button takes half width on mobile */
+            .submit-button-container {
+                width: 50%; /* Half width on mobile */
             }
         }
     </style>
