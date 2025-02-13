@@ -117,9 +117,7 @@
         }
 
         .trade-panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            display: block;
             margin-bottom: 30px;
         }
 
@@ -232,6 +230,19 @@
             background-color: #00A3E0; /* blue for selected */
             color: white;
         }
+
+        .player-inputs {
+            display: flex; /* Use flexbox for layout */
+            gap: 10px; /* Optional: space between inputs */
+        }
+
+        .player-inputs input {
+            flex: 1; /* Make inputs take equal width */
+            padding: 10px; /* Ensure consistent padding */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -319,13 +330,11 @@
                 <div class="panel">
                     <div class="panel-title">Players to Trade Out</div>
                     <div class="form-group">
-                        <label for="player1">Player 1:</label>
-                        <input type="text" id="player1" name="player1" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="player2">Player 2 (Optional):</label>
-                        <input type="text" id="player2" name="player2">
+                        
+                        <div class="player-inputs">
+                            <input type="text" id="player1" name="player1" placeholder="Player 1" required>
+                            <input type="text" id="player2" name="player2" placeholder="Player 2 (Optional)">
+                        </div>
                     </div>
                 </div>
             </div>
