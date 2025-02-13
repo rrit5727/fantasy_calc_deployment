@@ -281,18 +281,34 @@
                         </div>
                         <!-- Hidden input to store selected trade type -->
                         <input type="hidden" id="tradeType" name="tradeType" value="likeForLike">
-                        <!-- Dropdown for positional swap (initially hidden) -->
-                        <div id="positionSelection" style="display:none;">
-                            <label for="positions">Select Positions for Swap:</label>
-                            <select id="positions" name="positions" multiple>
-                                <option value="HOK">HOK</option>
-                                <option value="HLF">HLF</option>
-                                <option value="CTR">CTR</option>
-                                <option value="WFB">WFB</option>
-                                <option value="EDG">EDG</option>
-                                <option value="MID">MID</option>
-                            </select>
+                    </div>
+
+                    <!-- Additional Options as Buttons -->
+                    <div class="form-group additional-options-group">
+                        <div class="button-row button-row-2">
+                            <button type="button" class="button-like button-inactive" id="teamListOnly">Team List Only</button>
+                            <button type="button" class="button-like button-inactive" id="applyLockoutBtn">Apply Lockout</button>
                         </div>
+                        <!-- Hidden checkboxes to preserve form data -->
+                        <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList" style="display: none;">
+                        <input type="checkbox" id="applyLockout" name="applyLockout" style="display: none;">
+                        <div class="form-group" id="simulateDateTimeGroup" style="display: none;">
+                            <label for="simulateDateTime">Simulate Current Date/Time:</label>
+                            <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
+                        </div>
+                    </div>
+
+                    <!-- Position Selection for Positional Swap (moved to the bottom of this panel) -->
+                    <div id="positionSelection" style="display: none;">
+                        <label for="positions">Select Positions for Swap:</label>
+                        <select id="positions" name="positions" multiple>
+                            <option value="HOK">HOK</option>
+                            <option value="HLF">HLF</option>
+                            <option value="CTR">CTR</option>
+                            <option value="WFB">WFB</option>
+                            <option value="EDG">EDG</option>
+                            <option value="MID">MID</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -310,45 +326,6 @@
                         <input type="text" id="player2" name="player2">
                     </div>
                 </div>
-
-                <div class="panel">
-                    <div class="panel-title">Additional Options</div>
-                    <div class="checkbox-group">
-                        <label>
-                            <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList">
-                            Restrict to Team Lists
-                        </label>
-                    </div>
-
-                    <div class="checkbox-group">
-                        <label>
-                            <input type="checkbox" id="applyLockout" name="applyLockout">
-                            Apply Lockout Restriction
-                        </label>
-                    </div>
-
-                    <div class="form-group" id="simulateDateTimeGroup" style="display: none;">
-                        <label for="simulateDateTime">Simulate Current Date/Time:</label>
-                        <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
-                    </div>
-
-                    <div class="form-group" id="positionSelection" style="display: none;">
-                        <label for="positions">Select Positions for Swap:</label>
-                        <select id="positions" name="positions" multiple>
-                            <option value="HOK">HOK</option>
-                            <option value="HLF">HLF</option>
-                            <option value="CTR">CTR</option>
-                            <option value="WFB">WFB</option>
-                            <option value="EDG">EDG</option>
-                            <option value="MID">MID</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="button-row button-row-2">
-                <button type="button" class="button-like button-inactive" id="teamListOnly">Team List Only</button>
-                <button type="button" class="button-like button-inactive" id="applyLockout">Apply Lockout</button>
             </div>
 
             <button type="submit">Calculate Trade Options</button>
@@ -375,34 +352,22 @@
             });
 
             // Strategy buttons
-            $('#maximizeValue, #maximizeBase, #hybridApproach').click(function() {
-                // Remove active class from all strategy buttons
-                $('#maximizeValue, #maximizeBase, #hybridApproach').addClass('button-inactive');
-                $(this).removeClass('button-inactive');
-                
-                // Update the strategy dropdown to match
-                let strategyMap = {
-                    'maximizeValue': '1',
-                    'maximizeBase': '2',
-                    'hybridApproach': '3'
-                };
-                $('#strategy').val(strategyMap[this.id]);
+            $('.strategy-btn').click(function() {
+                $('.strategy-btn').removeClass('selected');
+                $(this).addClass('selected');
+                $('#strategy').val($(this).data('strategy'));
             });
 
             // Trade type buttons
-            $('#likeForLike, #positionalSwap').click(function() {
-                // Remove active class from all trade type buttons
-                $('#likeForLike, #positionalSwap').addClass('button-inactive');
-                $(this).removeClass('button-inactive');
-                
-                // Update the radio buttons to match
-                $(`input[name="tradeType"][value="${this.id}"]`).prop('checked', true);
-                
-                // Show/hide position selection based on trade type
-                if (this.id === 'positionalSwap') {
-                    $('#positionSelection').show();
+            $('.trade-type-btn').click(function() {
+                $('.trade-type-btn').removeClass('selected');
+                $(this).addClass('selected');
+                $('#tradeType').val($(this).data('type'));
+                // Show the positions dropdown only for positional swap.
+                if ($(this).data('type') === 'positionalSwap') {
+                    $('#positionSelection').slideDown();
                 } else {
-                    $('#positionSelection').hide();
+                    $('#positionSelection').slideUp();
                 }
             });
 
@@ -412,15 +377,15 @@
                 $('#restrictToTeamList').prop('checked', !$(this).hasClass('button-inactive'));
             });
 
-            $('#applyLockout').click(function() {
+            $('#applyLockoutBtn').click(function() {
                 $(this).toggleClass('button-inactive');
                 let isActive = !$(this).hasClass('button-inactive');
                 $('#applyLockout').prop('checked', isActive);
                 
                 if (isActive) {
-                    $('#simulateDateTimeGroup').show();
+                    $('#simulateDateTimeGroup').slideDown();
                 } else {
-                    $('#simulateDateTimeGroup').hide();
+                    $('#simulateDateTimeGroup').slideUp();
                 }
             });
 
@@ -666,26 +631,6 @@
                     // Recheck current players when lockout is enabled
                     if ($('#player1').val()) checkPlayerLockout($('#player1'));
                     if ($('#player2').val()) checkPlayerLockout($('#player2'));
-                }
-            });
-
-            // Handle strategy button clicks.
-            $('.strategy-btn').click(function() {
-                $('.strategy-btn').removeClass('selected');
-                $(this).addClass('selected');
-                $('#strategy').val($(this).data('strategy'));
-            });
-
-            // Handle trade type button clicks.
-            $('.trade-type-btn').click(function() {
-                $('.trade-type-btn').removeClass('selected');
-                $(this).addClass('selected');
-                $('#tradeType').val($(this).data('type'));
-                // Show the positions dropdown only for positional swap.
-                if ($(this).data('type') === 'positionalSwap') {
-                    $('#positionSelection').slideDown();
-                } else {
-                    $('#positionSelection').slideUp();
                 }
             });
         });
