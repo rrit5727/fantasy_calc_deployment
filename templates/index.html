@@ -310,6 +310,12 @@
             background: #609ffb;
         }
 
+        /* Button styling for Team List Only and Apply Lockout */
+        .setting-box.button-inactive.selected {
+            background-color: #00A3E0; /* Change to blue when selected */
+            color: white;
+        }
+
         /* Responsive adjustments for mobile devices */
         @media (max-width: 768px) {
             /* Settings panel takes full width on mobile */
@@ -473,11 +479,13 @@
             // Additional options buttons
             $('#teamListOnly').click(function() {
                 $(this).toggleClass('button-inactive');
+                $(this).toggleClass('selected');
                 $('#restrictToTeamList').prop('checked', !$(this).hasClass('button-inactive'));
             });
 
             $('#applyLockoutBtn').click(function() {
                 $(this).toggleClass('button-inactive');
+                $(this).toggleClass('selected');
                 let isActive = !$(this).hasClass('button-inactive');
                 $('#applyLockout').prop('checked', isActive);
                 
