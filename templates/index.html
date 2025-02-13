@@ -479,13 +479,13 @@
             // Additional options buttons
             $('#teamListOnly').click(function() {
                 $(this).toggleClass('button-inactive');
-                $(this).toggleClass('selected');
+                $(this).toggleClass('selected'); // Toggle selected class
                 $('#restrictToTeamList').prop('checked', !$(this).hasClass('button-inactive'));
             });
 
             $('#applyLockoutBtn').click(function() {
                 $(this).toggleClass('button-inactive');
-                $(this).toggleClass('selected');
+                $(this).toggleClass('selected'); // Toggle selected class
                 let isActive = !$(this).hasClass('button-inactive');
                 $('#applyLockout').prop('checked', isActive);
                 
