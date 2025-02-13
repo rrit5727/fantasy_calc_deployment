@@ -119,6 +119,9 @@
         .trade-panel {
             display: block;
             margin-bottom: 30px;
+            width: 33.33%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .panel {
@@ -201,6 +204,9 @@
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             margin-bottom: 30px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* Button grid layouts */
@@ -243,6 +249,55 @@
             border-radius: 4px;
             background-color: #f8f9fa;
         }
+
+        /* Add new style for the submit button container */
+        .submit-button-container {
+            width: 33.33%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .settings-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: fit-content;
+        }
+
+        .row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .setting-box {
+            background: #e0e0e0;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            border-radius: 6px;
+            transform: skewX(-10deg);  /* Slants the box */
+            transition: background 0.3s ease;
+        }
+
+        .setting-box.selected {
+            background: #3f86f8;
+            color: white;
+        }
+
+        .setting-box:hover {
+            background: #609ffb;
+        }
+
+
+        
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -262,7 +317,7 @@
     </header>
 
     <div class="container">
-        <h1 class="main-title">NRL Trade Calculator</h1>
+        <h1 class="main-title">NRL Trade Calculator</h1>              
         
         <h2 class="settings-title">Settings</h2>
 
@@ -271,24 +326,24 @@
                 <div class="panel">
                     <div class="panel-title">Trade Settings</div>
 
-                    <!-- Strategy selection using buttons -->
+                    <!-- Strategy selection block: Updated the button classes -->
                     <div class="form-group strategy-group">
                         <label>Strategy:</label>
                         <div class="button-row button-row-3">
-                            <button type="button" class="button-like strategy-btn selected" data-strategy="1">Maximize value (BPRE)</button>
-                            <button type="button" class="button-like strategy-btn" data-strategy="2">Maximize base stats</button>
-                            <button type="button" class="button-like strategy-btn" data-strategy="3">Hybrid approach</button>
+                            <button type="button" class="setting-box selected" data-strategy="1">Maximize value</button>
+                            <button type="button" class="setting-box" data-strategy="2">Maximize base stats</button>
+                            <button type="button" class="setting-box" data-strategy="3">Hybrid approach</button>
                         </div>
                         <!-- Hidden input to store selected strategy -->
                         <input type="hidden" id="strategy" name="strategy" value="1">
                     </div>
 
-                    <!-- Trade type selection using buttons -->
+                    <!-- Trade type selection block: Updated the button classes -->
                     <div class="form-group trade-type-group">
                         <label>Trade Type:</label>
                         <div class="button-row button-row-2">
-                            <button type="button" class="button-like trade-type-btn selected" data-type="likeForLike">Like-for-Like</button>
-                            <button type="button" class="button-like trade-type-btn" data-type="positionalSwap">Positional Swap</button>
+                            <button type="button" class="setting-box selected" data-type="likeForLike">Like-for-Like</button>
+                            <button type="button" class="setting-box" data-type="positionalSwap">Positional Swap</button>
                         </div>
                         <!-- Hidden input to store selected trade type -->
                         <input type="hidden" id="tradeType" name="tradeType" value="likeForLike">
@@ -307,11 +362,11 @@
                       </select>
                     </div>
 
-                    <!-- Additional Options as Buttons -->
+                    <!-- Additional options block: Updated the button classes -->
                     <div class="form-group additional-options-group">
                         <div class="button-row button-row-2">
-                            <button type="button" class="button-like button-inactive" id="teamListOnly">Team List Only</button>
-                            <button type="button" class="button-like button-inactive" id="applyLockoutBtn">Apply Lockout</button>
+                            <button type="button" class="setting-box button-inactive" id="teamListOnly">Team List Only</button>
+                            <button type="button" class="setting-box button-inactive" id="applyLockoutBtn">Apply Lockout</button>
                         </div>
                         <!-- Hidden checkboxes to preserve form data -->
                         <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList" style="display: none;">
@@ -339,7 +394,9 @@
                 </div>
             </div>
 
-            <button type="submit">Calculate Trade Options</button>
+            <div class="submit-button-container">
+                <button type="submit">Calculate Trade Options</button>
+            </div>
         </form>
 
         <div id="results" class="results"></div>
@@ -362,16 +419,16 @@
                 }
             });
 
-            // Strategy buttons
-            $('.strategy-btn').click(function() {
-                $('.strategy-btn').removeClass('selected');
+            // Updated Strategy buttons event listener
+            $('.settings-panel .setting-box[data-strategy]').click(function() {
+                $('.settings-panel .setting-box[data-strategy]').removeClass('selected');
                 $(this).addClass('selected');
                 $('#strategy').val($(this).data('strategy'));
             });
 
-            // Trade type buttons
-            $('.trade-type-btn').click(function() {
-                $('.trade-type-btn').removeClass('selected');
+            // Updated Trade type buttons event listener
+            $('.settings-panel .setting-box[data-type]').click(function() {
+                $('.settings-panel .setting-box[data-type]').removeClass('selected');
                 $(this).addClass('selected');
                 $('#tradeType').val($(this).data('type'));
                 // Show the positions dropdown only for positional swap.
