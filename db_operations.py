@@ -4,11 +4,12 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 
-# Load environment variables from the .env file
-load_dotenv()
+# Load environment variables from .env.local
+load_dotenv(dotenv_path=Path('.env.local'))
 
-# Database connection parameters from the .env file
+# Database connection parameters from .env.local
 DB_PARAMS = {
     'host': os.getenv('DB_HOST'),
     'database': os.getenv('DB_DATABASE'),

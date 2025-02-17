@@ -7,9 +7,13 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
+from pathlib import Path
 
-# Load environment variables
-load_dotenv()
+# Load development environment variables from .env.local and production from .env
+if os.getenv('FLASK_ENV') == 'development':
+    load_dotenv(dotenv_path=Path('.env.local'))
+else:
+    load_dotenv()
 
 app = Flask(__name__)
 
@@ -139,12 +143,22 @@ def calculate():
                     'error': f"{' and '.join(locked_players)}'s lockout has expired"
                 }), 400
 
-        # Load team list if needed
+        # Load team list if needed from the PostgreSQL database instead of a CSV file
         team_list = None
         if form_data['restrictToTeamList']:
-            team_list_path = "teamlists.csv"
-            team_df = pd.read_csv(team_list_path)
-            team_list = team_df['Player'].unique().tolist()
+            load_dotenv(dotenv_path=Path('.env.local'))
+            db_params = {
+                "host": os.getenv("DB_HOST"),
+                "database": os.getenv("DB_DATABASE"),
+                "user": os.getenv("DB_USER"),
+                "password": os.getenv("DB_PASSWORD"),
+                "port": os.getenv("DB_PORT")
+            }
+            conn_str = f"postgresql://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/{db_params['database']}"
+            engine = create_engine(conn_str)
+            query = "SELECT * FROM team_lists;"
+            team_df = pd.read_sql(query, engine)
+            team_list = team_df["Player"].unique().tolist()
 
         # Strategy flags
         strategy = form_data['strategy']
