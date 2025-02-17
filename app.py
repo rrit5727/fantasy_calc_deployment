@@ -146,15 +146,29 @@ def calculate():
         # Load team list if needed from the PostgreSQL database instead of a CSV file
         team_list = None
         if form_data['restrictToTeamList']:
-            load_dotenv(dotenv_path=Path('.env.local'))
-            db_params = {
-                "host": os.getenv("DB_HOST"),
-                "database": os.getenv("DB_DATABASE"),
-                "user": os.getenv("DB_USER"),
-                "password": os.getenv("DB_PASSWORD"),
-                "port": os.getenv("DB_PORT")
-            }
-            conn_str = f"postgresql://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/{db_params['database']}"
+            # Determine the connection string based on the environment
+            if os.getenv('FLASK_ENV') == 'development':
+                # Get database parameters from .env.local
+                db_params = {
+                    "host": os.getenv("DB_HOST"),
+                    "database": os.getenv("DB_DATABASE"),
+                    "user": os.getenv("DB_USER"),
+                    "password": os.getenv("DB_PASSWORD"),
+                    "port": os.getenv("DB_PORT", "5432")
+                }
+                conn_str = (
+                    f"postgresql://{db_params['user']}:{db_params['password']}@"
+                    f"{db_params['host']}:{db_params['port']}/{db_params['database']}"
+                )
+            else:
+                # Use DATABASE_URL for production
+                database_url = os.getenv("DATABASE_URL")
+                if not database_url:
+                    raise ValueError("DATABASE_URL not found in production environment")
+                if database_url.startswith("postgres://"):
+                    database_url = database_url.replace("postgres://", "postgresql://", 1)
+                conn_str = database_url
+
             engine = create_engine(conn_str)
             query = "SELECT * FROM team_lists;"
             team_df = pd.read_sql(query, engine)
