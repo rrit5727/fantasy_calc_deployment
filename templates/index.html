@@ -227,16 +227,40 @@
             overflow: hidden;
         }
 
-        .trade-option.highlighted {
+        .trade-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: var(--primary-gradient);
-            box-shadow: var(--box-shadow-hover);
-            transform: translateY(-3px);
-            color: white;
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease;
+            z-index: 0;
         }
 
-        .trade-option.highlighted h3,
-        .trade-option.highlighted strong,
-        .trade-option.highlighted div {
+        .trade-option > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .trade-option strong {
+            color: #00A3E0;
+            font-weight: 700;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .trade-option.highlighted::before {
+            opacity: 1;
+        }
+
+        .trade-option.highlighted > * {
+            color: white;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .trade-option.highlighted strong {
             color: white;
         }
 
@@ -246,11 +270,6 @@
             margin-bottom: 20px;
             font-weight: 700;
             letter-spacing: -0.5px;
-        }
-
-        .trade-option strong {
-            color: #00A3E0;
-            font-weight: 600;
         }
 
         @keyframes fadeIn {
