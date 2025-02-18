@@ -481,6 +481,63 @@
                 color: white;
             }
         }
+
+        .tooltip-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            margin-left: 8px;
+        }
+
+        .tooltip-trigger {
+            width: 20px;
+            height: 20px;
+            background: var(--secondary-gradient);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .tooltip-text {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--secondary-gradient);
+            color: white;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            width: 250px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+            box-shadow: var(--box-shadow);
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Mobile tooltip behavior */
+        @media (max-width: 768px) {
+            .tooltip-text {
+                display: none;
+            }
+            
+            .tooltip-container:active .tooltip-text {
+                display: block;
+                visibility: visible;
+                opacity: 1;
+            }
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -509,23 +566,37 @@
                 <div class="panel">
                     <div class="panel-title">Trade Settings</div>
 
-                    <!-- Strategy selection block: Updated the button classes -->
+                    <!-- Strategy selection block -->
                     <div class="form-group strategy-group">
-                        <label>Strategy:</label>
+                        <label>Strategy:
+                            <div class="tooltip-container">
+                                <div class="tooltip-trigger">?</div>
+                                <div class="tooltip-text">
+                                    Choose how to optimise your trades: 'Maximise value' recommends players whose base stats exceed what they are priced at, 'Maximise base stats' prioritizes players with the highest base stats, while 'Hybrid approach' recommends a value pick and a high base stats player.
+                                </div>
+                            </div>
+                        </label>
                         <div class="button-row button-row-3">
                             <button type="button" class="setting-box selected" data-strategy="1">
-                                <span>Maximize value</span>
+                                <span>Maximise value</span>
                             </button>
-                            <button type="button" class="setting-box" data-strategy="2">Maximize base stats</button>
+                            <button type="button" class="setting-box" data-strategy="2">Maximise base stats</button>
                             <button type="button" class="setting-box" data-strategy="3">Hybrid approach</button>
                         </div>
                         <!-- Hidden input to store selected strategy -->
                         <input type="hidden" id="strategy" name="strategy" value="1">
                     </div>
 
-                    <!-- Trade type selection block: Updated the button classes -->
+                    <!-- Trade type selection block -->
                     <div class="form-group trade-type-group">
-                        <label>Trade Type:</label>
+                        <label>Trade Type:
+                            <div class="tooltip-container">
+                                <div class="tooltip-trigger">?</div>
+                                <div class="tooltip-text">
+                                    Like-for-Like maintains the same positions as traded out players, while Positional Swap allows trading across different positions. 
+                                </div>
+                            </div>
+                        </label>
                         <div class="button-row button-row-2">
                             <button type="button" class="setting-box selected" data-type="likeForLike">Like-for-Like</button>
                             <button type="button" class="setting-box" data-type="positionalSwap">Positional Swap</button>
@@ -534,21 +605,36 @@
                         <input type="hidden" id="tradeType" name="tradeType" value="likeForLike">
                     </div>
 
-                    <!-- Position Selection for Positional Swap (moved to the bottom of this panel) -->
+                    <!-- Position Selection for Positional Swap -->
                     <div id="positionSelection" style="display: none;">
-                      <label for="positions">Select Positions for Swap:</label>
-                      <select id="positions" name="positions" multiple>
-                          <option value="HOK">HOK</option>
-                          <option value="HLF">HLF</option>
-                          <option value="CTR">CTR</option>
-                          <option value="WFB">WFB</option>
-                          <option value="EDG">EDG</option>
-                          <option value="MID">MID</option>
-                      </select>
+                        <label for="positions">Select Positions for Swap:
+                            <div class="tooltip-container">
+                                <div class="tooltip-trigger">?</div>
+                                <div class="tooltip-text">
+                                  Selecting all positions recommends the best players across all positions. When 2 postions are selected, suggested players will cover both positions selected.
+                                </div>
+                            </div>
+                        </label>
+                        <select id="positions" name="positions" multiple>
+                            <option value="HOK">HOK</option>
+                            <option value="HLF">HLF</option>
+                            <option value="CTR">CTR</option>
+                            <option value="WFB">WFB</option>
+                            <option value="EDG">EDG</option>
+                            <option value="MID">MID</option>
+                        </select>
                     </div>
 
-                    <!-- Additional options block: Updated the button classes -->
+                    <!-- Additional options block -->
                     <div class="form-group additional-options-group">
+                        <label>Additional Options:
+                            <div class="tooltip-container">
+                                <div class="tooltip-trigger">?</div>
+                                <div class="tooltip-text">
+                                    Team List Only restricts suggested players to those named in current team lists. Apply Lockout resticts suggested players to those yet to play in the current round.
+                                </div>
+                            </div>
+                        </label>
                         <div class="button-row button-row-2">
                             <button type="button" class="setting-box button-inactive" id="teamListOnly">Team List Only</button>
                             <button type="button" class="setting-box button-inactive" id="applyLockoutBtn">Apply Lockout</button>
