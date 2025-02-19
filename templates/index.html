@@ -360,11 +360,15 @@
 
         .player-inputs {
             display: flex;
+            flex-direction: column;
             gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .player-inputs input {
-            flex: 1;
+            width: 100%;
             padding: 12px;
             border: 2px solid #e2e8f0;
             border-radius: var(--border-radius);
@@ -439,13 +443,38 @@
 
         /* Mobile styles */
         @media (max-width: 768px) {
-            .settings-panel,
-            .trade-panel,
+            .settings-panel {
+                padding: 0;
+                background: none;
+                box-shadow: none;
+            }
+
             .panel {
                 width: 100%;
-                margin-left: auto;
-                margin-right: auto;
-                box-sizing: border-box;
+                margin: 0;
+                border-radius: 12px;
+            }
+
+            .button-row {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                gap: 8px;
+                margin: 10px 0;
+            }
+
+            .setting-box {
+                flex: 1;
+                padding: 12px 8px;
+                font-size: 13px;
+                text-align: center;
+                white-space: nowrap;
+                min-width: 0;
+            }
+
+            .setting-box span {
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .player-inputs {
@@ -479,10 +508,34 @@
 
             .trade-option {
                 width: 100%;
+                margin: 15px 0;
+                padding: 20px;
+                box-sizing: border-box;
+                border-radius: var(--border-radius);
             }
 
+            /* Ensure container doesn't allow horizontal scroll */
             .container {
-                padding: 20px 15px;
+                padding: 15px;
+                overflow-x: hidden;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Ensure results container doesn't overflow */
+            #results {
+                width: 100%;
+                overflow-x: hidden;
+            }
+
+            /* Adjust trade option content spacing */
+            .trade-option h3 {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+
+            .trade-option div {
+                margin-bottom: 10px;
             }
 
             .header h1 {
@@ -493,22 +546,6 @@
             .dark-mode-toggle {
                 top: 15px;
                 right: 15px;
-            }
-
-            .button-row {
-                display: flex !important;
-                flex-wrap: nowrap !important;
-                gap: 10px;
-                overflow-x: auto;
-                padding-bottom: 10px; /* For scroll bar */
-            }
-
-            .button-row .setting-box {
-                flex: 1;
-                white-space: nowrap;
-                min-width: auto;
-                padding: 10px 15px;
-                font-size: 14px;
             }
 
             .checkbox-wrapper {
