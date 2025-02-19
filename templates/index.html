@@ -393,7 +393,15 @@
             position: relative;
             display: inline-flex;
             align-items: center;
-            margin-left: 8px;
+            margin-left: auto; /* Push to right */
+        }
+
+        /* Add space between label and tooltip */
+        label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Pushes tooltip to right */
+            margin-bottom: 8px;
         }
 
         .tooltip-trigger {
@@ -411,14 +419,10 @@
             transition: all var(--transition-speed) ease;
         }
 
-        .tooltip-trigger:hover {
-            transform: scale(1.1);
-        }
-
         .tooltip-text {
             display: none;
             position: absolute;
-            left: 30px;
+            right: 30px; /* Position to the left of the trigger */
             top: 50%;
             transform: translateY(-50%);
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -429,13 +433,24 @@
             width: 250px;
             z-index: 100;
             box-shadow: var(--box-shadow);
-            opacity: 0;
-            transition: opacity var(--transition-speed) ease;
         }
 
         /* Desktop hover behavior */
         @media (min-width: 769px) {
             .tooltip-container:hover .tooltip-text {
+                display: block;
+                opacity: 1;
+            }
+        }
+
+        /* Mobile tooltip behavior */
+        @media (max-width: 768px) {
+            .tooltip-text {
+                right: 30px;  /* Position to the left of trigger */
+                left: auto;   /* Reset left position */
+            }
+            
+            .tooltip-container.active .tooltip-text {
                 display: block;
                 opacity: 1;
             }
