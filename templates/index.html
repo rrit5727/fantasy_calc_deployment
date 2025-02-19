@@ -443,51 +443,84 @@
 
         /* Mobile styles */
         @media (max-width: 768px) {
+            /* Container and panel adjustments */
+            .container {
+                padding: 15px;
+                width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+
+            /* Make all panels consistent with trade options cards */
+            .panel,
+            .trade-panel,
+            .settings-panel {
+                width: 100%;
+                margin: 15px 0;
+                padding: 20px;
+                box-sizing: border-box;
+                border-radius: var(--border-radius);
+            }
+
+            /* Strategy buttons adjustments */
+            .button-row {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                gap: 8px;
+                margin: 10px 0;
+                width: 100%;
+            }
+
+            .setting-box {
+                flex: 1;
+                padding: 12px 15px; /* Increased horizontal padding */
+                font-size: 13px;
+                text-align: center;
+                min-width: 0;
+            }
+
+            /* Ensure text fits in buttons */
+            .setting-box span {
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            /* Player inputs adjustments */
+            .player-inputs {
+                width: 100%;
+                max-width: none;
+            }
+
+            .player-inputs input {
+                width: 100%;
+                box-sizing: border-box;
+                margin-bottom: 10px;
+            }
+
+            /* Remove any unnecessary margins/padding */
             .settings-panel {
                 padding: 0;
                 background: none;
                 box-shadow: none;
             }
 
-            .panel {
-                width: 100%;
-                margin: 0;
-                border-radius: 12px;
-            }
-
-            .button-row {
-                display: flex !important;
-                flex-wrap: nowrap !important;
-                gap: 8px;
-                margin: 10px 0;
-            }
-
-            .setting-box {
-                flex: 1;
-                padding: 12px 8px;
-                font-size: 13px;
+            /* Ensure consistent spacing */
+            .panel-title {
+                margin-bottom: 20px;
                 text-align: center;
-                white-space: nowrap;
-                min-width: 0;
             }
 
-            .setting-box span {
-                display: block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .player-inputs {
-                width: 100%;
-            }
-
-            .player-inputs input {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-
+            /* Match button styling with trade options */
             .submit-button-container {
                 width: 100%;
+                margin: 15px 0;
+            }
+
+            .submit-button-container button {
+                width: 100%;
+                padding: 15px;
             }
 
             .tooltip-trigger {
@@ -512,14 +545,6 @@
                 padding: 20px;
                 box-sizing: border-box;
                 border-radius: var(--border-radius);
-            }
-
-            /* Ensure container doesn't allow horizontal scroll */
-            .container {
-                padding: 15px;
-                overflow-x: hidden;
-                width: 100%;
-                box-sizing: border-box;
             }
 
             /* Ensure results container doesn't overflow */
