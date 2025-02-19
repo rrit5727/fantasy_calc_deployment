@@ -473,18 +473,21 @@
 
             .setting-box {
                 flex: 1;
-                padding: 12px 15px; /* Increased horizontal padding */
+                padding: 12px 15px;
                 font-size: 13px;
                 text-align: center;
                 min-width: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
-            /* Ensure text fits in buttons */
+            /* Ensure text wraps consistently */
             .setting-box span {
-                display: block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+                display: inline-block;
+                white-space: normal;
+                line-height: 1.2;
+                word-break: break-word;
             }
 
             /* Player inputs adjustments */
@@ -530,8 +533,20 @@
             }
 
             .tooltip-text {
-                left: 35px;
-                width: 200px;
+                display: none;
+                position: absolute;
+                right: 30px;  /* Position to the left instead of right */
+                left: auto;   /* Reset left position */
+                top: 50%;
+                transform: translateY(-50%);
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                color: white;
+                padding: 10px 15px;
+                border-radius: var(--border-radius);
+                font-size: 14px;
+                width: 250px;
+                z-index: 100;
+                box-shadow: var(--box-shadow);
             }
             
             .tooltip-container.active .tooltip-text {
