@@ -36,12 +36,16 @@
             letter-spacing: 0.015em;
             transition: background-color var(--transition-speed) ease;
             padding-top: 70px;
+            overflow-x: hidden;
+            width: 100%;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* Header styling */
@@ -100,15 +104,7 @@
             }
         }
 
-        /* Settings section */
-        .settings-title {
-            color: var(--text-color);
-            text-align: center;
-            font-size: 32px;
-            margin: 20px 0;
-            font-weight: 600;
-        }
-
+       
         /* Button styling */
         button, .button-like {
             background-color: var(--primary-color);
@@ -201,6 +197,8 @@
 
         /* Trade option styling */
         .trade-option {
+            width: 35%; /* Half of 70% */
+            margin: 30px auto;
             background: white;
             padding: 30px;
             border-radius: var(--border-radius);
@@ -441,8 +439,22 @@
 
         /* Mobile styles */
         @media (max-width: 768px) {
-            .settings-panel, .trade-panel {
+            .settings-panel,
+            .trade-panel,
+            .panel {
                 width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+                box-sizing: border-box;
+            }
+
+            .player-inputs {
+                width: 100%;
+            }
+
+            .player-inputs input {
+                width: 100%;
+                margin-bottom: 10px;
             }
 
             .submit-button-container {
@@ -463,6 +475,45 @@
             .tooltip-container.active .tooltip-text {
                 display: block;
                 opacity: 1;
+            }
+
+            .trade-option {
+                width: 100%;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 20px; /* Smaller text on mobile */
+                margin-right: 50px; /* Make room for dark mode toggle */
+            }
+
+            .dark-mode-toggle {
+                top: 15px;
+                right: 15px;
+            }
+
+            .button-row {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                gap: 10px;
+                overflow-x: auto;
+                padding-bottom: 10px; /* For scroll bar */
+            }
+
+            .button-row .setting-box {
+                flex: 1;
+                white-space: nowrap;
+                min-width: auto;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .checkbox-wrapper {
+                display: inline-flex;
+                margin-right: 15px;
             }
         }
 
@@ -547,7 +598,7 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            z-index: 1000;
+            z-index: 1001; /* Ensure it's above the header */
         }
 
         .dark-mode-toggle input[type="checkbox"] {
@@ -623,9 +674,7 @@
                 font-size: 36px;
             }
 
-            .settings-title {
-                font-size: 28px;
-            }
+            
 
             .panel-title {
                 font-size: 20px;
@@ -638,6 +687,15 @@
             .player-inputs {
                 flex-direction: column;
             }
+        }
+
+        /* Dark mode header styles */
+        body.dark-mode .header {
+            background: rgba(26, 32, 44, 0.95);
+        }
+
+        body.dark-mode .header:not(.scrolled) h1 {
+            color: #e2e8f0;
         }
     </style>
     <!-- Hotjar Tracking Code -->
@@ -664,7 +722,7 @@
     <div class="container">
         <h1 class="main-title">NRL Trade Calculator</h1>              
         
-        <h2 class="settings-title">Settings</h2>
+        
 
         <form id="tradeForm">
             <div class="settings-panel">
