@@ -7,11 +7,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #00A3E0, #0082b3);
-            --secondary-gradient: linear-gradient(135deg, #004C6C, #003349);
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
             --background-color: #f8fafc;
             --text-color: #2d3748;
             --border-radius: 12px;
@@ -22,7 +23,7 @@
                 0 14px 28px rgba(0,0,0,0.25),
                 0 10px 10px rgba(0,0,0,0.22);
             --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --transition-speed: 1.45s;
+            --transition-speed: 0.3s;
         }
 
         body {
@@ -32,20 +33,70 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
+            letter-spacing: 0.015em;
+            transition: background-color var(--transition-speed) ease;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
+        }
+
+        /* Animated background */
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* Header styling */
         .header {
-            background: var(--secondary-gradient);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             padding: 20px;
             margin-bottom: 40px;
             box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            animation: ripple 12s linear infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50%, 50%);
+            }
         }
 
         .header h1 {
@@ -56,18 +107,23 @@
             -webkit-text-fill-color: transparent;
             font-weight: 700;
             letter-spacing: -0.5px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Main title styling */
         .main-title {
             color: var(--text-color);
             text-align: center;
-            font-size: 36px;
-            margin: 40px 0;
+            font-size: 48px;
+            margin: 60px 0;
             font-weight: 700;
             letter-spacing: -1px;
             opacity: 0;
             animation: fadeUp 0.6s ease forwards;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         @keyframes fadeUp {
@@ -83,50 +139,60 @@
 
         /* Settings section */
         .settings-title {
-            color: #333;
+            color: var(--text-color);
             text-align: center;
-            font-size: 24px;
-            margin: 20px 0;
+            font-size: 32px;
+            margin: 40px 0;
+            font-weight: 600;
         }
 
         /* Button styling */
         button, .button-like {
-            background-color: #00A3E0;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            width: 100%;
-            text-align: center;
-            margin: 5px 0;
-            transition: background-color 0.3s ease;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all var(--transition-speed) cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
         }
 
         button:hover, .button-like:hover {
-            background-color: #0082b3;
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow-hover);
+        }
+
+        button::after, .button-like::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease;
+        }
+
+        button:hover::after, .button-like:hover::after {
+            opacity: 1;
         }
 
         .button-inactive {
-            background-color: #f5f5f5;
-            color: #333;
-            border: 1px solid #ddd;
+            background-color: #e2e8f0;
+            color: #64748b;
         }
 
         .button-inactive:hover {
-            background-color: #e8e8e8;
+            background-color: #cbd5e1;
         }
 
-        /* Player input sections */
-        .player-section {
-            margin: 20px 0;
-        }
-
-        .player-section h3 {
-            color: #00A3E0;
-            margin-bottom: 10px;
-        }
-
+        /* Input styling */
         input[type="text"], input[type="datetime-local"], select {
             width: 100%;
             padding: 12px 16px;
@@ -139,35 +205,18 @@
         }
 
         input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
-            border-color: #00A3E0;
-            box-shadow: 0 0 0 3px rgba(0,163,224,0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
             outline: none;
         }
 
-        /* Trade options section */
-        .trade-options {
-            margin-top: 30px;
-        }
-
-        .trade-options h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .trade-panel {
-            display: block;
-            margin-bottom: 30px;
-            width: 33.33%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
+        /* Panel styling */
         .panel {
             background: white;
             padding: 30px;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            transition: all var(--transition-speed) ease;
+            transition: all var(--transition-speed) cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 1px solid rgba(0,0,0,0.1);
             opacity: 0;
             animation: fadeIn 0.6s ease forwards;
@@ -180,46 +229,21 @@
 
         .panel-title {
             color: var(--text-color);
-            font-size: 1.8em;
+            font-size: 24px;
             margin-bottom: 25px;
             text-align: center;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: -0.5px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            margin: 10px 0;
-        }
-
-        .checkbox-group {
-            margin: 15px 0;
-        }
-
-        .results {
-            margin-top: 30px;
-        }
-
+        /* Trade option styling */
         .trade-option {
             background: white;
-            padding: 25px;
+            padding: 30px;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            margin-bottom: 25px;
-            transition: transform var(--transition-speed) ease,
-                        box-shadow var(--transition-speed) ease,
-                        background var(--transition-speed) ease;
+            margin-bottom: 30px;
+            transition: all var(--transition-speed) cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 1px solid rgba(0,0,0,0.1);
             opacity: 0;
             animation: fadeIn 0.6s ease forwards;
@@ -234,7 +258,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             opacity: 0;
             transition: opacity var(--transition-speed) ease;
             z-index: 0;
@@ -246,8 +270,8 @@
         }
 
         .trade-option strong {
-            color: #00A3E0;
-            font-weight: 700;
+            color: var(--primary-color);
+            font-weight: 600;
             transition: color var(--transition-speed) ease;
         }
 
@@ -266,9 +290,9 @@
 
         .trade-option h3 {
             color: var(--text-color);
-            font-size: 1.4em;
+            font-size: 20px;
             margin-bottom: 20px;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: -0.5px;
         }
 
@@ -284,11 +308,12 @@
         }
 
         .error {
-            color: #dc3545;
-            background-color: #ffe6e6;
-            padding: 10px;
+            color: var(--accent-color);
+            background-color: rgba(231, 76, 60, 0.1);
+            padding: 15px;
             border-radius: var(--border-radius);
-            margin-top: 10px;
+            margin-top: 15px;
+            font-weight: 500;
         }
 
         /* Loading animation */
@@ -298,26 +323,28 @@
         }
 
         .loading:after {
-            content: "...";
-            animation: dots 1.5s steps(5, end) infinite;
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(52, 152, 219, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
         }
 
-        @keyframes dots {
-            0%, 20% { content: "."; }
-            40% { content: ".."; }
-            60% { content: "..."; }
-            80% { content: "...."; }
-            100% { content: "....."; }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Settings panel styling */
         .settings-panel {
             background: white;
-            padding: 25px;
+            padding: 30px;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            margin-bottom: 30px;
-            width: 50%;
+            margin-bottom: 40px;
+            width: 70%;
             margin-left: auto;
             margin-right: auto;
         }
@@ -325,8 +352,8 @@
         /* Button grid layouts */
         .button-row {
             display: grid;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .button-row-3 {
@@ -338,92 +365,6 @@
         }
 
         /* For the button styling */
-        .strategy-btn, .trade-type-btn {
-            border-radius: 8px;
-            padding: 10px 15px;
-            background-color: #d3d3d3; /* light grey for unselected */
-            border: 1px solid #ccc;
-        }
-
-        .strategy-btn.selected, .trade-type-btn.selected {
-            background-color: #00A3E0; /* blue for selected */
-            color: white;
-        }
-
-        .player-inputs {
-            display: flex; /* Use flexbox for layout */
-            gap: 10px; /* Optional: space between inputs */
-        }
-
-        .player-inputs input {
-            flex: 1; /* Make inputs take equal width */
-            padding: 10px; /* Ensure consistent padding */
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f8f9fa;
-        }
-
-        /* Add new style for the submit button container */
-        .submit-button-container {
-            width: 33.33%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* New styles for the Calculate Trade Options button */
-        .submit-button-container button {
-            background: var(--primary-gradient);
-            color: white;
-            font-size: 1.1em;
-            font-weight: 600;
-            padding: 16px 32px;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            width: 100%;
-            transition: all var(--transition-speed) ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .submit-button-container button::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(255,255,255,0.2), transparent);
-            opacity: 0;
-            transition: opacity var(--transition-speed) ease;
-        }
-
-        .submit-button-container button:hover::after {
-            opacity: 1;
-        }
-
-        .submit-button-container button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--box-shadow-hover);
-        }
-
-        .settings-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            background-color: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            width: fit-content;
-        }
-
-        .row {
-            display: flex;
-            gap: 6px;
-        }
-
         .setting-box {
             background: white;
             border: 2px solid #e2e8f0;
@@ -432,76 +373,52 @@
             font-weight: 600;
             color: var(--text-color);
             cursor: pointer;
-            border-radius: 12px;
-            transition: all var(--transition-speed) ease;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-speed) cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
-            transform: skew(-10deg);  /* This creates the slant */
         }
 
         .setting-box.selected {
-            background: var(--primary-gradient);
-            color: white !important;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
             border-color: transparent;
             box-shadow: var(--box-shadow);
-            transform: skew(-10deg);
-        }
-
-        .setting-box::before {
-            display: none;
-        }
-
-        .setting-box span {
-            position: relative;
-            z-index: 2;
-            display: inline-block;
-            transform: skew(10deg);  /* Counter-skew to keep text straight */
         }
 
         .setting-box:hover {
-            transform: skew(-10deg) translateY(-2px);
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow-hover);
         }
 
-        /* Button styling for Team List Only and Apply Lockout */
-        .setting-box.button-inactive.selected {
-            background-color: #00A3E0; /* Change to blue when selected */
-            color: white;
+        .player-inputs {
+            display: flex;
+            gap: 15px;
         }
 
-        /* Responsive adjustments for mobile devices */
-        @media (max-width: 768px) {
-            /* Settings panel takes full width on mobile */
-            .settings-panel {
-                width: 100%;
-                margin-left: 0;
-                margin-right: 0;
-            }
-
-            /* Trade panel takes full width on mobile */
-            .trade-panel {
-                width: 100%;
-            }
-
-            /* Submit button takes half width on mobile */
-            .submit-button-container {
-                width: 50%; /* Half width on mobile */
-            }
-
-            .trade-option:active {
-                background: var(--primary-gradient);
-                box-shadow: var(--box-shadow-hover);
-                transform: translateY(-3px);
-                color: white;
-            }
-
-            .trade-option:active h3,
-            .trade-option:active strong,
-            .trade-option:active div {
-                color: white;
-            }
+        .player-inputs input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            background-color: #f8f9fa;
+            transition: all var(--transition-speed) ease;
         }
 
-        /* Base tooltip styles */
+        .player-inputs input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        /* Submit button container */
+        .submit-button-container {
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 40px;
+        }
+
+        /* Tooltip styling */
         .tooltip-container {
             position: relative;
             display: inline-flex;
@@ -512,7 +429,7 @@
         .tooltip-trigger {
             width: 20px;
             height: 20px;
-            background: var(--secondary-gradient);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             border-radius: 50%;
             display: flex;
@@ -521,68 +438,306 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .tooltip-trigger:hover {
+            transform: scale(1.1);
         }
 
         .tooltip-text {
-            display: none; /* Hidden by default */
+            display: none;
             position: absolute;
             left: 30px;
             top: 50%;
             transform: translateY(-50%);
-            background: var(--secondary-gradient);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 8px 12px;
+            padding: 10px 15px;
             border-radius: var(--border-radius);
             font-size: 14px;
             width: 250px;
             z-index: 100;
             box-shadow: var(--box-shadow);
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease;
         }
 
         /* Desktop hover behavior */
         @media (min-width: 769px) {
             .tooltip-container:hover .tooltip-text {
                 display: block;
+                opacity: 1;
             }
         }
 
         /* Mobile styles */
         @media (max-width: 768px) {
+            .settings-panel, .trade-panel {
+                width: 100%;
+            }
+
+            .submit-button-container {
+                width: 100%;
+            }
+
             .tooltip-trigger {
                 width: 26px;
                 height: 26px;
                 font-size: 18px;
-                box-shadow: var(--box-shadow);
             }
 
             .tooltip-text {
-                display: none;
-                position: absolute;
                 left: 35px;
                 width: 200px;
-                background: var(--secondary-gradient);
-                color: white;
-                padding: 12px 16px;
-                border-radius: var(--border-radius);
-                box-shadow: var(--box-shadow);
-                z-index: 100;
-                font-size: 15px;
-                animation: tooltipFadeIn 0.2s ease;
-            }
-
-            @keyframes tooltipFadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateX(-10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
             }
             
             .tooltip-container.active .tooltip-text {
                 display: block;
+                opacity: 1;
+            }
+        }
+
+        /* Checkbox styling */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkbox-wrapper label {
+            position: relative;
+            padding-left: 35px;
+            cursor: pointer;
+            font-size: 16px;
+            user-select: none;
+        }
+
+        .checkbox-wrapper label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 25px;
+            height: 25px;
+            border: 2px solid #e2e8f0;
+            background-color: #fff;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:checked + label:before {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:checked + label:after {
+            content: '\2714';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            color: white;
+            font-size: 16px;
+        }
+
+        /* Form group styling */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Progress indicator */
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -50%;
+            right: 50%;
+            height: 2px;
+            background-color: #e2e8f0;
+            z-index: -1;
+        }
+
+        .progress-step:first-child::before {
+            display: none;
+        }
+
+        .progress-step-inner {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            color: var(--text-color);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .progress-step.active .progress-step-inner {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .progress-step.completed .progress-step-inner {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .progress-step.completed::before {
+            background-color: var(--secondary-color);
+        }
+
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .dark-mode-toggle input[type="checkbox"] {
+            display: none;
+        }
+
+        .dark-mode-toggle label {
+            cursor: pointer;
+            width: 50px;
+            height: 25px;
+            background-color: #83d8ff;
+            display: block;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .dark-mode-toggle label:after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 23px;
+            height: 23px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .dark-mode-toggle input:checked + label {
+            background-color: #032b43;
+        }
+
+        .dark-mode-toggle input:checked + label:after {
+            left: calc(100% - 1px);
+            transform: translateX(-100%);
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .panel,
+        body.dark-mode .trade-option,
+        body.dark-mode .settings-panel {
+            background-color: #2d3748;
+            border-color: #4a5568;
+        }
+
+        body.dark-mode input[type="text"],
+        body.dark-mode input[type="datetime-local"],
+        body.dark-mode select {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+
+        body.dark-mode .setting-box {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+
+        body.dark-mode .checkbox-wrapper label:before {
+            border-color: #4a5568;
+            background-color: #2d3748;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 36px;
+            }
+
+            .settings-title {
+                font-size: 28px;
+            }
+
+            .panel-title {
+                font-size: 20px;
+            }
+
+            .button-row {
+                grid-template-columns: 1fr;
+            }
+
+            .player-inputs {
+                flex-direction: column;
+            }
+
+            .progress-indicator {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .progress-step {
+                margin-bottom: 15px;
+            }
+
+            .progress-step::before {
+                display: none;
             }
         }
     </style>
@@ -599,6 +754,11 @@
     </script>
 </head>
 <body>
+    <div class="animated-background"></div>
+    <div class="dark-mode-toggle">
+        <input type="checkbox" id="darkModeToggle">
+        <label for="darkModeToggle"></label>
+    </div>
     <header class="header">
         <h1>FANTASY FOOTY QUANT</h1>
     </header>
@@ -606,6 +766,21 @@
     <div class="container">
         <h1 class="main-title">NRL Trade Calculator</h1>              
         
+        <div class="progress-indicator">
+            <div class="progress-step active">
+                <div class="progress-step-inner">1</div>
+                <span>Settings</span>
+            </div>
+            <div class="progress-step">
+                <div class="progress-step-inner">2</div>
+                <span>Players</span>
+            </div>
+            <div class="progress-step">
+                <div class="progress-step-inner">3</div>
+                <span>Results</span>
+            </div>
+        </div>
+
         <h2 class="settings-title">Settings</h2>
 
         <form id="tradeForm">
@@ -658,7 +833,7 @@
                             <div class="tooltip-container">
                                 <div class="tooltip-trigger">?</div>
                                 <div class="tooltip-text">
-                                  Selecting all positions recommends the best players across all positions. When 2 postions are selected, suggested players will cover both positions selected.
+                                  Selecting all positions recommends the best players across all positions. When 2 positions are selected, suggested players will cover both positions selected.
                                 </div>
                             </div>
                         </label>
@@ -674,28 +849,20 @@
 
                     <!-- Additional options block -->
                     <div class="form-group additional-options-group">
-                        <label>Additional Options:
-                            <div class="tooltip-container">
-                                <div class="tooltip-trigger">?</div>
-                                <div class="tooltip-text">
-                                    Team List Only restricts suggested players to those named in current team lists. Apply Lockout resticts suggested players to those yet to play in the current round.
-                                </div>
-                            </div>
-                        </label>
-                        <div class="button-row button-row-2">
-                            <button type="button" class="setting-box button-inactive" id="teamListOnly">Team List Only</button>
-                            <button type="button" class="setting-box button-inactive" id="applyLockoutBtn">Apply Lockout</button>
+                        <label>Additional Options:</label>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList">
+                            <label for="restrictToTeamList">Team List Only</label>
                         </div>
-                        <!-- Hidden checkboxes to preserve form data -->
-                        <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList" style="display: none;">
-                        <input type="checkbox" id="applyLockout" name="applyLockout" style="display: none;">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="applyLockout" name="applyLockout">
+                            <label for="applyLockout">Apply Lockout</label>
+                        </div>
                         <div class="form-group" id="simulateDateTimeGroup" style="display: none;">
                             <label for="simulateDateTime">Simulate Current Date/Time:</label>
                             <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
                         </div>
                     </div>
-
-                    
                 </div>
             </div>
 
@@ -703,7 +870,6 @@
                 <div class="panel">
                     <div class="panel-title">Players to Trade Out</div>
                     <div class="form-group">
-                        
                         <div class="player-inputs">
                             <input type="text" id="player1" name="player1" placeholder="Player 1" required>
                             <input type="text" id="player2" name="player2" placeholder="Player 2 (Optional)">
@@ -726,6 +892,11 @@
             let currentHighlightedElement = null;
             let scrollDirection = 'down';
             let lastScrollTop = 0;
+
+            // Dark mode toggle
+            $('#darkModeToggle').change(function() {
+                $('body').toggleClass('dark-mode');
+            });
 
             // Detect scroll direction
             window.addEventListener('scroll', function() {
@@ -818,29 +989,26 @@
                 }
             });
 
-            // Additional options buttons
-            $('#teamListOnly').click(function() {
-                $(this).toggleClass('button-inactive');
-                $(this).toggleClass('selected'); // Toggle selected class
-                $('#restrictToTeamList').prop('checked', !$(this).hasClass('button-inactive'));
-            });
-
-            $('#applyLockoutBtn').click(function() {
-                $(this).toggleClass('button-inactive');
-                $(this).toggleClass('selected'); // Toggle selected class
-                let isActive = !$(this).hasClass('button-inactive');
-                $('#applyLockout').prop('checked', isActive);
-                
-                if (isActive) {
-                    $('#simulateDateTimeGroup').slideDown();
-                } else {
-                    $('#simulateDateTimeGroup').slideUp();
+            // Additional options checkboxes
+            $('#restrictToTeamList, #applyLockout').change(function() {
+                if ($(this).attr('id') === 'applyLockout') {
+                    if ($(this).is(':checked')) {
+                        $('#simulateDateTimeGroup').slideDown();
+                    } else {
+                        $('#simulateDateTimeGroup').slideUp();
+                    }
                 }
             });
 
             $('#tradeForm').on('submit', function(e) {
                 e.preventDefault();
-                $('#results').html('Calculating...');
+                $('#results').html('<div class="loading"></div>');
+                
+                // Update progress indicator
+                $('.progress-step').removeClass('active completed');
+                $('.progress-step:nth-child(1)').addClass('completed');
+                $('.progress-step:nth-child(2)').addClass('completed');
+                $('.progress-step:nth-child(3)').addClass('active');
                 
                 // Serialize form data
                 let formData = $(this).serializeArray();
@@ -909,8 +1077,6 @@
                 });
             });
 
-            // Add these functions to your existing JavaScript
-        
             function checkPlayerLockout(playerInput) {
                 const playerName = playerInput.val();
                 const simulateDateTime = $('#simulateDateTime').val();
@@ -948,8 +1114,8 @@
                 const errorDiv = $('<div>')
                     .addClass('player-error')
                     .css({
-                        'color': 'red',
-                        'font-size': '0.8em',
+                        'color': 'var(--accent-color)',
+                        'font-size': '0.9em',
                         'margin-top': '5px'
                     })
                     .text(message);
@@ -961,8 +1127,6 @@
                 element.parent().find('.player-error').remove();
             }
             
-            // Add these event listeners to your existing code
-            
             // Check lockout when player name is selected from autocomplete
             $('#player1, #player2').on('autocompleteselect', function(event, ui) {
                 checkPlayerLockout($(this));
@@ -971,109 +1135,6 @@
             // Check lockout when player name is manually entered
             $('#player1, #player2').on('change', function() {
                 checkPlayerLockout($(this));
-            });
-            
-            // Modify your existing form submission handler
-            $('#tradeForm').on('submit', function(e) {
-                e.preventDefault();
-                
-                // Check if any players are locked when lockout is enabled
-                if ($('#applyLockout').is(':checked')) {
-                    const lockedPlayers = [];
-                    
-                    if ($('#player1').val()) {
-                        const player1Error = $('#player1').parent().find('.player-error');
-                        if (player1Error.length > 0) {
-                            lockedPlayers.push($('#player1').val());
-                        }
-                    }
-                    
-                    if ($('#player2').val()) {
-                        const player2Error = $('#player2').parent().find('.player-error');
-                        if (player2Error.length > 0) {
-                            lockedPlayers.push($('#player2').val());
-                        }
-                    }
-                    
-                    if (lockedPlayers.length > 0) {
-                        $('#results').html(`
-                            <div class="error">
-                                ${lockedPlayers.join(' and ')}'s lockout has expired
-                            </div>
-                        `);
-                        return;
-                    }
-                }
-                
-                // Your existing AJAX call to /calculate goes here
-                // ... rest of your form submission code ...
-                $('#results').html('Calculating...');
-                
-                // Serialize form data
-                let formData = $(this).serializeArray();
-                
-                // Remove player2 from formData if it's empty
-                formData = formData.filter(field => !(field.name === 'player2' && !field.value));
-                
-                // Add simulated date/time to form data if lockout is enabled
-                if ($('#applyLockout').is(':checked')) {
-                    let simulateDateTime = $('#simulateDateTime').val();
-                    if (simulateDateTime) {
-                        formData.push({ name: 'simulateDateTime', value: simulateDateTime });
-                    }
-                }
-                
-                $.ajax({
-                    url: '/calculate',
-                    method: 'POST',
-                    data: $.param(formData),
-                    success: function(options) {
-                        let html = '<h2>Trade Options</h2>';
-                        
-                        options.forEach((option, index) => {
-                            html += `
-                                <div class="trade-option">
-                                    <h3>Option ${index + 1}</h3>
-                                    <h4>Players to trade in:</h4>
-                                    ${option.players.map(player => `
-                                        <div>
-                                            <strong>${player.name}</strong> (${player.position})
-                                            <br>
-                                            Price: $${player.price.toLocaleString()}
-                                            <br>
-                                            Base: ${player.total_base.toFixed(1)}
-                                            <br>
-                                            ${player.avg_base ? `Average Base: ${player.avg_base.toFixed(1)}<br>` : ''}
-                                            ${player.base_premium ? `Base Premium: ${player.base_premium.toFixed(1)}<br>` : ''}
-                                            ${player.consecutive_good_weeks ? `Consecutive Good Weeks: ${player.consecutive_good_weeks}` : ''}
-                                        </div>
-                                    `).join('<br>')}
-                                    <br>
-                                    <div>
-                                        Total Price: $${option.total_price.toLocaleString()}
-                                        <br>
-                                        Salary Remaining: $${option.salary_remaining.toLocaleString()}
-                                        <br>
-                                        ${option.total_avg_base ? `Combined Average Base: ${option.total_avg_base.toFixed(1)}` : ''}
-                                        ${option.combo_avg_bpre ? `<br>Combined Base Premium: ${option.combo_avg_bpre.toFixed(1)}` : ''}
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        
-                        $('#results').html(html);
-                        
-                        // Reinitialize observer for new elements
-                        initializeIntersectionObserver();
-                    },
-                    error: function(xhr) {
-                        let errorMessage = 'An error occurred while calculating trade options.';
-                        if (xhr.responseJSON && xhr.responseJSON.error) {
-                            errorMessage = xhr.responseJSON.error;
-                        }
-                        $('#results').html(`<div class="error">${errorMessage}</div>`);
-                    }
-                });
             });
             
             // Clear error messages when lockout checkbox is unchecked
@@ -1106,6 +1167,12 @@
                 if (!$(e.target).closest('.tooltip-container').length) {
                     $('.tooltip-container').removeClass('active');
                 }
+            });
+
+            // Update progress indicator on form interaction
+            $('#tradeForm input, #tradeForm select, #tradeForm button').on('change click', function() {
+                $('.progress-step:nth-child(1)').addClass('completed');
+                $('.progress-step:nth-child(2)').addClass('active');
             });
         });
     </script>
