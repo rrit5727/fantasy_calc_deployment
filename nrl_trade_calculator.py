@@ -476,7 +476,8 @@ def calculate_trade_options(
     min_games: int = 2,
     team_list: List[str] = None,
     simulate_datetime: str = None,
-    apply_lockout: bool = False
+    apply_lockout: bool = False,
+    excluded_players: List[str] = None
 ) -> List[Dict]:
     """
     Calculate trade options based on the selected strategy.
@@ -493,6 +494,7 @@ def calculate_trade_options(
     team_list (List[str]): Optional list of players to restrict trades to
     simulate_datetime (str): Optional datetime string for lockout simulation
     apply_lockout (bool): Whether to apply lockout restrictions
+    excluded_players (List[str]): Optional list of players to exclude from trade options
     
     Returns:
     List[Dict]: List of trade option dictionaries
@@ -533,7 +535,14 @@ def calculate_trade_options(
     latest_round_data = consolidated_data[consolidated_data['Round'] == latest_round]
     available_players = latest_round_data[~latest_round_data['Player'].isin(traded_out_players)]
     
-    # Apply team list restriction first if enabled
+    # Apply excluded players filter
+    if excluded_players and len(excluded_players) > 0:
+        available_players = available_players[~available_players['Player'].isin(excluded_players)]
+        if available_players.empty:
+            print("Warning: No players available after excluding selected players")
+            return []
+    
+    # Apply team list restriction if enabled
     if team_list:
         available_players = available_players[available_players['Player'].isin(team_list)]
         if available_players.empty:

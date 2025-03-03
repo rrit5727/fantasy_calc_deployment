@@ -145,7 +145,8 @@ def calculate():
             'positions': request.form.getlist('positions') if request.form['tradeType'] == 'positionalSwap' else [],
             'restrictToTeamList': 'restrictToTeamList' in request.form,
             'applyLockout': 'applyLockout' in request.form,
-            'simulateDateTime': request.form.get('simulateDateTime')
+            'simulateDateTime': request.form.get('simulateDateTime'),
+            'excludedPlayers': request.form.getlist('excludedPlayers')  # Get all excluded players
         }
 
         # Use cached data load
@@ -191,7 +192,8 @@ def calculate():
             trade_type=form_data['tradeType'],
             team_list=team_list,
             simulate_datetime=form_data['simulateDateTime'],
-            apply_lockout=form_data['applyLockout']
+            apply_lockout=form_data['applyLockout'],
+            excluded_players=form_data['excludedPlayers']  # Pass excluded players to calculation
         )
 
         # Format options for frontend

@@ -839,6 +839,126 @@
         body.dark-mode .header:not(.scrolled) h1 {
             color: #e2e8f0;
         }
+
+        /* Add to your CSS section */
+        #excluded-players-pane {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            z-index: 100;
+            max-height: 20vh;
+            overflow-y: auto;
+        }
+
+        .excluded-players-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #excluded-players-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .excluded-player-tag {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 5px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .excluded-player-tag .remove-excluded {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Improved remove player icon - elegant circular design */
+        .remove-player-icon {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+            /* Better touch target */
+            min-width: 20px;
+            min-height: 20px;
+            /* Remove the text character */
+            font-size: 0;
+        }
+
+        /* Create the X using pseudo-elements for smooth lines */
+        .remove-player-icon::before,
+        .remove-player-icon::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 2px;
+            border-radius: 1px;
+            background-color: #333;
+            transition: all 0.2s ease;
+        }
+
+        /* Rotate to create X */
+        .remove-player-icon::before {
+            transform: rotate(45deg);
+        }
+
+        .remove-player-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        /* Hover effects */
+        .remove-player-icon:hover {
+            transform: scale(1.15);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .remove-player-icon:hover::before,
+        .remove-player-icon:hover::after {
+            background-color: #e74c3c;
+            width: 12px;
+        }
+
+        /* Active state */
+        .remove-player-icon:active {
+            transform: scale(0.95);
+        }
+
+        /* Focus state for accessibility */
+        .remove-player-icon:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
+        }
+
+        /* Specifically for highlighted cards */
+        .trade-option.highlighted .remove-player-icon {
+            background-color: white;
+        }
+
+        .trade-option.highlighted .remove-player-icon::before,
+        .trade-option.highlighted .remove-player-icon::after {
+            background-color: #333;
+        }
+
+        .trade-option.highlighted .remove-player-icon:hover::before,
+        .trade-option.highlighted .remove-player-icon:hover::after {
+            background-color: #e74c3c;
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -860,6 +980,17 @@
     <header class="header">
         <h1>FANTASY FOOTY QUANT</h1>
     </header>
+
+    <div id="excluded-players-pane" style="display: none;">
+        <div class="excluded-players-container">
+            <h3>Excluded Players</h3>
+            <div id="excluded-players-list"></div>
+            <div class="excluded-players-actions">
+                <button id="recalculate-btn" class="btn">Recalculate Without These Players</button>
+                <button id="clear-excluded-btn" class="btn btn-secondary">Clear All</button>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <h1 class="main-title">NRL Trade Calculator</h1>              
@@ -975,6 +1106,7 @@
             let currentHighlightedElement = null;
             let scrollDirection = 'down';
             let lastScrollTop = 0;
+            let excludedPlayers = [];
 
             // Dark mode toggle
             $('#darkModeToggle').change(function() {
@@ -1088,58 +1220,64 @@
                 $('#results').html('<div class="loading"></div>');
                 
                 // Serialize form data
-                let formData = $(this).serializeArray();
+                let formData = new FormData(this);
                 
                 // Remove player2 from formData if it's empty
-                formData = formData.filter(field => !(field.name === 'player2' && !field.value));
-                
-                // Add simulated date/time to form data if lockout is enabled
-                if ($('#applyLockout').is(':checked')) {
-                    let simulateDateTime = $('#simulateDateTime').val();
-                    if (simulateDateTime) {
-                        formData.push({ name: 'simulateDateTime', value: simulateDateTime });
-                    }
+                if (!formData.get('player2')) {
+                    formData.delete('player2');
                 }
                 
                 $.ajax({
                     url: '/calculate',
                     method: 'POST',
-                    data: $.param(formData),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function(options) {
                         let html = '<h2>Trade Options</h2>';
                         
-                        // Check if strategy is base maximization (value 2)
+                        // Check if strategy is base maximization
                         let isBaseStrategy = $('#strategy').val() === '2';
                         
-                        options.forEach((option, index) => {
-                            html += `
-                                <div class="trade-option">
-                                    <h3>Option ${index + 1}</h3>
-                                    <h4>Players to trade in:</h4>
-                                    ${option.players.map(player => `
+                        if (options.length === 0) {
+                            html += '<div class="no-results">No valid trade options found.</div>';
+                        } else {
+                            options.forEach((option, index) => {
+                                html += `
+                                    <div class="trade-option">
+                                        <h3>Option ${index + 1}</h3>
+                                        <h4>Players to trade in:</h4>
+                                        ${option.players.map(player => `
+                                            <div>
+                                                <strong>${player.name}</strong> (${player.position})
+                                                <span class="remove-player-icon" 
+                                                      data-player="${player.name}" 
+                                                      role="button" 
+                                                      tabindex="0" 
+                                                      title="Remove ${player.name} from trade options"
+                                                      aria-label="Remove ${player.name}"></span>
+                                                <br>
+                                                Price: $${player.price.toLocaleString()}
+                                                <br>
+                                                ${isBaseStrategy 
+                                                  ? `Projected score: ${player.projection.toFixed(1)}` 
+                                                  : `Upside: ${player.diff.toFixed(1)}`}
+                                            </div>
+                                        `).join('<br>')}
+                                        <br>
                                         <div>
-                                            <strong>${player.name}</strong> (${player.position})
+                                            Total Price: $${option.totalPrice.toLocaleString()}
                                             <br>
-                                            Price: $${player.price.toLocaleString()}
+                                            Salary Remaining: $${option.salaryRemaining.toLocaleString()}
                                             <br>
                                             ${isBaseStrategy 
-                                              ? `Projected score: ${player.projection.toFixed(1)}` 
-                                              : `Upside: ${player.diff.toFixed(1)}`}
+                                              ? `Combined projected score: ${option.totalProjection.toFixed(1)}` 
+                                              : `Combined Upside: ${option.totalDiff.toFixed(1)}`}
                                         </div>
-                                    `).join('<br>')}
-                                    <br>
-                                    <div>
-                                        Total Price: $${option.totalPrice.toLocaleString()}
-                                        <br>
-                                        Salary Remaining: $${option.salaryRemaining.toLocaleString()}
-                                        <br>
-                                        ${isBaseStrategy 
-                                          ? `Combined projected score: ${option.totalProjection.toFixed(1)}` 
-                                          : `Combined Upside: ${option.totalDiff.toFixed(1)}`}
                                     </div>
-                                </div>
-                            `;
-                        });
+                                `;
+                            });
+                        }
                         
                         $('#results').html(html);
                         
@@ -1254,6 +1392,176 @@
                 } else {
                     $('.header').removeClass('scrolled');
                 }
+            });
+
+            // Event delegation for the remove player icons
+            $(document).on('click', '.remove-player-icon', function() {
+                const playerName = $(this).data('player');
+                
+                // Add to excluded players if not already there
+                if (!excludedPlayers.includes(playerName)) {
+                    excludedPlayers.push(playerName);
+                    
+                    // Update the excluded players list
+                    updateExcludedPlayersDisplay();
+                    
+                    // Show the excluded players pane if it's the first player
+                    if (excludedPlayers.length === 1) {
+                        $('#excluded-players-pane').slideDown(300);
+                    }
+                }
+            });
+
+            // Function to update the excluded players display
+            function updateExcludedPlayersDisplay() {
+                const listHTML = excludedPlayers.map(player => `
+                    <div class="excluded-player-tag">
+                        ${player}
+                        <span class="remove-excluded" data-player="${player}">✕</span>
+                    </div>
+                `).join('');
+                
+                $('#excluded-players-list').html(listHTML);
+            }
+
+            // Remove a player from the excluded list
+            $(document).on('click', '.remove-excluded', function() {
+                const playerName = $(this).data('player');
+                excludedPlayers = excludedPlayers.filter(p => p !== playerName);
+                
+                updateExcludedPlayersDisplay();
+                
+                // Hide the pane if no players are excluded
+                if (excludedPlayers.length === 0) {
+                    $('#excluded-players-pane').slideUp(300);
+                }
+            });
+
+            // Clear all excluded players
+            $('#clear-excluded-btn').on('click', function() {
+                excludedPlayers = [];
+                updateExcludedPlayersDisplay();
+                $('#excluded-players-pane').slideUp(300);
+            });
+
+            // Handle the recalculation with excluded players
+            $('#recalculate-btn').on('click', function() {
+                // Show loading indicator
+                $('#results').html('<div class="loading">Recalculating trades...</div>');
+                
+                // Get the form data from the original form
+                let formData = new FormData($('#tradeForm')[0]);
+                
+                // Remove player2 if empty
+                if (!formData.get('player2')) {
+                    formData.delete('player2');
+                }
+                
+                // Add excluded players to form data
+                for (let player of excludedPlayers) {
+                    formData.append('excludedPlayers', player);
+                }
+                
+                // Make the AJAX request with FormData
+                $.ajax({
+                    url: '/calculate',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,  // Important for FormData
+                    contentType: false,  // Important for FormData
+                    success: function(options) {
+                        // Render the results
+                        let html = '<h2>Trade Options (Excluding Selected Players)</h2>';
+                        let isBaseStrategy = $('#strategy').val() === '2';
+                        
+                        if (options.length === 0) {
+                            html += '<div class="no-results">No valid trade options found with the excluded players.</div>';
+                        } else {
+                            options.forEach((option, index) => {
+                                // Same rendering code as the original calculation
+                                html += `
+                                    <div class="trade-option">
+                                        <h3>Option ${index + 1}</h3>
+                                        <h4>Players to trade in:</h4>
+                                        ${option.players.map(player => `
+                                            <div>
+                                                <strong>${player.name}</strong> (${player.position})
+                                                <span class="remove-player-icon" 
+                                                      data-player="${player.name}" 
+                                                      role="button" 
+                                                      tabindex="0" 
+                                                      title="Remove ${player.name} from trade options"
+                                                      aria-label="Remove ${player.name}"></span>
+                                                <br>
+                                                Price: $${player.price.toLocaleString()}
+                                                <br>
+                                                ${isBaseStrategy 
+                                                  ? `Projected score: ${player.projection.toFixed(1)}` 
+                                                  : `Upside: ${player.diff.toFixed(1)}`}
+                                            </div>
+                                        `).join('<br>')}
+                                        <br>
+                                        <div>
+                                            Total Price: $${option.totalPrice.toLocaleString()}
+                                            <br>
+                                            Salary Remaining: $${option.salaryRemaining.toLocaleString()}
+                                            <br>
+                                            ${isBaseStrategy 
+                                              ? `Combined projected score: ${option.totalProjection.toFixed(1)}` 
+                                              : `Combined Upside: ${option.totalDiff.toFixed(1)}`}
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        }
+                        
+                        $('#results').html(html);
+                        
+                        // Reinitialize observer for new elements
+                        initializeIntersectionObserver();
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'An error occurred while calculating trade options.';
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            errorMessage = xhr.responseJSON.error;
+                        }
+                        $('#results').html(`<div class="error">${errorMessage}</div>`);
+                    }
+                });
+            });
+
+            // Make the remove icons keyboard accessible
+            $(document).on('keypress', '.remove-player-icon', function(e) {
+                // Trigger click on Enter or Space
+                if (e.which === 13 || e.which === 32) {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                }
+            });
+
+            // Add a subtle animation when removing a player
+            $(document).on('click', '.remove-player-icon', function() {
+                const playerName = $(this).data('player');
+                
+                // Visual feedback before processing
+                $(this).addClass('removing');
+                const $element = $(this).closest('div');
+                
+                // Subtle animation effect
+                $element.css('transition', 'opacity 0.3s ease')
+                        .css('position', 'relative');
+                
+                setTimeout(function() {
+                    // Let's continue with the original code logic here...
+                    if (!excludedPlayers.includes(playerName)) {
+                        excludedPlayers.push(playerName);
+                        updateExcludedPlayersDisplay();
+                        
+                        if (excludedPlayers.length === 1) {
+                            $('#excluded-players-pane').slideDown(300);
+                        }
+                    }
+                }, 300);
             });
         });
     </script>
