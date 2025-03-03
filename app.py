@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from flask_caching import Cache  # Added for caching
-from nrl_trade_calculator import calculate_trade_options, load_data, assign_priority_level, is_player_locked
+from nrl_trade_calculator import calculate_trade_options, load_data, is_player_locked
 from typing import List, Dict, Any
 import traceback
 import pandas as pd
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
+import time
 
 # Load environment variables
 load_dotenv()
@@ -18,12 +19,13 @@ cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
 cache.init_app(app)
 CACHE_TIMEOUT = 300  # 5 minutes cache
 
+# Add these global variables at the top of the file, after the app initialization
+_cached_data = None
+_last_cache_time = 0
+
 def prepare_trade_option(option: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Optimized version of prepare_trade_option with:
-    - Precomputed static keys
-    - Removed redundant type conversions
-    - Simplified player data extraction
+    Prepare trade option for JSON response with the new data structure.
     """
     players = []
     total_price = int(option.get('total_price', 0))
@@ -34,25 +36,30 @@ def prepare_trade_option(option: Dict[str, Any]) -> Dict[str, Any]:
             'name': player.get('name', ''),
             'position': player.get('position', ''),
             'team': player.get('team', ''),
-            'price': int(player['price']),
-            'total_base': float(player['total_base']),
-            'base_premium': int(float(player['base_premium'])),
-            'consecutive_good_weeks': int(player['consecutive_good_weeks']),
-            'avg_base': float(player.get('avg_base', 0))
+            'price': int(player['price'])
         }
-        if 'priority_level' in player:
-            p['priority_level'] = int(player['priority_level'])
+        
+        # Add diff or projection based on what's available
+        if 'diff' in player:
+            p['diff'] = float(player['diff'])
+        if 'projection' in player:
+            p['projection'] = float(player['projection'])
+            
         players.append(p)
 
-    return {
+    result = {
         'players': players,
         'total_price': total_price,
-        'salary_remaining': int(option['salary_remaining']),
-        'total_base': float(option['total_base']),
-        'total_base_premium': float(option['total_base_premium']),
-        'total_avg_base': float(option.get('total_avg_base', 0)),
-        'combo_avg_bpre': float(option.get('combo_avg_bpre', 0))
+        'salary_remaining': int(option['salary_remaining'])
     }
+    
+    # Add total metrics based on what's available
+    if 'total_diff' in option:
+        result['total_diff'] = float(option['total_diff'])
+    if 'total_projection' in option:
+        result['total_projection'] = float(option['total_projection'])
+        
+    return result
 
 @app.route('/')
 def index():
@@ -66,7 +73,7 @@ def check_player_lockout():
         simulate_datetime = request.form.get('simulateDateTime')
         
         # Use cached data
-        consolidated_data = load_data()
+        consolidated_data = cached_load_data()
         
         is_locked = is_player_locked(player_name, consolidated_data, simulate_datetime)
         
@@ -78,7 +85,29 @@ def check_player_lockout():
 # Added cached data loading
 @cache.cached(timeout=CACHE_TIMEOUT, key_prefix='load_data')
 def cached_load_data():
-    return load_data()
+    """
+    Load data from database with caching to improve performance.
+    """
+    global _cached_data
+    global _last_cache_time
+    
+    # Check if we need to refresh the cache (every 15 minutes)
+    current_time = time.time()
+    if _cached_data is None or current_time - _last_cache_time > 900:  # 15 minutes in seconds
+        try:
+            _cached_data = load_data()
+            _last_cache_time = current_time
+            app.logger.info(f"Data cache refreshed with {len(_cached_data)} records")
+        except Exception as e:
+            app.logger.error(f"Error refreshing data cache: {str(e)}")
+            # If we have cached data, use it even if it's stale
+            if _cached_data is not None:
+                app.logger.warning("Using stale cached data due to refresh error")
+            else:
+                # No cached data available, must raise the error
+                raise
+    
+    return _cached_data
 
 def simulate_rule_levels(consolidated_data: pd.DataFrame, rounds: List[int]) -> None:
     # Existing implementation unchanged
@@ -153,26 +182,58 @@ def calculate():
 
         # Calculate trade options
         options = calculate_trade_options(
-            consolidated_data=consolidated_data,
-            traded_out_players=traded_out_players,
+            consolidated_data,
+            traded_out_players,
             maximize_base=maximize_base,
             hybrid_approach=hybrid_approach,
             max_options=10,
-            allowed_positions=form_data['positions'],
+            allowed_positions=form_data['positions'] if form_data['positions'] else None,
             trade_type=form_data['tradeType'],
             team_list=team_list,
             simulate_datetime=form_data['simulateDateTime'],
             apply_lockout=form_data['applyLockout']
         )
 
-        prepared_options = [prepare_trade_option(option) for option in options]
-
-        return jsonify(prepared_options)
-
+        # Format options for frontend
+        formatted_options = []
+        for option in options:
+            formatted_option = {
+                'players': [],
+                'totalPrice': option['total_price'],
+                'salaryRemaining': option['salary_remaining']
+            }
+            
+            if maximize_base:
+                formatted_option['totalProjection'] = option['total_projection']
+            else:
+                formatted_option['totalDiff'] = option['total_diff']
+                
+            for player in option['players']:
+                player_info = {
+                    'name': player['name'],
+                    'team': player['team'],
+                    'position': player['position'],
+                    'price': player['price']
+                }
+                
+                if maximize_base:
+                    player_info['projection'] = player['projection']
+                else:
+                    player_info['diff'] = player['diff']
+                    
+                formatted_option['players'].append(player_info)
+            
+            formatted_options.append(formatted_option)
+        
+        # Return the array directly to match what the frontend expects
+        return jsonify(formatted_options)
+        
     except Exception as e:
-        error_traceback = traceback.format_exc()
-        print(f"Error occurred: {error_traceback}")
-        return jsonify({'error': f'An error occurred: {str(e)}'}), 500
+        # Log the error for debugging
+        app.logger.error(f"Error in calculate: {str(e)}")
+        return jsonify({
+            'error': f"An error occurred: {str(e)}"
+        }), 500
 
 @app.route('/players', methods=['GET'])
 def get_players():

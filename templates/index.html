@@ -1108,6 +1108,9 @@
                     success: function(options) {
                         let html = '<h2>Trade Options</h2>';
                         
+                        // Check if strategy is base maximization (value 2)
+                        let isBaseStrategy = $('#strategy').val() === '2';
+                        
                         options.forEach((option, index) => {
                             html += `
                                 <div class="trade-option">
@@ -1119,21 +1122,20 @@
                                             <br>
                                             Price: $${player.price.toLocaleString()}
                                             <br>
-                                            Base: ${player.total_base.toFixed(1)}
-                                            <br>
-                                            ${player.avg_base ? `Average Base: ${player.avg_base.toFixed(1)}<br>` : ''}
-                                            ${player.base_premium ? `Base Premium: ${player.base_premium.toFixed(1)}<br>` : ''}
-                                            ${player.consecutive_good_weeks ? `Consecutive Good Weeks: ${player.consecutive_good_weeks}` : ''}
+                                            ${isBaseStrategy 
+                                              ? `Projection: ${player.projection.toFixed(1)}` 
+                                              : `Diff: ${player.diff.toFixed(1)}`}
                                         </div>
                                     `).join('<br>')}
                                     <br>
                                     <div>
-                                        Total Price: $${option.total_price.toLocaleString()}
+                                        Total Price: $${option.totalPrice.toLocaleString()}
                                         <br>
-                                        Salary Remaining: $${option.salary_remaining.toLocaleString()}
+                                        Salary Remaining: $${option.salaryRemaining.toLocaleString()}
                                         <br>
-                                        ${option.total_avg_base ? `Combined Average Base: ${option.total_avg_base.toFixed(1)}` : ''}
-                                        ${option.combo_avg_bpre ? `<br>Combined Base Premium: ${option.combo_avg_bpre.toFixed(1)}` : ''}
+                                        ${isBaseStrategy 
+                                          ? `Combined Projection: ${option.totalProjection.toFixed(1)}` 
+                                          : `Combined Diff: ${option.totalDiff.toFixed(1)}`}
                                     </div>
                                 </div>
                             `;
