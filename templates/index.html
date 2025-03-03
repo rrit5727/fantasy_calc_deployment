@@ -959,6 +959,56 @@
         .trade-option.highlighted .remove-player-icon:hover::after {
             background-color: #e74c3c;
         }
+
+        /* Mobile optimization for excluded players pane */
+        @media (max-width: 768px) {
+            #excluded-players-pane {
+                padding: 8px;
+                max-height: unset;
+            }
+            
+            #excluded-players-pane h3 {
+                font-size: 14px;
+                margin: 4px 0;
+            }
+            
+            #excluded-players-list {
+                gap: 6px;
+                margin-bottom: 8px;
+            }
+            
+            .excluded-player-tag {
+                padding: 3px 8px;
+                font-size: 12px;
+                gap: 4px;
+                border-radius: 10px;
+            }
+            
+            .excluded-players-actions {
+                display: flex;
+                gap: 8px;
+            }
+            
+            .excluded-players-actions .btn {
+                font-size: 12px;
+                padding: 6px 10px;
+                min-height: unset;
+                line-height: 1.2;
+            }
+            
+            .remove-excluded {
+                font-size: 12px;
+            }
+            
+            /* Make the buttons more compact */
+            #recalculate-btn, #clear-excluded-btn {
+                flex: 1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-width: 0;
+            }
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
