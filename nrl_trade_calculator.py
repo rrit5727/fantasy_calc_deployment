@@ -621,18 +621,18 @@ if __name__ == "__main__":
                         print(f"- {player['name']} ({player['position']})")
                         print(f"  Team: {player['team']}")
                         print(f"  Price: ${player['price']:,}")
-                        print(f"  Projection: {player['projection']:.1f}")
+                        print(f"  Projected score: {player['projection']:.1f}")
                     else:
                         print(f"- {player['name']} ({player['position']})")
                         print(f"  Team: {player['team']}")
                         print(f"  Price: ${player['price']:,}")
-                        print(f"  Diff: {player['diff']:.1f}")
+                        print(f"  Upside: {player['diff']:.1f}")
                 
                 print(f"Total Price: ${option['total_price']:,}")
                 if maximize_base:
-                    print(f"Combined Projection: {option['total_projection']:.1f}")
+                    print(f"Combined Projected score: {option['total_projection']:.1f}")
                 else:
-                    print(f"Combined Diff: {option['total_diff']:.1f}")
+                    print(f"Combined Upside: {option['total_diff']:.1f}")
                 print(f"Salary Remaining: ${option['salary_remaining']:,}")
             
     except FileNotFoundError:
