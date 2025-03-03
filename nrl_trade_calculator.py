@@ -452,6 +452,16 @@ def generate_trade_options(
                 if found_match and len(valid_combinations) >= max_options:
                     break
     
+    # Sort the final combinations before returning
+    if maximize_base:
+        valid_combinations.sort(key=lambda x: x['total_projection'], reverse=True)
+    elif hybrid_approach:
+        # For hybrid, you might want to sort by a combination of metrics
+        # This example uses sum of diff and projection
+        valid_combinations.sort(key=lambda x: x['total_diff'] + x['total_projection'], reverse=True)
+    else:  # maximize_value - use Diff
+        valid_combinations.sort(key=lambda x: x['total_diff'], reverse=True)
+    
     return valid_combinations[:max_options]
 
 
