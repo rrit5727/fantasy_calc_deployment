@@ -278,22 +278,56 @@ def generate_trade_options(
         
         return set(traded_out_positions) == positions_covered
     
-    if maximize_base:
-        # Sort players by Projection (highest first)
-        players.sort(key=lambda x: x['Projection'], reverse=True)
+    # Function to handle position-balanced combinations for positional swap with exactly 2 positions
+    def is_position_balanced_combo(first_player, second_player):
+        if (trade_type == 'positionalSwap' and 
+            traded_out_positions and len(traded_out_positions) == 2 and
+            num_players_needed == 2):
+            
+            first_player_positions = position_mapping[first_player['Player']]
+            second_player_positions = position_mapping[second_player['Player']]
+            
+            # Check if players cover both positions between them
+            position_1_covered = any(pos == traded_out_positions[0] for pos in first_player_positions) or any(pos == traded_out_positions[0] for pos in second_player_positions)
+            position_2_covered = any(pos == traded_out_positions[1] for pos in first_player_positions) or any(pos == traded_out_positions[1] for pos in second_player_positions)
+            
+            # Check if each player covers a different position
+            first_player_covers_pos1 = any(pos == traded_out_positions[0] for pos in first_player_positions)
+            first_player_covers_pos2 = any(pos == traded_out_positions[1] for pos in first_player_positions)
+            
+            second_player_covers_pos1 = any(pos == traded_out_positions[0] for pos in second_player_positions)
+            second_player_covers_pos2 = any(pos == traded_out_positions[1] for pos in second_player_positions)
+            
+            # For a balanced combination, we need one player covering pos1 and the other covering pos2
+            return ((first_player_covers_pos1 and second_player_covers_pos2) or 
+                    (first_player_covers_pos2 and second_player_covers_pos1))
         
-        if num_players_needed == 1:
-            for player in players:
-                if player['Player'] in used_players:
-                    continue
-                
-                if player['Price'] <= salary_freed and is_valid_like_for_like_combo([player]):
-                    combo = create_combination([player], player['Price'], salary_freed)
-                    valid_combinations.append(combo)
-                    used_players.add(player['Player'])
-                    if len(valid_combinations) >= max_options:
-                        break
-        else:
+        return True  # If not a position-balanced scenario, return True
+
+    # Sort players based on strategy
+    if maximize_base:
+        players.sort(key=lambda x: x['Projection'], reverse=True)
+    elif hybrid_approach:
+        # For hybrid approach, we'll sort later when combining players
+        pass
+    else:  # maximize_value - use Diff
+        players.sort(key=lambda x: x['Diff'], reverse=True)
+    
+    # Handle single player trades
+    if num_players_needed == 1:
+        for player in players:
+            if player['Player'] in used_players:
+                continue
+            
+            if player['Price'] <= salary_freed and (is_valid_like_for_like_combo([player]) or trade_type == 'positionalSwap'):
+                combo = create_combination([player], player['Price'], salary_freed)
+                valid_combinations.append(combo)
+                used_players.add(player['Player'])
+                if len(valid_combinations) >= max_options:
+                    break
+    # Handle 2+ player trades
+    else:
+        if maximize_base:
             # For 2+ player trades, find combinations with highest total Projection
             for i in range(len(players)):
                 if players[i]['Player'] in used_players:
@@ -308,8 +342,11 @@ def generate_trade_options(
                         
                     second_player = players[j]
                     
-                    # Check if the combination is valid for like-for-like
-                    if not is_valid_like_for_like_combo([first_player, second_player]):
+                    # Check if the combination is valid based on trade type
+                    position_valid = (trade_type == 'likeForLike' and is_valid_like_for_like_combo([first_player, second_player])) or \
+                                    (trade_type == 'positionalSwap' and is_position_balanced_combo(first_player, second_player))
+                    
+                    if not position_valid:
                         continue
                     
                     total_price = first_player['Price'] + second_player['Price']
@@ -323,24 +360,11 @@ def generate_trade_options(
                 if len(valid_combinations) >= max_options:
                     break
                     
-    elif hybrid_approach:
-        # Create two sorted lists
-        value_players = sorted(players, key=lambda x: x['Diff'], reverse=True)
-        projection_players = sorted(players, key=lambda x: x['Projection'], reverse=True)
-        
-        if num_players_needed == 1:
-            # For single player trades, prioritize value (Diff)
-            for player in value_players:
-                if player['Player'] in used_players:
-                    continue
-                
-                if player['Price'] <= salary_freed and is_valid_like_for_like_combo([player]):
-                    combo = create_combination([player], player['Price'], salary_freed)
-                    valid_combinations.append(combo)
-                    used_players.add(player['Player'])
-                    if len(valid_combinations) >= max_options:
-                        break
-        else:
+        elif hybrid_approach:
+            # Create two sorted lists
+            value_players = sorted(players, key=lambda x: x['Diff'], reverse=True)
+            projection_players = sorted(players, key=lambda x: x['Projection'], reverse=True)
+            
             # For 2+ player trades, pair a value player with a projection player
             for value_player in value_players:
                 if value_player['Player'] in used_players or value_player['Price'] > salary_freed:
@@ -355,8 +379,11 @@ def generate_trade_options(
                         projection_player['Player'] != value_player['Player'] and 
                         projection_player['Price'] <= remaining_salary):
                         
-                        # Check if the combination is valid for like-for-like
-                        if not is_valid_like_for_like_combo([value_player, projection_player]):
+                        # Check position requirements based on trade type
+                        position_valid = (trade_type == 'likeForLike' and is_valid_like_for_like_combo([value_player, projection_player])) or \
+                                        (trade_type == 'positionalSwap' and is_position_balanced_combo(value_player, projection_player))
+                        
+                        if not position_valid:
                             continue
                         
                         combo = create_combination(
@@ -373,22 +400,7 @@ def generate_trade_options(
                 if found_match and len(valid_combinations) >= max_options:
                     break
                     
-    else:  # maximize_value - use Diff
-        # Sort players by Diff (highest first)
-        players.sort(key=lambda x: x['Diff'], reverse=True)
-        
-        if num_players_needed == 1:
-            for player in players:
-                if player['Player'] in used_players:
-                    continue
-                
-                if player['Price'] <= salary_freed and is_valid_like_for_like_combo([player]):
-                    combo = create_combination([player], player['Price'], salary_freed)
-                    valid_combinations.append(combo)
-                    used_players.add(player['Player'])
-                    if len(valid_combinations) >= max_options:
-                        break
-        else:
+        else:  # maximize_value - use Diff
             # For 2+ player trades, find combinations with highest total Diff
             for i in range(len(players)):
                 if players[i]['Player'] in used_players:
@@ -396,16 +408,36 @@ def generate_trade_options(
                     
                 first_player = players[i]
                 
+                # If using position-balanced approach, determine the needed complementary position
+                if (trade_type == 'positionalSwap' and traded_out_positions and len(traded_out_positions) == 2):
+                    # Identify which position the first player covers
+                    first_player_positions = position_mapping[first_player['Player']]
+                    first_player_pos1 = any(pos == traded_out_positions[0] for pos in first_player_positions)
+                    
+                    # Filter second player candidates to only those covering the other position
+                    needed_position = traded_out_positions[1] if first_player_pos1 else traded_out_positions[0]
+                    filtered_players = [p for p in players if 
+                                       p['Player'] != first_player['Player'] and 
+                                       p['Player'] not in used_players and
+                                       (p['POS1'] == needed_position or 
+                                        (pd.notna(p.get('POS2')) and p['POS2'] == needed_position))]
+                    
+                    second_player_candidates = filtered_players
+                else:
+                    # Use all available players if not using position-balanced approach
+                    second_player_candidates = players
+                
                 # Find a valid second player
                 found_match = False
-                for j in range(len(players)):
-                    if j == i or players[j]['Player'] in used_players:
+                for j, second_player in enumerate(second_player_candidates):
+                    if second_player['Player'] == first_player['Player'] or second_player['Player'] in used_players:
                         continue
-                        
-                    second_player = players[j]
                     
-                    # Check if the combination is valid for like-for-like
-                    if not is_valid_like_for_like_combo([first_player, second_player]):
+                    # Check if the combination is valid based on trade type
+                    position_valid = (trade_type == 'likeForLike' and is_valid_like_for_like_combo([first_player, second_player])) or \
+                                    (trade_type == 'positionalSwap' and is_position_balanced_combo(first_player, second_player))
+                    
+                    if not position_valid:
                         continue
                     
                     total_price = first_player['Price'] + second_player['Price']
