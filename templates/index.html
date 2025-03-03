@@ -1123,8 +1123,8 @@
                                             Price: $${player.price.toLocaleString()}
                                             <br>
                                             ${isBaseStrategy 
-                                              ? `Projection: ${player.projection.toFixed(1)}` 
-                                              : `Diff: ${player.diff.toFixed(1)}`}
+                                              ? `Projected score: ${player.projection.toFixed(1)}` 
+                                              : `Upside: ${player.diff.toFixed(1)}`}
                                         </div>
                                     `).join('<br>')}
                                     <br>
@@ -1134,8 +1134,8 @@
                                         Salary Remaining: $${option.salaryRemaining.toLocaleString()}
                                         <br>
                                         ${isBaseStrategy 
-                                          ? `Combined Projection: ${option.totalProjection.toFixed(1)}` 
-                                          : `Combined Diff: ${option.totalDiff.toFixed(1)}`}
+                                          ? `Combined projected score: ${option.totalProjection.toFixed(1)}` 
+                                          : `Combined Upside: ${option.totalDiff.toFixed(1)}`}
                                     </div>
                                 </div>
                             `;
