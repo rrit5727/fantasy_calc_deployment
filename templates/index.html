@@ -962,11 +962,12 @@
 
         /* Mobile optimization for excluded players pane */
         @media (max-width: 768px) {
+            /* Maintain the pane's original size */
             #excluded-players-pane {
-                padding: 8px;
-                max-height: unset;
+                max-height: 20vh; /* Keep this the same as desktop */
             }
             
+            /* Scale down internal elements by approximately 60% */
             #excluded-players-pane h3 {
                 font-size: 14px;
                 margin: 4px 0;
@@ -980,33 +981,37 @@
             .excluded-player-tag {
                 padding: 3px 8px;
                 font-size: 12px;
-                gap: 4px;
                 border-radius: 10px;
+            }
+            
+            .excluded-player-tag .remove-excluded {
+                font-size: 10px;
+                padding: 2px;
             }
             
             .excluded-players-actions {
                 display: flex;
-                gap: 8px;
+                gap: 6px;
+                justify-content: space-between;
             }
             
-            .excluded-players-actions .btn {
+            #recalculate-btn, #clear-excluded-btn {
                 font-size: 12px;
-                padding: 6px 10px;
+                padding: 5px 8px;
                 min-height: unset;
                 line-height: 1.2;
             }
             
-            .remove-excluded {
-                font-size: 12px;
+            /* Adjust layout to fit more content horizontally */
+            .excluded-players-container {
+                display: flex;
+                flex-direction: column;
             }
             
-            /* Make the buttons more compact */
-            #recalculate-btn, #clear-excluded-btn {
-                flex: 1;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                min-width: 0;
+            #excluded-players-list {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
             }
         }
     </style>
