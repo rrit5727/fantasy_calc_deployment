@@ -27,9 +27,8 @@ def init_heroku_database():
         
         # Define the required columns using exact names from Excel
         required_columns = [
-            'Round', 'Player', 'Team', 'Age', 'POS1', 'POS2',
-            'Price', 'Priced at', 'PTS', 'Total base',
-            'Base exceeds price premium'
+            'Round', 'Player', 'Team', 'POS1', 'POS2',
+            'Price', 'Priced at', 'Projection', 'Diff'
         ]
         
         # Filter DataFrame to include only required columns
@@ -39,8 +38,7 @@ def init_heroku_database():
         df.columns = [col.strip().replace(' ', '_') for col in df.columns]
         
         # Convert numeric columns and handle NaN values
-        numeric_columns = ['Round', 'Age', 'Price', 'Priced_at', 'PTS', 
-                         'Total_base', 'Base_exceeds_price_premium']
+        numeric_columns = ['Round', 'Price', 'Priced_at', 'Projection', 'Diff']
         
         for col in numeric_columns:
             if col in df.columns:
