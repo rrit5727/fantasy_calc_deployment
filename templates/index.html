@@ -56,8 +56,7 @@
             right: 0;
             z-index: 1000;
             padding: 20px;
-            linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             transition: all 0.3s ease;
         }
 
@@ -849,9 +848,9 @@
             color: white;
             padding: 15px;
             box-shadow: var(--box-shadow);
-            z-index: 100;
-            height: 20vh; /* Fixed height at 1/5th of viewport */
-            display: none; /* Initially hidden */
+            z-index: 1100; /* Higher than header's z-index of 1000 */
+            height: 20vh;
+            display: none;
         }
 
         .excluded-players-container {
@@ -1016,6 +1015,11 @@
                 min-height: unset;
                 line-height: 1.2;
             }
+        }
+
+        /* Adjust body padding when excluded players pane is visible */
+        body.has-excluded-players {
+            padding-top: calc(20vh + 60px); /* Adjust top padding based on header plus pane height */
         }
     </style>
     <!-- Hotjar Tracking Code -->
