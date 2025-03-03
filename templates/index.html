@@ -48,7 +48,7 @@
             box-sizing: border-box;
         }
 
-        /* Header styling */
+        /* Header styling - inverted colors at top of page */
         .header {
             position: fixed;
             top: 0;
@@ -56,21 +56,23 @@
             right: 0;
             z-index: 1000;
             padding: 20px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: white; /* White background when at the top */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
 
         .header h1 {
             margin: 0;
             font-size: 28px;
-            color: var(--primary-color);
+            color: var(--primary-color); /* Blue text when at the top */
             font-weight: 700;
             letter-spacing: -0.5px;
             transition: all 0.3s ease;
         }
 
+        /* When scrolled, invert colors */
         .header.scrolled {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         }
 
         .header.scrolled h1 {
