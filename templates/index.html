@@ -1699,7 +1699,7 @@
                     processData: false,
                     contentType: false,
                     success: function(options) {
-                        let html = '<h2>Trade Options</h2>';
+                        let html = '<h2 style="text-align: center;">Trade Options</h2>';
                         
                         // Check if strategy is base maximization
                         let isBaseStrategy = $('#strategy').val() === '2';
@@ -1962,7 +1962,7 @@
                     contentType: false,  // Important for FormData
                     success: function(options) {
                         // Render the results
-                        let html = '<h2>Trade Options (Excluding Selected Players)</h2>';
+                        let html = '<h2 style="text-align: center;">Trade Options (Excluding Selected Players)</h2>';
                         let isBaseStrategy = $('#strategy').val() === '2';
                         
                         if (options.length === 0) {
