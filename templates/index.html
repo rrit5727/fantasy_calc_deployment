@@ -491,19 +491,6 @@
 
         /* Mobile tooltip behavior */
         @media (max-width: 768px) {
-            .tooltip-text {
-                right: 30px;  /* Position to the left of trigger */
-                left: auto;   /* Reset left position */
-            }
-            
-            .tooltip-container.active .tooltip-text {
-                display: block;
-                opacity: 1;
-            }
-        }
-
-        /* Mobile styles */
-        @media (max-width: 768px) {
             /* Container and panel adjustments */
             .container {
                 padding: 15px;
@@ -1347,6 +1334,32 @@
             font-size: 22px;
             font-weight: 600;
         }
+
+        /* Styling for the remove player button */
+        .remove-player-button {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .remove-player-button:hover {
+            background-color: #e53e3e;
+        }
+
+        /* For dark mode support */
+        body.dark-mode .remove-player-button {
+            background-color: #e53e3e;
+        }
+
+        body.dark-mode .remove-player-button:hover {
+            background-color: #c53030;
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -1715,12 +1728,12 @@
                                         ${option.players.map(player => `
                                             <div>
                                                 <strong>${player.name}</strong> (${player.position})
-                                                <span class="remove-player-icon" 
+                                                <span class="remove-player-button" 
                                                       data-player="${player.name}" 
                                                       role="button" 
                                                       tabindex="0" 
                                                       title="Remove ${player.name} from trade options"
-                                                      aria-label="Remove ${player.name}"></span>
+                                                      aria-label="Remove ${player.name}">Remove player</span>
                                                 <br>
                                                 Price: $${player.price.toLocaleString()}
                                                 <br>
@@ -1860,7 +1873,7 @@
             });
 
             // Event delegation for the remove player icons
-            $(document).on('click', '.remove-player-icon', function() {
+            $(document).on('click', '.remove-player-button', function() {
                 const playerName = $(this).data('player');
                 
                 // Add to excluded players if not already there
@@ -1977,12 +1990,12 @@
                                         ${option.players.map(player => `
                                             <div>
                                                 <strong>${player.name}</strong> (${player.position})
-                                                <span class="remove-player-icon" 
+                                                <span class="remove-player-button" 
                                                       data-player="${player.name}" 
                                                       role="button" 
                                                       tabindex="0" 
                                                       title="Remove ${player.name} from trade options"
-                                                      aria-label="Remove ${player.name}"></span>
+                                                      aria-label="Remove ${player.name}">Remove player</span>
                                                 <br>
                                                 Price: $${player.price.toLocaleString()}
                                                 <br>
@@ -2022,7 +2035,7 @@
             });
 
             // Make the remove icons keyboard accessible
-            $(document).on('keypress', '.remove-player-icon', function(e) {
+            $(document).on('keypress', '.remove-player-button', function(e) {
                 // Trigger click on Enter or Space
                 if (e.which === 13 || e.which === 32) {
                     e.preventDefault();
@@ -2031,7 +2044,7 @@
             });
 
             // Add a subtle animation when removing a player
-            $(document).on('click', '.remove-player-icon', function() {
+            $(document).on('click', '.remove-player-button', function() {
                 const playerName = $(this).data('player');
                 
                 // Visual feedback before processing
