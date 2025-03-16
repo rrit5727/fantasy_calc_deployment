@@ -72,28 +72,42 @@ def import_excel_data(excel_file_path):
         print(f"- '{col}'")
     
     # Define the required columns using exact names from Excel
+    # Updated to only require columns that are essential
     required_columns = [
-        'Round', 'Player', 'Team', 'Age', 'POS1', 'POS2',
-        'Price', 'Priced at', 'PTS', 'Total base',
-        'Base exceeds price premium'
+        'Round', 'Player', 'Team', 'POS1', 'POS2', 
+        'Price', 'Priced at'
     ]
     
-    # Filter DataFrame to include only required columns
-    try:
-        df = df[required_columns].copy()
-    except KeyError as e:
-        missing_cols = [col for col in required_columns if col not in df.columns]
-        print("\nMissing columns:")
-        for col in missing_cols:
+    # Define optional columns that will be used if present
+    optional_columns = [
+        'Age', 'PTS', 'Total base', 'Base exceeds price premium', 
+        'Projection', 'Diff'
+    ]
+    
+    # Check for required columns
+    missing_required = [col for col in required_columns if col not in df.columns]
+    if missing_required:
+        print("\nMissing required columns:")
+        for col in missing_required:
             print(f"- '{col}'")
-        raise ValueError(f"Missing required columns: {missing_cols}")
+        raise ValueError(f"Missing required columns: {missing_required}")
+    
+    # Filter DataFrame to include required columns and any available optional columns
+    columns_to_use = required_columns.copy()
+    for col in optional_columns:
+        if col in df.columns:
+            columns_to_use.append(col)
+    
+    # Filter to selected columns
+    df = df[columns_to_use].copy()
     
     # Clean column names after filtering
     df.columns = [col.strip().replace(' ', '_') for col in df.columns]
     
     # Convert numeric columns to appropriate types and handle NaN values
-    numeric_columns = ['Round', 'Age', 'Price', 'Priced_at', 'PTS', 
-                      'Total_base', 'Base_exceeds_price_premium']
+    numeric_columns = [col for col in ['Round', 'Age', 'Price', 'Priced_at', 'PTS', 
+                     'Total_base', 'Base_exceeds_price_premium', 'Projection', 'Diff'] 
+                     if col.replace('_', ' ') in columns_to_use or col in df.columns]
     
     for col in numeric_columns:
         if col in df.columns:

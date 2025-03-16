@@ -1,0 +1,510 @@
+Round,Player,Team,POS1,POS2, Price , Priced at ,, Projection , Diff 
+1,Connor Watson,SYD,MID,HOK," 678,000 ", 50 ,, 56 , 6 
+1,Terrell May,WST,MID,," 697,000 ", 52 ,, 66 , 15 
+1,Kalyn Ponga,NEW,WFB,," 736,000 ", 55 ,, 59 , 5 
+1,Matty Nicholson,CAN,EDG,," 450,000 ", 33 ,,,
+1,Jamie Humphreys,SOU,HLF,," 403,000 ", 30 ,, 49 , 19 
+1,Nick Meaney,BYE,CTR,WFB," 581,000 ", 43 ,, 42 , (1)
+1,Ryan Papenhuyzen,BYE,WFB,," 562,000 ", 42 ,, 42 , 1 
+1,Xavier Savage,CAN,WFB,," 423,000 ", 31 ,, 33 , 2 
+1,Sitili Tupouniua,CBY,MID,EDG," 439,000 ", 33 ,, 33 , 1 
+1,Dylan Lucas,NEW,EDG,CTR," 677,000 ", 50 ,, 52 , 3 
+1,Wayde Egan,WAR,HOK,," 569,000 ", 42 ,, 42 , 0 
+1,Christian Tuipulotu,SGI,WFB,," 464,000 ", 34 ,, 32 , (3)
+1,Eliesa Katoa,BYE,EDG,," 711,000 ", 53 ,, 51 , (1)
+1,Payne Haas,BRI,MID,," 844,000 ", 63 ,, 62 , 0 
+1,Isaiya Katoa,DOL,HLF,," 559,000 ", 41 ,, 43 , 2 
+1,Fletcher Sharpe,NEW,WFB,HLF," 562,000 ", 42 ,, 44 , 2 
+1,Daly Cherry-Evans,MAN,HLF,," 749,000 ", 55 ,, 51 , (5)
+1,Greg Marzhew,NEW,WFB,," 497,000 ", 37 ,, 44 , 7 
+1,Jack Howarth,BYE,EDG,CTR," 478,000 ", 35 ,, 40 , 5 
+1,Nathan Cleary,PEN,HLF,," 866,000 ", 64 ,, 71 , 8 
+1,Blayke Brailey,CRO,HOK,," 601,000 ", 45 ,, 44 , (1)
+1,Toby Couchman,SGI,MID,EDG," 547,000 ", 41 ,, 52 , 12 
+1,Kayal Iro,CRO,CTR,," 611,000 ", 45 ,, 44 , (2)
+1,Bradman Best,NEW,CTR,," 573,000 ", 42 ,, 47 , 5 
+1,Tyrell Sloan,SGI,WFB,," 496,000 ", 37 ,,,
+1,Matthew Timoko,CAN,CTR,," 538,000 ", 40 ,, 40 , 1 
+1,Herbie Farnworth,DOL,CTR,," 734,000 ", 54 ,, 51 , (3)
+1,Corey Horsburgh,CAN,MID,," 566,000 ", 42 ,, 53 , 12 
+1,Adam Elliott,NEW,MID,," 617,000 ", 46 ,, 36 , (9)
+1,Viliame Kikau,CBY,EDG,," 528,000 ", 39 ,, 39 , 0 
+1,Connor Tracey,CBY,WFB,," 521,000 ", 39 ,, 40 , 2 
+1,Jason Saab,MAN,WFB,," 444,000 ", 33 ,, 36 , 3 
+1,James Fisher-Harris,WAR,MID,," 605,000 ", 45 ,, 50 , 6 
+1,Lindsay Smith,PEN,MID,," 623,000 ", 46 ,, 44 , (2)
+1,Tom Gilbert,DOL,MID,EDG," 529,000 ", 39 ,, 50 , 11 
+1,Briton Nikora,CRO,EDG,," 696,000 ", 52 ,, 53 , 2 
+1,Cameron Munster,BYE,HLF,," 597,000 ", 44 ,, 54 , 10 
+1,Tom Starling,CAN,HOK,," 468,000 ", 35 ,, 46 , 12 
+1,Cameron McInnes,CRO,MID,," 703,000 ", 52 ,, 52 , 1 
+1,Hudson Young,CAN,EDG,," 725,000 ", 54 ,, 51 , (3)
+1,Zac Hosking,CAN,EDG,," 601,000 ", 45 ,, 49 , 5 
+1,Alex Twal,WST,MID,," 541,000 ", 40 ,, 46 , 6 
+1,Addin Fonua-Blake,CRO,MID,," 788,000 ", 58 ,, 54 , (4)
+1,Jye Gray,SOU,HLF,WFB," 557,000 ", 41 ,, 44 , 3 
+1,Nicholas Hynes,CRO,HLF,," 799,000 ", 59 ,, 49 , (10)
+1,Jaydn Su'A,SGI,EDG,," 644,000 ", 48 ,, 51 , 3 
+1,Max King,CBY,MID,," 657,000 ", 49 ,, 43 , (6)
+1,Valentine Holmes,SGI,CTR,," 669,000 ", 50 ,, 42 , (7)
+1,Teig Wilton,CRO,EDG,," 596,000 ", 44 ,, 51 , 8 
+1,Jack De Belin,SGI,MID,," 629,000 ", 47 ,, 50 , 4 
+1,Lachlan Galvin,WST,HLF,," 690,000 ", 51 ,, 48 , (3)
+1,Jesse Ramien,CRO,CTR,," 601,000 ", 45 ,, 42 , (2)
+1,Sebastian Kris,CAN,CTR,WFB," 430,000 ", 32 ,, 33 , 2 
+1,Robert Toia,SYD,CTR,," 278,000 ", 21 ,, 37 , 17 
+1,Isaah Yeo,PEN,MID,," 866,000 ", 64 ,, 63 , (1)
+1,Angus Crichton,SYD,EDG,," 713,000 ", 53 ,, 57 , 5 
+1,Max Plath,DOL,HOK,MID," 704,000 ", 52 ,, 49 , (3)
+1,Xavier Coates,BYE,WFB,," 466,000 ", 35 ,, 32 , (2)
+1,Emre Guler,SGI,MID,," 399,000 ", 30 ,, 37 , 7 
+1,Jesse Arthars,BRI,CTR,WFB," 375,000 ", 28 ,, 28 , 0 
+1,Harry Hayes,CBY,MID,," 415,000 ", 31 ,,,
+1,Patrick Carrigan,BRI,MID,," 773,000 ", 57 ,, 57 , 0 
+1,Matt Burton,CBY,HLF,," 701,000 ", 52 ,, 59 , 7 
+1,Haumole Olakau'atu,MAN,EDG,," 691,000 ", 51 ,, 52 , 2 
+1,John Bateman,NQL,EDG,," 607,000 ", 45 ,, 53 , 8 
+1,Kai Pearce-Paul,NEW,EDG,," 601,000 ", 45 ,, 51 , 7 
+1,Josh King,BYE,MID,," 519,000 ", 38 ,, 34 , (4)
+1,Paul Alamoti,PEN,CTR,WFB," 505,000 ", 37 ,, 40 , 2 
+1,Taniela Paseka,MAN,MID,," 488,000 ", 36 ,, 36 , (0)
+1,Peter Mamouzelos,SOU,HOK,," 330,000 ", 24 ,, 38 , 13 
+1,J'maine Hopgood,PAR,MID,EDG," 731,000 ", 54 ,, 63 , 10 
+1,Jamal Fogarty,CAN,HLF,," 705,000 ", 52 ,, 60 , 8 
+1,Samuela Fainu,WST,MID,EDG," 542,000 ", 40 ,, 43 , 3 
+1,Naufahu Whyte,SYD,MID,EDG," 427,000 ", 32 ,, 42 , 10 
+1,Hamiso Tabuai-Fidow,DOL,WFB,," 599,000 ", 44 ,, 44 , (1)
+1,Ethan Bullemor,MAN,MID,EDG," 416,000 ", 31 ,, 32 , 1 
+1,Siua Wong,SYD,EDG,," 357,000 ", 26 ,, 26 , -   
+1,Jahrome Hughes,BYE,HLF,," 805,000 ", 60 ,, 53 , (6)
+1,Isaiah Papali'i,PEN,EDG,," 619,000 ", 46 ,, 38 , (8)
+1,Sean Keppie,SOU,MID,," 387,000 ", 29 ,, 27 , (1)
+1,Damien Cook,SGI,HOK,," 743,000 ", 55 ,, 43 , (11)
+1,Keaon Koloamatangi,SOU,MID,EDG," 702,000 ", 52 ,, 48 , (3)
+1,Jai Arrow,SOU,MID,EDG," 627,000 ", 46 ,, 47 , 1 
+1,Jeremy Marshall-King,DOL,HOK,," 598,000 ", 44 ,, 46 , 2 
+1,Reuben Garrick,MAN,CTR,WFB," 594,000 ", 44 ,, 49 , 6 
+1,Clinton Gutherson,SGI,WFB,," 577,000 ", 43 ,, 43 , 0 
+1,Sandon Smith,SYD,HLF,," 277,000 ", 21 ,, 40 , 20 
+1,Mitchell Barnett,WAR,MID,EDG," 705,000 ", 52 ,, 52 , 0 
+1,Leo Thompson,NEW,MID,," 567,000 ", 42 ,, 47 , 5 
+1,Will Penisini,PAR,CTR,," 539,000 ", 40 ,, 46 , 6 
+1,Dane Gagai,NEW,CTR,," 675,000 ", 50 ,, 48 , (1)
+1,Scott Drinkwater,NQL,WFB,," 640,000 ", 47 ,, 49 , 2 
+1,Jamayne Isaako,DOL,WFB,," 539,000 ", 40 ,, 41 , 1 
+1,Luke Metcalf,WAR,HLF,," 429,000 ", 32 ,, 47 , 16 
+1,Chanel Harris-Tavita,WAR,HLF,," 365,000 ", 27 ,, 36 , 9 
+1,James Tedesco,SYD,WFB,," 704,000 ", 52 ,, 55 , 3 
+1,Adam Reynolds,BRI,HLF,," 641,000 ", 47 ,, 45 , (2)
+1,Jarome Luai,WST,HLF,," 586,000 ", 43 ,, 47 , 4 
+1,Adam Doueihi,WST,HLF,CTR," 476,000 ", 35 ,, 34 , (1)
+1,Hamish Stewart,SGI,MID,," 257,000 ", 19 ,, 25 , 6 
+1,Jordan Riki,BRI,EDG,," 563,000 ", 42 ,, 45 , 3 
+1,Sam McIntyre,NQL,EDG,MID," 437,000 ", 32 ,, 34 , 2 
+1,William Kennedy,CRO,WFB,," 396,000 ", 29 ,, 35 , 6 
+1,Lachlan Hubner,SOU,MID,," 266,000 ", 20 ,, 33 , 14 
+1,Jacob Preston,CBY,EDG,," 682,000 ", 51 ,, 59 , 8 
+1,Shawn Blore,BYE,EDG,," 582,000 ", 43 ,, 43 , (0)
+1,Daniel Saifiti,DOL,MID,," 456,000 ", 34 ,, 45 , 11 
+1,Coen Hess,NQL,MID,EDG," 475,000 ", 35 ,, 25 , (10)
+1,Lehi Hopoate,MAN,WFB,," 508,000 ", 38 ,, 40 , 3 
+1,Jackson Ford,WAR,EDG,," 604,000 ", 45 ,, 37 , (8)
+1,Daniel Tupou,SYD,WFB,," 513,000 ", 38 ,, 38 , 0 
+1,Joseph Tapine,CAN,MID,," 700,000 ", 52 ,, 56 , 4 
+1,Liam Martin,PEN,EDG,," 534,000 ", 40 ,, 39 , 0 
+1,Blake Steep,SYD,EDG,," 261,000 ", 19 ,,,
+1,Samuel Stonestreet,CRO,WFB,," 435,000 ", 32 ,, 36 , 4 
+1,Dylan Edwards,PEN,WFB,," 720,000 ", 53 ,, 51 , (2)
+1,Harry Grant,BYE,HOK,," 711,000 ", 53 ,, 53 , 0 
+1,Jake Trbojevic,MAN,MID,," 596,000 ", 44 ,, 43 , (1)
+1,Tom Trbojevic,MAN,WFB,," 702,000 ", 52 ,, 55 , 3 
+1,Luke Brooks,MAN,HLF,," 554,000 ", 41 ,, 36 , (4)
+1,James Schiller,NEW,CTR,WFB," 500,000 ", 37 ,, 38 , 1 
+1,Roger Tuivasa-Sheck,WAR,CTR,WFB," 508,000 ", 38 ,, 39 , 1 
+1,Jake Averillo,DOL,CTR,," 461,000 ", 34 ,, 34 , 0 
+1,Toafofoa Sipley,MAN,MID,," 447,000 ", 33 ,, 30 , (3)
+1,Kulikefu Finefeuiaki,DOL,EDG,," 409,000 ", 30 ,, 30 , 0 
+1,Phoenix Crossland,NEW,HOK,," 393,000 ", 29 ,, 38 , 9 
+1,Jacob Liddle,SGI,HOK,," 708,000 ", 52 ,, 17 , (35)
+1,Josh Papalii,CAN,MID,," 503,000 ", 37 ,, 32 , (5)
+1,Harrison Edwards,NQL,MID,," 380,000 ", 28 ,,,
+1,Trent Loiero,BYE,MID,EDG," 590,000 ", 44 ,, 38 , (5)
+1,Jeral Skelton,WST,WFB,," 499,000 ", 37 ,, 40 , 3 
+1,Jack Williams,PAR,MID,EDG," 504,000 ", 37 ,, 45 , 8 
+1,Mark Nicholls,DOL,MID,," 482,000 ", 36 ,, 35 , (0)
+1,Mat Croker,NEW,MID,," 391,000 ", 29 ,, 20 , (8)
+1,Sean O'Sullivan,DOL,HLF,," 453,000 ", 34 ,,,
+1,Cory Paix,BRI,HOK,HLF," 311,000 ", 23 ,, 33 , 10 
+1,Morgan Smithies,CAN,MID,," 608,000 ", 45 ,, 44 , (1)
+1,Ben Trbojevic,MAN,EDG,CTR," 414,000 ", 31 ,, 33 , 3 
+1,Chad Townsend,SYD,HLF,," 448,000 ", 33 ,, 39 , 6 
+1,Erin Clark,WAR,HOK,MID," 477,000 ", 35 ,, 41 , 6 
+1,Kai O'Donnell,NQL,EDG,," 250,000 ", 19 ,,,
+1,Reece Robson,NQL,HOK,," 636,000 ", 47 ,, 50 , 3 
+1,Kyle Flanagan,SGI,HLF,," 433,000 ", 32 ,, 39 , 7 
+1,Mark Nawaqanitawase,SYD,WFB,CTR," 361,000 ", 27 ,, 40 , 13 
+1,Luciano Leilua,SGI,EDG,," 554,000 ", 41 ,, 44 , 3 
+1,Scott Sorensen,PEN,MID,EDG," 500,000 ", 37 ,, 42 , 5 
+1,Daine Laurie,PEN,WFB,," 423,000 ", 31 ,, 5 , (26)
+1,Viliami Vailea,NQL,CTR,," 385,000 ", 29 ,, 28 , 0 
+1,Dominic Young,SYD,WFB,," 569,000 ", 42 ,, 42 , -   
+1,Will Warbrick,BYE,WFB,," 434,000 ", 32 ,, 31 , (1)
+1,Lachlan Ilias,SGI,HLF,," 395,000 ", 29 ,, 36 , 7 
+1,Ronald Volkman,PAR,HLF,," 381,000 ", 28 ,,,
+1,Taine Tuaupiki,WAR,WFB,," 435,000 ", 32 ,, 32 , 0 
+1,Zach Dockar-Clay,SYD,HOK,," 251,000 ", 19 ,, 15 , (4)
+1,Ronaldo Mulitalo,CRO,WFB,," 525,000 ", 39 ,, 39 , 0 
+1,Mitch Kenny,PEN,HOK,," 513,000 ", 38 ,, 40 , 1 
+1,Kurt Mann,CBY,MID,," 491,000 ", 36 ,, 30 , (6)
+1,Jaeman Salmon,CBY,MID,EDG," 453,000 ", 34 ,, 14 , (19)
+1,Marcelo Montoya,CBY,CTR,WFB," 363,000 ", 27 ,,,
+1,Braydon Trindall,CRO,HLF,," 513,000 ", 38 ,, 46 , 8 
+1,Reuben Cotter,NQL,MID,," 652,000 ", 48 ,, 51 , 3 
+1,Ali Leiataua,WAR,CTR,WFB," 481,000 ", 36 ,, 40 , 4 
+1,Tyran Wishart,BYE,HLF,," 539,000 ", 40 ,, 25 , (14)
+1,Kurt Capewell,WAR,EDG,," 532,000 ", 39 ,, 40 , 1 
+1,Junior Paulo,PAR,MID,," 539,000 ", 40 ,, 42 , 2 
+1,Jack Wighton,SOU,HLF,CTR," 539,000 ", 40 ,, 34 , (6)
+1,Toby Sexton,CBY,HLF,," 491,000 ", 36 ,, 36 , 0 
+1,Deine Mariner,BRI,CTR,WFB," 488,000 ", 36 ,,,
+1,Campbell Graham,SOU,CTR,," 568,000 ", 42 ,, 41 , (1)
+1,Gehamat Shibasaki,BRI,CTR,," 334,000 ", 25 ,, 37 , 13 
+1,Ben Hunt,BRI,HLF,," 675,000 ", 50 ,, 49 , (1)
+1,Dylan Brown,PAR,HLF,," 630,000 ", 47 ,, 49 , 3 
+1,Liam Henry,PEN,MID,EDG," 542,000 ", 40 ,, 42 , 2 
+1,Moses Suli,SGI,CTR,," 481,000 ", 36 ,, 38 , 3 
+1,Selwyn Cobbo,BRI,CTR,WFB," 550,000 ", 41 ,, 41 , 1 
+1,Tallis Duncan,SOU,MID,," 461,000 ", 34 ,, 40 , 6 
+1,Moses Leota,PEN,MID,," 419,000 ", 31 ,, 28 , (3)
+1,Thomas Duffy,NQL,HLF,," 272,000 ", 20 ,, 45 , 25 
+1,Braidon Burns,NQL,CTR,WFB," 517,000 ", 38 ,, 44 , 6 
+1,Stefano Utoikamanu,BYE,MID,," 582,000 ", 43 ,, 45 , 2 
+1,Jordan McLean,NQL,MID,," 429,000 ", 32 ,, 32 , 0 
+1,Ray Stone,DOL,MID,," 419,000 ", 31 ,, 25 , (6)
+1,Oryn Keeley,DOL,EDG,," 347,000 ", 26 ,,,
+1,Jack Cogger,NEW,HLF,," 449,000 ", 33 ,, 42 , 9 
+1,Kurt Donoghoe,DOL,HLF,," 271,000 ", 20 ,, 26 , 6 
+1,Zac Lomax,PAR,CTR,WFB," 643,000 ", 48 ,, 46 , (1)
+1,Cody Walker,SOU,HLF,," 504,000 ", 37 ,, 43 , 6 
+1,Oregon Kaufusi,CRO,MID,," 474,000 ", 35 ,, 36 , 1 
+1,Lindsay Collins,SYD,MID,," 513,000 ", 38 ,, 37 , (1)
+1,Tyrone Munro,SOU,WFB,," 307,000 ", 23 ,,,
+1,Tallyn Da Silva,WST,HOK,," 337,000 ", 25 ,, 8 , (16)
+1,Tom Dearden,NQL,HLF,," 555,000 ", 41 ,, 45 , 4 
+1,Luke Garner,PEN,EDG,," 554,000 ", 41 ,, 23 , (18)
+1,Alex Seyfarth,WST,MID,EDG," 466,000 ", 35 ,, 47 , 13 
+1,Tui Kamikamica,BYE,MID,," 373,000 ", 28 ,, 27 , (0)
+1,Jake Simpkin,MAN,HOK,," 379,000 ", 28 ,,,
+1,Savelio Tamale,CAN,CTR,WFB," 329,000 ", 24 ,, 44 , 19 
+1,Isaiah Iongi,PAR,WFB,," 351,000 ", 26 ,, 37 , 11 
+1,Griffin Neame,NQL,MID,," 444,000 ", 33 ,, 39 , 6 
+1,Siliva Havili,SOU,HOK,MID," 350,000 ", 26 ,,,
+1,Salesi Foketi,SYD,EDG,," 256,000 ", 19 ,,,
+1,Tyson Frizell,NEW,EDG,MID," 574,000 ", 43 ,, 39 , (3)
+1,Josh Kerr,DOL,EDG,," 404,000 ", 30 ,,,
+1,Corey Jensen,BRI,MID,," 601,000 ", 45 ,, 33 , (12)
+1,Thomas Hazelton,CRO,MID,," 528,000 ", 39 ,, 39 , (0)
+1,Sunia Turuva,WST,WFB,," 501,000 ", 37 ,, 36 , (1)
+1,Bronson Xerri,CBY,CTR,," 435,000 ", 32 ,, 35 , 3 
+1,Alec MacDonald,BYE,MID,," 387,000 ", 29 ,, 23 , (6)
+1,Charlie Guymer,PAR,EDG,," 304,000 ", 23 ,,,
+1,Jack Gosiewski,BRI,EDG,," 276,000 ", 20 ,, 37 , 17 
+1,Kobe Hetherington,BRI,MID,," 418,000 ", 31 ,, 37 , 6 
+1,Jayden Brailey,NEW,HOK,," 504,000 ", 37 ,, 21 , (16)
+1,Jack Bird,WST,EDG,CTR," 360,000 ", 27 ,, 33 , 6 
+1,Jack Hetherington,NEW,MID,," 325,000 ", 24 ,, 20 , (4)
+1,Lazarus Vaalepu,BYE,MID,," 295,000 ", 22 ,,,
+1,Jake Tago,PAR,WFB,," 274,000 ", 20 ,,,
+1,Charnze Nicoll-Klokstad,WAR,WFB,," 565,000 ", 42 ,, 44 , 2 
+1,Izack Tago,PEN,CTR,," 489,000 ", 36 ,, 40 , 4 
+1,Marata Niukore,WAR,MID,EDG," 443,000 ", 33 ,, 34 , 2 
+1,Isaiah Tass,SOU,CTR,WFB," 331,000 ", 25 ,, 24 , (1)
+1,Dylan Walker,WAR,MID,," 555,000 ", 41 ,, 31 , (10)
+1,Josh Aloiai,MAN,MID,," 381,000 ", 28 ,,,
+1,Adam Pompey,WAR,CTR,," 357,000 ", 26 ,, 29 , 3 
+1,Solomona Faataape,WST,CTR,," 290,000 ", 21 ,,,
+1,Jacob Saifiti,NEW,MID,," 527,000 ", 39 ,, 38 , (1)
+1,Blake Wilson,CBY,WFB,," 377,000 ", 28 ,, 33 , 6 
+1,Jack Cole,PEN,HLF,," 261,000 ", 19 ,, 36 , 16 
+1,Heath Mason,WST,WFB,," 292,000 ", 22 ,,,
+1,Tevita Tatola,SOU,MID,," 455,000 ", 34 ,, 21 , (12)
+1,Ethan Strange,CAN,HLF,," 481,000 ", 36 ,, 39 , 3 
+1,Blake Lawrie,SGI,MID,," 417,000 ", 31 ,, 36 , 5 
+1,Felise Kaufusi,DOL,MID,EDG," 432,000 ", 32 ,, 31 , (1)
+1,Davvy Moale,SOU,MID,," 410,000 ", 30 ,, 30 , (0)
+1,Braden Hamlin-Uele,CRO,MID,," 308,000 ", 23 ,, 27 , 5 
+1,Tuku Hau Tapuha,CRO,MID,," 250,000 ", 19 ,,,
+1,Xavier Willison,BRI,MID,EDG," 476,000 ", 35 ,, 36 , 1 
+1,Reed Mahoney,CBY,HOK,," 629,000 ", 47 ,, 49 , 3 
+1,Brian To'o,PEN,WFB,," 634,000 ", 47 ,, 47 , 1 
+1,Jazz Tevaga,MAN,MID,HOK," 395,000 ", 29 ,, 36 , 7 
+1,Ryley Smith,PAR,HOK,," 233,000 ", 17 ,, 37 , 20 
+1,Reece Walsh,BRI,WFB,," 692,000 ", 51 ,, 51 , (0)
+1,Raymond Faitala-Mariner,SGI,MID,EDG," 458,000 ", 34 ,, 22 , (12)
+1,Casey McLean,PEN,CTR,WFB," 409,000 ", 30 ,, 37 , 7 
+1,Junior Tupou,DOL,WFB,," 355,000 ", 26 ,,,
+1,Karl Lawton,NQL,HOK,EDG," 381,000 ", 28 ,, 20 , (8)
+1,Matthew Eisenhuth,PEN,MID,," 338,000 ", 25 ,,,
+1,Joe Ofahengaue,PAR,MID,," 469,000 ", 35 ,, 28 , (7)
+1,Fonua Pole,WST,MID,," 443,000 ", 33 ,, 39 , 7 
+1,Daniel Suluka-Fifita,CBY,MID,," 249,000 ", 18 ,,,
+1,Leka Halasima,WAR,EDG,," 247,000 ", 18 ,, 18 , 0 
+1,Jaxon Purdue,NQL,CTR,," 245,000 ", 18 ,, 33 , 15 
+1,Taylor Losalu,SYD,MID,," 235,000 ", 17 ,,,
+1,Jeremiah Nanai,NQL,EDG,," 551,000 ", 41 ,, 41 , 0 
+1,Kelma Tuilagi,PAR,EDG,," 404,000 ", 30 ,,,
+1,Siosifa Talakai,CRO,EDG,CTR," 393,000 ", 29 ,, 21 , (8)
+1,Tristan Hope,WST,HOK,," 230,000 ", 17 ,,,
+1,Bayleigh Bentley-Hape,SOU,WFB,," 230,000 ", 17 ,,,
+1,Ata Mariota,CAN,MID,EDG," 397,000 ", 29 ,, 30 , 1 
+1,Bailey Hayward,CBY,MID,," 355,000 ", 26 ,, 22 , (5)
+1,Luron Patea,PEN,MID,," 246,000 ", 18 ,,,
+1,Siosiua Taukeiaho,MAN,MID,," 383,000 ", 28 ,, 32 , 4 
+1,Kaeo Weekes,CAN,HLF,WFB," 530,000 ", 39 ,, 37 , (2)
+1,Royce Hunt,WST,MID,," 268,000 ", 20 ,, 26 , 6 
+1,Billy Walters,BRI,HOK,HLF," 420,000 ", 31 ,, 20 , (11)
+1,Murray Taulagi,NQL,WFB,," 466,000 ", 35 ,, 30 , (4)
+1,Makahesi Makatoa,SYD,MID,," 250,000 ", 19 ,,,
+1,Fletcher Myers,SOU,CTR,WFB," 350,000 ", 26 ,,,
+1,Sam Tuivaiti,PAR,MID,," 230,000 ", 17 ,,,
+1,Brodie Jones,NEW,EDG,," 328,000 ", 24 ,,,
+1,Matt Doorey,PAR,EDG,," 243,000 ", 18 ,, 22 , 4 
+1,Daniel Atkinson,CRO,HLF,WFB," 423,000 ", 31 ,, 11 , (20)
+1,Stephen Crichton,CBY,CTR,," 411,000 ", 30 ,, 37 , 7 
+1,Kodi Nikorima,DOL,HLF,," 409,000 ", 30 ,, 35 , 5 
+1,Sione Fainu,WST,MID,," 340,000 ", 25 ,, 19 , (6)
+1,Demitric Vaimauga,WAR,EDG,," 285,000 ", 21 ,, 18 , (3)
+1,Connelly Lemuelu,DOL,EDG,," 470,000 ", 35 ,, 24 , (11)
+1,Tolutau Koula,MAN,CTR,WFB," 398,000 ", 29 ,, 31 , 2 
+1,Mathew Feagai,SGI,WFB,," 388,000 ", 29 ,, 28 , (1)
+1,Owen Pattie,CAN,HOK,," 231,000 ", 17 ,, 12 , (5)
+1,Brendan Hands,PAR,HOK,," 365,000 ", 27 ,, 17 , (10)
+1,Clayton Faulalo,MAN,CTR,WFB," 325,000 ", 24 ,,,
+1,Corey Waddell,MAN,MID,EDG," 379,000 ", 28 ,, 19 , (9)
+1,Jayden Sullivan,SOU,HLF,," 459,000 ", 34 ,, 25 , (9)
+1,Victor Radley,SYD,MID,EDG," 553,000 ", 41 ,, 49 , 9 
+1,Simi Sasagi,CAN,EDG,CTR," 364,000 ", 27 ,, 17 , (10)
+1,Hugo Savala,SYD,HLF,," 230,000 ", 17 ,,,
+1,Albert Hopoate,CAN,CTR,WFB," 402,000 ", 30 ,,,
+1,Sean Russell,PAR,CTR,WFB," 324,000 ", 24 ,,,
+1,Latrell Mitchell,SOU,WFB,," 800,000 ", 59 ,,,
+1,David Fifita,GLD,EDG,," 780,000 ", 58 ,, 50 , (7)
+1,Cameron Murray,SOU,MID,," 737,000 ", 55 ,,,
+1,Jayden Campbell,GLD,HLF,WFB," 722,000 ", 53 ,, 62 , 9 
+1,Soni Luke,PEN,HOK,," 350,000 ", 26 ,,,
+1,Euan Aitken,SOU,EDG,," 700,000 ", 52 ,, 51 , (0)
+1,Ativalu Lisati,BYE,EDG,," 350,000 ", 26 ,,,
+1,Beau Fermor,GLD,EDG,CTR," 665,000 ", 49 ,, 51 , 2 
+1,Trai Fuller,DOL,WFB,," 665,000 ", 49 ,,,
+1,Mitchell Moses,PAR,HLF,," 700,000 ", 52 ,, 45 , (6)
+1,Thomas Flegler,DOL,MID,," 644,000 ", 48 ,,,
+1,Jackson Hastings,NEW,HLF,," 642,000 ", 48 ,,,
+1,Jacob Kiraz,CBY,CTR,WFB," 641,000 ", 47 ,, 48 , 1 
+1,Nat Butcher,SYD,MID,EDG," 638,000 ", 47 ,, 38 , (9)
+1,Keano Kini,GLD,WFB,," 654,000 ", 48 ,, 51 , 3 
+1,Tom Eisenhuth,SGI,MID,EDG," 616,000 ", 46 ,,,
+1,Josh Curran,CBY,MID,EDG," 600,000 ", 44 ,, 37 , (7)
+1,Apisai Koroisau,WST,HOK,," 593,000 ", 44 ,, 53 , 9 
+1,Bryce Cartwright,PAR,EDG,," 590,000 ", 44 ,,,
+1,Jaimin Jolliffe,GLD,MID,," 589,000 ", 44 ,, 31 , (13)
+1,Brad Schneider,PEN,HLF,," 550,000 ", 41 ,,,
+1,Chris Randall,GLD,HOK,MID," 577,000 ", 43 ,, 33 , (10)
+1,Te Maire Martin,WAR,HLF,," 576,000 ", 43 ,,,
+1,Sam Walker,SYD,HLF,," 573,000 ", 42 ,,,
+1,Ryan Matterson,PAR,MID,EDG," 567,000 ", 42 ,, 43 , 1 
+1,Liam Ison,CRO,WFB,," 350,000 ", 26 ,,,
+1,Moeaki Fotuaika,GLD,MID,," 550,000 ", 41 ,, 43 , 2 
+1,Reagan Campbell-Gillard,GLD,MID,," 534,000 ", 40 ,, 34 , (6)
+1,Phillip Sami,GLD,CTR,WFB," 533,000 ", 39 ,, 37 , (2)
+1,Jake Clifford,NQL,HLF,," 525,000 ", 39 ,,,
+1,Shaun Lane,PAR,EDG,," 523,000 ", 39 ,, 42 , 4 
+1,Toby Rudolf,CRO,MID,," 525,000 ", 39 ,,,
+1,Brian Kelly,GLD,CTR,," 515,000 ", 38 ,, 40 , 2 
+1,Tino Fa'asuamaleaui,GLD,MID,," 700,000 ", 52 ,, 53 , 2 
+1,Kieran Foran,GLD,HLF,," 509,000 ", 38 ,,,
+1,Jock Madden,BRI,HLF,," 450,000 ", 33 ,,,
+1,Jahream Bula,WST,WFB,," 525,000 ", 39 ,, 38 , (1)
+1,Tyson Gamble,NEW,HLF,," 502,000 ", 37 ,,,
+1,Kotoni Staggs,BRI,CTR,," 525,000 ", 39 ,, 40 , 2 
+1,Sam Verrills,GLD,HOK,," 496,000 ", 37 ,, 34 , (2)
+1,Tanah Boyd,WAR,HLF,," 497,000 ", 37 ,,,
+1,Sione Katoa,CRO,WFB,," 491,000 ", 36 ,,,
+1,Klese Haas,GLD,MID,EDG," 488,000 ", 36 ,, 33 , (3)
+1,Jojo Fifita,GLD,CTR,WFB," 483,000 ", 36 ,, 40 , 4 
+1,AJ Brimson,GLD,WFB,," 482,000 ", 36 ,, 46 , 10 
+1,Dallin Watene-Zelezniak,WAR,WFB,," 477,000 ", 35 ,,,
+1,Asu Kepaoa,PEN,CTR,," 400,000 ", 30 ,,,
+1,Josh Addo-Carr,PAR,WFB,," 468,000 ", 35 ,, 37 , 3 
+1,Sione Finau,SGI,WFB,," 350,000 ", 26 ,,,
+1,Brandon Smith,SYD,HOK,MID," 465,000 ", 34 ,,,
+1,Tommy Talau,MAN,CTR,WFB," 465,000 ", 34 ,,,
+1,Spencer Leniu,SYD,MID,," 459,000 ", 34 ,, 39 , 5 
+1,Thomas Cant,NEW,EDG,," 458,000 ", 34 ,,,
+1,Blaize Talagi,PEN,WFB,," 458,000 ", 34 ,,,
+1,Christian Welch,BYE,MID,," 456,000 ", 34 ,,,
+1,Mawene Hiroti,CRO,WFB,," 350,000 ", 26 ,,,
+1,Ethan Sanders,CAN,HLF,," 350,000 ", 26 ,,,
+1,Tyson Smoothy,BRI,HOK,," 452,000 ", 33 ,,,
+1,Jordan Rapana,CAN,WFB,," 450,000 ", 33 ,,,
+1,Fetalaiga Pauga,SYD,CTR,WFB," 449,000 ", 33 ,,,
+1,Dean Hawkins,PAR,HLF,," 444,000 ", 33 ,,,
+1,Sualauvi Faalogo,BYE,WFB,," 443,000 ", 33 ,,,
+1,Luke Sommerton,PEN,HOK,," 350,000 ", 26 ,,,
+1,Rocco Berry,WAR,CTR,," 441,000 ", 33 ,,,
+1,David Klemmer,WST,MID,," 439,000 ", 33 ,,,
+1,Francis Molo,SGI,MID,," 433,000 ", 32 ,,,
+1,Bailey Simonsson,PAR,CTR,WFB," 431,000 ", 32 ,, 36 , 4 
+1,Zac Laybutt,NQL,CTR,," 431,000 ", 32 ,,,
+1,Alofiana Khan-Pereira,GLD,WFB,," 429,000 ", 32 ,, 31 , (1)
+1,Michael Molo,SGI,MID,," 427,000 ", 32 ,,,
+1,Ezra Mam,BRI,HLF,," 450,000 ", 33 ,,,
+1,Kenneath Bromwich,DOL,MID,EDG," 421,000 ", 31 ,,,
+1,Lachlan Croker,MAN,HOK,," 420,000 ", 31 ,, 31 , (0)
+1,Josh Rogers,BRI,HLF,," 416,000 ", 31 ,,,
+1,Jaylan De Groot,GLD,WFB,," 300,000 ", 22 ,,,
+1,Jack Bostock,DOL,WFB,," 414,000 ", 31 ,, 35 , 4 
+1,Nathan Brown,MAN,MID,," 413,000 ", 31 ,,,
+1,Jacob Alick-Wiencke,GLD,EDG,," 409,000 ", 30 ,,,
+1,Hame Sele,SGI,MID,," 408,000 ", 30 ,,,
+1,Will Pryce,NEW,HLF,WFB," 350,000 ", 26 ,,,
+1,Grant Anderson,BYE,CTR,WFB," 401,000 ", 30 ,,,
+1,Martin Taupau,BRI,MID,," 401,000 ", 30 ,,,
+1,Fletcher Baker,BRI,MID,," 398,000 ", 29 ,,,
+1,Jason Taumalolo,NQL,MID,," 392,000 ", 29 ,, 28 , (1)
+1,Luca Moretti,PAR,MID,," 392,000 ", 29 ,,,
+1,Jonah Pezet,BYE,HLF,," 392,000 ", 29 ,,,
+1,Justin Olam,WST,CTR,," 390,000 ", 29 ,,,
+1,Samuel Hughes,CBY,MID,," 389,000 ", 29 ,, 37 , 8 
+1,Aaron Schoupp,MAN,CTR,," 350,000 ", 26 ,,,
+1,Raymond Tuaimalo Vaega,MAN,WFB,," 350,000 ", 26 ,,,
+1,Jacob Host,SOU,EDG,," 381,000 ", 28 ,,,
+1,Nelson Asofa-Solomona,BYE,MID,EDG," 400,000 ", 30 ,, 29 , (1)
+1,Jaiyden Hunt,BRI,MID,EDG," 382,000 ", 28 ,,,
+1,Justin Matamua,WST,EDG,," 381,000 ", 28 ,,,
+1,Pasami Saulo,CAN,MID,," 377,000 ", 28 ,,,
+1,Michael Chee Kam,MAN,EDG,CTR," 375,000 ", 28 ,,,
+1,Max Feagai,DOL,CTR,," 375,000 ", 28 ,,,
+1,Mikaele Ravalawa,SGI,WFB,," 374,000 ", 28 ,,,
+1,Semi Valemei,NQL,WFB,," 374,000 ", 28 ,,,
+1,Bronson Garlick,BYE,HOK,MID," 350,000 ", 26 ,,,
+1,Trey Mooney,CAN,MID,," 361,000 ", 27 ,,,
+1,Alex Johnston,SOU,WFB,," 360,000 ", 27 ,, 32 , 6 
+1,Ryan Couchman,SGI,EDG,," 327,000 ", 24 ,,,
+1,Joey Lussick,PAR,HOK,," 357,000 ", 26 ,,,
+1,Chevy Stewart,CAN,WFB,," 300,000 ", 22 ,,,
+1,Harley Smith-Shields,GLD,CTR,," 344,000 ", 25 ,,,
+1,Enari Tuala,CBY,CTR,WFB," 300,000 ", 22 ,,,
+1,Blake Mozer,BRI,HOK,," 337,000 ", 25 ,,,
+1,Thomas Mikaele,NQL,MID,," 336,000 ", 25 ,,,
+1,Edward Kosi,WAR,WFB,," 300,000 ", 22 ,,,
+1,Charlie Staines,WST,WFB,," 330,000 ", 24 ,,,
+1,Egan Butcher,SYD,EDG,," 350,000 ", 26 ,, 27 , 1 
+1,Shaquai Mitchell,SOU,MID,," 318,000 ", 24 ,,,
+1,Blake Taaffe,CBY,WFB,," 317,000 ", 23 ,,,
+1,Danny Levi,CAN,HOK,," 314,000 ", 23 ,,,
+1,Josh Feledy,WST,CTR,," 300,000 ", 22 ,,,
+1,Kurtis Morrin,CBY,MID,," 308,000 ", 23 ,,,
+1,Freddy Lussick,WAR,HOK,," 301,000 ", 22 ,,,
+1,Benjamin Te Kura,BRI,MID,," 250,000 ", 19 ,,,
+1,Luke Laulilii,WST,WFB,," 250,000 ", 19 ,,,
+1,Bunty Afoa,WAR,MID,," 286,000 ", 21 ,,,
+1,Jacob Laban,WAR,EDG,," 284,000 ", 21 ,,,
+1,Josiah Pahulu,GLD,MID,," 279,000 ", 21 ,, 21 , 0 
+1,Brent Naden,WST,CTR,WFB," 277,000 ", 21 ,,,
+1,Mavrik Geyer,PEN,EDG,," 275,000 ", 20 ,,,
+1,Jaxson Paulo,NQL,WFB,," 274,000 ", 20 ,,,
+1,Joe Chan,BYE,EDG,," 300,000 ", 22 ,,,
+1,Billy Burns,CRO,EDG,," 300,000 ", 22 ,,,
+1,Josiah Karapani,BRI,CTR,," 270,000 ", 20 ,,,
+1,Tom Ale,WAR,MID,," 256,000 ", 19 ,,,
+1,Thomas Jenkins,PEN,WFB,," 250,000 ", 19 ,,,
+1,Preston Riki,PEN,EDG,," 250,000 ", 19 ,,,
+1,Latu Fainu,WST,HLF,," 250,000 ", 19 ,,,
+1,Wiremu Greig,PAR,MID,," 250,000 ", 19 ,,,
+1,Kit Laulilii,WST,MID,," 250,000 ", 19 ,,,
+1,Jamal Shibasaki,NQL,EDG,," 250,000 ", 19 ,,,
+1,Gordon Chan Kum Tong,MAN,HOK,," 250,000 ", 19 ,,,
+1,Dean Ieremia,BYE,WFB,," 250,000 ", 19 ,,,
+1,Aitasi James,MAN,MID,," 250,000 ", 19 ,,,
+1,De La Salle Va'a,SYD,MID,," 250,000 ", 19 ,,,
+1,Matthew Arthur,NEW,HOK,," 250,000 ", 19 ,,,
+1,Jake Turpin,CBY,HOK,," 250,000 ", 19 ,,,
+1,Peter Hola,CAN,MID,," 250,000 ", 19 ,,,
+1,Jordan Miller,WST,MID,," 250,000 ", 19 ,,,
+1,Zyon Maiu'u,CBY,EDG,," 250,000 ", 19 ,,,
+1,Joe Stimson,GLD,EDG,," 250,000 ", 19 ,,,
+1,Viliami Fifita,SGI,MID,," 250,000 ", 19 ,,,
+1,Tony Francis,GLD,WFB,," 250,000 ", 19 ,,,
+1,Iszac Fa'asuamaleaui,GLD,MID,," 250,000 ", 19 ,,,
+1,Jayden Berrell,CRO,HOK,," 250,000 ", 19 ,,,
+1,Jesse Colquhoun,CRO,MID,," 250,000 ", 19 ,,,
+1,Starford To'a,WST,CTR,," 250,000 ", 19 ,, 32 , 14 
+1,Kitione Kautoga,PAR,CTR,EDG," 250,000 ", 19 ,, 26 , 8 
+1,Mason Teague,DOL,MID,," 250,000 ", 19 ,,,
+1,Tony Sukkar,WST,EDG,," 250,000 ", 19 ,,,
+1,Jordan Martin,CAN,EDG,," 250,000 ", 19 ,,,
+1,Marion Seve,BYE,CTR,," 250,000 ", 19 ,,,
+1,Sebastian Su'a,NEW,MID,," 250,000 ", 19 ,,,
+1,Brock Gray,GLD,MID,," 230,000 ", 17 ,,,
+1,Delouise Hoeter,BRI,CTR,," 437,000 ", 32 ,,,
+1,Ken Maumalo,GLD,WFB,," 300,000 ", 22 ,,,
+1,Ryan Sutton,CBY,MID,," 350,000 ", 26 ,,,
+1,Tom Amone,CBY,MID,," 250,000 ", 19 ,,,
+1,Dean Matterson,MAN,EDG,," 250,000 ", 19 ,,,
+1,Haze Dunster,PAR,WFB,," 250,000 ", 19 ,,,
+1,Joshua Schuster,SOU,EDG,HLF," 400,000 ", 30 ,,,
+1,Corey Allan,SGI,WFB,," 300,000 ", 22 ,,,
+1,Harrison Graham,DOL,HOK,," 350,000 ", 26 ,,,
+1,Hohepa Puru,CRO,MID,," 250,000 ", 19 ,,,
+1,Billy Smith,SYD,CTR,," 450,000 ", 33 ,,,
+1,Niwhai Puru,CRO,HLF,," 230,000 ", 17 ,,,
+1,Brandon Tumeth,WST,EDG,," 250,000 ", 19 ,,,
+1,Jordan Samrani,PAR,CTR,," 230,000 ", 17 ,,,
+1,Kade Dykes,CRO,WFB,," 250,000 ", 19 ,,,
+1,Samuel Healey,WAR,HOK,," 230,000 ", 17 ,,,
+1,Solome Saukuru,WST,EDG,," 230,000 ", 17 ,,,
+1,Toni Mataele,PAR,EDG,," 230,000 ", 17 ,,,
+1,Jake Arthur,MAN,HLF,," 300,000 ", 22 ,,,
+1,Myles Martin,CAN,MID,," 230,000 ", 17 ,,,
+1,Riley Price,PEN,MID,," 230,000 ", 17 ,,,
+1,Michael Asomua,CAN,WFB,," 230,000 ", 17 ,,,
+1,Tyler Moriarty,SYD,HOK,," 230,000 ", 17 ,,,
+1,Joash Papalii,PAR,WFB,," 230,000 ", 17 ,,,
+1,Ben Liyou,GLD,MID,," 230,000 ", 17 ,,,
+1,Paul Bryan,NEW,MID,," 230,000 ", 17 ,,,
+1,James Walsh,DOL,EDG,," 230,000 ", 17 ,,,
+1,Dylan Egan,SGI,EDG,," 230,000 ", 17 ,,,
+1,Harrison Hassett,PEN,EDG,," 230,000 ", 17 ,,,
+1,Vena Patuki-Case,CAN,MID,," 230,000 ", 17 ,,,
+1,Thomas Fletcher,SOU,EDG,," 230,000 ", 17 ,,,
+1,Ethan Roberts,SYD,EDG,," 230,000 ", 17 ,,,
+1,Jesse McLean,PEN,CTR,WFB," 250,000 ", 19 ,,,
+1,Jack Todd,CBY,MID,," 230,000 ", 17 ,,,
+1,Ryan Foran,GLD,EDG,," 230,000 ", 17 ,,,
+1,Robert Derby,NQL,WFB,," 250,000 ", 19 ,,,
+1,Benjamin Lovett,SOU,EDG,," 250,000 ", 19 ,,,
+1,Lewis Dodd,SOU,HLF,," 550,000 ", 41 ,,,
+1,Jermaine McEwen,NEW,EDG,," 230,000 ", 17 ,,,
+1,Karl Oloapu,CBY,HLF,," 400,000 ", 30 ,,,
+1,Michael Waqa,DOL,MID,," 230,000 ", 17 ,,,
+1,Riley Jones,NEW,HOK,," 250,000 ", 19 ,,,
+1,Haizyn Mellars,SOU,WFB,," 230,000 ", 17 ,,,
+1,Liam Le Blanc,SOU,MID,," 250,000 ", 19 ,,,
+1,Ethan King,SYD,WFB,," 230,000 ", 17 ,,,
+1,Michael Gabrael,CRO,CTR,," 230,000 ", 17 ,,,
+1,Mitchell Woods,CBY,HLF,," 230,000 ", 17 ,,,
+1,Toby Rodwell,SYD,HLF,," 230,000 ", 17 ,,,
+1,Joey Walsh,MAN,HLF,," 230,000 ", 17 ,,,
+1,Finau Latu,SGI,MID,," 230,000 ", 17 ,,,
+1,Coby Black,BRI,HLF,," 230,000 ", 17 ,,,
+1,Israel Leota,BRI,WFB,," 230,000 ", 17 ,,,
+1,Kaiden Lahrs,NQL,MID,," 230,000 ", 17 ,,,
+1,Francis Manuleleua,NEW,EDG,," 230,000 ", 17 ,,,
+1,Jethro Rinakama,CBY,WFB,," 230,000 ", 17 ,,,
+1,Loko Pasifiki Tonga,SGI,MID,," 230,000 ", 17 ,,,
+1,Ryder Williams,GLD,HLF,," 230,000 ", 17 ,,,
+1,Eddie Ieremia-Toeava,WAR,EDG,," 230,000 ", 17 ,,,
+1,Carter Gordon,GLD,HLF,," 350,000 ", 26 ,,,
+1,Taj Annan,NEW,CTR,," 230,000 ", 17 ,,,
+1,Moses Leo,BYE,WFB,," 350,000 ", 26 ,,,
+1,Brendan Piakura,BRI,EDG,," 355,000 ", 26 ,, 8 , (19)
