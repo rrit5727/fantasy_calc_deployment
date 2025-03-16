@@ -213,10 +213,15 @@ def calculate():
                 formatted_option['totalDiff'] = option['total_diff']
                 
             for player in option['players']:
+                # Check if the player has a secondary position that isn't None or empty
+                position_display = player['position']
+                if player.get('secondary_position') and pd.notna(player.get('secondary_position')):
+                    position_display = f"{player['position']}/{player['secondary_position']}"
+                
                 player_info = {
                     'name': player['name'],
                     'team': player['team'],
-                    'position': player['position'],
+                    'position': position_display,
                     'price': player['price']
                 }
                 
