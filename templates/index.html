@@ -1921,8 +1921,30 @@
                 // Get the form data from the original form
                 let formData = new FormData($('#tradeForm')[0]);
                 
-                // Remove player2 if empty
-                if (!formData.get('player2')) {
+                // Get the cash value and convert from "k" to actual number
+                let cashValue = formData.get('cashInBank');
+                if (cashValue) {
+                    // Extract just the number part and multiply by 1000
+                    cashValue = parseInt(cashValue.replace(/\D/g, '') || 0) * 1000;
+                    formData.set('cashInBank', cashValue);
+                } else {
+                    formData.set('cashInBank', 0);
+                }
+                
+                // Clean player names by removing price information
+                let player1 = formData.get('player1');
+                if (player1) {
+                    // Extract just the player name by removing any $ and numbers/k that follow
+                    player1 = player1.replace(/\s+\$\d+k?$/, '');
+                    formData.set('player1', player1);
+                }
+                
+                let player2 = formData.get('player2');
+                if (player2) {
+                    // Extract just the player name by removing any $ and numbers/k that follow
+                    player2 = player2.replace(/\s+\$\d+k?$/, '');
+                    formData.set('player2', player2);
+                } else {
                     formData.delete('player2');
                 }
                 
