@@ -146,7 +146,8 @@ def calculate():
             'restrictToTeamList': 'restrictToTeamList' in request.form,
             'applyLockout': 'applyLockout' in request.form,
             'simulateDateTime': request.form.get('simulateDateTime'),
-            'excludedPlayers': request.form.getlist('excludedPlayers')  # Get all excluded players
+            'excludedPlayers': request.form.getlist('excludedPlayers'),  # Get all excluded players
+            'cashInBank': int(request.form.get('cashInBank', 0))  # Get cash in bank with default of 0
         }
 
         # Use cached data load
@@ -193,7 +194,8 @@ def calculate():
             team_list=team_list,
             simulate_datetime=form_data['simulateDateTime'],
             apply_lockout=form_data['applyLockout'],
-            excluded_players=form_data['excludedPlayers']  # Pass excluded players to calculation
+            excluded_players=form_data['excludedPlayers'],
+            cash_in_bank=form_data['cashInBank']  # Pass the cash in bank value
         )
 
         # Format options for frontend
@@ -244,6 +246,29 @@ def get_players():
         consolidated_data = cached_load_data()
         player_names = consolidated_data['Player'].unique().tolist()
         return jsonify(player_names)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/get_player_names_with_prices', methods=['GET'])
+def get_player_names_with_prices():
+    try:
+        # Load data
+        consolidated_data = cached_load_data()
+        
+        # Get latest round data
+        latest_round = consolidated_data['Round'].max()
+        latest_data = consolidated_data[consolidated_data['Round'] == latest_round]
+        
+        # Create list of players with prices
+        player_data = []
+        for _, row in latest_data.iterrows():
+            player_data.append({
+                'label': row['Player'],
+                'value': row['Player'],
+                'price': str(int(row['Price'] / 1000))  # Convert to k format
+            })
+        
+        return jsonify(player_data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

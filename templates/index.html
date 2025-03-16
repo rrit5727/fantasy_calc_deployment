@@ -172,28 +172,59 @@
 
         /* Panel styling */
         .panel {
-            background: white;
-            padding: 30px;
+            padding: 20px;
+            background-color: white;
             border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            transition: all var(--transition-speed) cubic-bezier(0.25, 0.8, 0.25, 1);
-            border: 1px solid rgba(0,0,0,0.1);
-            opacity: 0;
-            animation: fadeIn 0.6s ease forwards;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
-        .panel:hover {
-            box-shadow: var(--box-shadow-hover);
-            transform: translateY(-5px);
-        }
-
-        .panel-title {
-            color: var(--text-color);
-            font-size: 24px;
-            margin-bottom: 25px;
+        /* Main panel title at the top */
+        .main-panel-title {
             text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
             font-weight: 600;
-            letter-spacing: -0.5px;
+        }
+
+        /* Field container for each input group */
+        .field-container {
+            margin-bottom: 15px;
+        }
+
+        /* Field labels aligned with input fields */
+        .field-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        /* Input styling */
+        .cash-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .cash-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .cash-input {
+            width: 100%;
+            padding: 12px 15px 12px 30px !important;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+        }
+
+        .player-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         /* Trade option styling */
@@ -1023,6 +1054,299 @@
         body.has-excluded-players {
             padding-top: calc(20vh + 60px); /* Adjust top padding based on header plus pane height */
         }
+
+        /* Add this to your CSS section */
+        #cashInBank {
+            -moz-appearance: textfield; /* Firefox */
+        }
+
+        #cashInBank::-webkit-inner-spin-button,
+        #cashInBank::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* For consistency in Firefox */
+        @-moz-document url-prefix() {
+            #cashInBank {
+                padding-right: 10px; /* Add some space on the right in Firefox */
+            }
+        }
+
+        /* Match spacing between input groups */
+        .form-group + .form-group {
+            margin-top: 15px;
+        }
+
+        /* For Dark Mode */
+        body.dark-mode #cashInBank {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+
+        /* Cash in Bank styling fixes */
+        .cash-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .cash-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            z-index: 1;
+        }
+
+        .cash-input {
+            width: 100%;
+            padding: 12px 15px 12px 30px !important;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Player autocomplete styling fixes */
+        .ui-autocomplete {
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            width: auto !important;  /* Allow enough width for prices */
+            box-sizing: border-box;
+        }
+
+        .player-name-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 8px 10px;
+            box-sizing: border-box;
+        }
+
+        .player-name {
+            font-weight: bold;
+            margin-right: 20px; /* Add space between name and price */
+        }
+
+        .player-price {
+            font-weight: normal;
+            color: #718096;
+            white-space: nowrap;
+        }
+
+        /* Dark mode support */
+        body.dark-mode .player-price {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .ui-autocomplete {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+
+        body.dark-mode .ui-autocomplete .ui-menu-item-wrapper {
+            color: #e2e8f0;
+        }
+
+        /* Fix for label positioning */
+        .form-group.cash-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.cash-group label {
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Style for input labels above fields */
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        /* Dark mode support */
+        body.dark-mode .input-label {
+            color: #e2e8f0;
+        }
+
+        /* Section headings for trade panel */
+        .section-heading {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-color);
+            text-align: left;
+            width: 100%;
+        }
+
+        /* Dark mode support */
+        body.dark-mode .section-heading {
+            color: #e2e8f0;
+        }
+
+        /* Ensure cash and player inputs are properly aligned */
+        .player-inputs {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cash-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .cash-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            z-index: 1;
+        }
+
+        .cash-input {
+            width: 100%;
+            padding: 12px 15px 12px 30px !important;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Cash title styling */
+        .panel-title.cash-title {
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+        /* Ensure player inputs are properly aligned */
+        .player-inputs {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cash-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .cash-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            z-index: 1;
+        }
+
+        .cash-input {
+            width: 100%;
+            padding: 12px 15px 12px 30px !important;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Formatting for selected players */
+        input[type="text"] {
+            font-weight: normal;
+        }
+
+        /* Add this to your existing CSS */
+        .ui-autocomplete .player-name {
+            font-weight: bold;
+        }
+
+        .ui-autocomplete .player-price {
+            font-weight: normal;
+        }
+
+        /* Make sure the input text is properly styled when a player is selected */
+        #player1::first-line, #player2::first-line {
+            font-weight: bold;
+        }
+
+        /* Field containers with proper alignment */
+        .trade-inputs-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .field-container {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .field-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        /* Input styling for consistent width */
+        .input-field {
+            position: relative;
+            width: 100%;
+        }
+
+        .player-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .cash-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .cash-input {
+            width: 100%;
+            padding: 12px 15px 12px 30px !important;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Player selection styling */
+        .player-name {
+            font-weight: bold;
+        }
+
+        .player-price {
+            font-weight: normal;
+            color: #718096;
+        }
+
+        /* Center align the panel title */
+        .panel-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 600;
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -1146,11 +1470,23 @@
 
             <div class="trade-panel">
                 <div class="panel">
-                    <div class="panel-title">Players to Trade Out</div>
-                    <div class="form-group">
-                        <div class="player-inputs">
-                            <input type="text" id="player1" name="player1" placeholder="Player 1" required>
-                            <input type="text" id="player2" name="player2" placeholder="Player 2 (Optional)">
+                    <div class="panel-title" style="text-align: center;">Players to Trade Out</div>
+
+                    <div class="trade-inputs-container">
+                        <div class="field-container">
+                            <div class="field-label">Cash in Bank</div>
+                            <div class="input-field">
+                                <span class="cash-symbol">$</span>
+                                <input type="text" id="cashInBank" name="cashInBank" placeholder="000 k" class="cash-input">
+                            </div>
+                        </div>
+                        
+                        <div class="field-container">
+                            <div class="field-label">Players</div>
+                            <div class="player-inputs">
+                                <input type="text" id="player1" name="player1" placeholder="Player 1" required>
+                                <input type="text" id="player2" name="player2" placeholder="Player 2 (Optional)">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1233,20 +1569,66 @@
             // Initial observer setup
             initializeIntersectionObserver();
 
-            // Fetch player names for autocomplete
+            // Fetch player names with prices for autocomplete
             $.ajax({
-                url: '/players',
+                url: '/get_player_names_with_prices',
                 method: 'GET',
-                success: function(playerNames) {
-                    // Initialize autocomplete for player input fields
+                success: function(playerData) {
                     $('#player1, #player2').autocomplete({
-                        source: playerNames
+                        source: playerData,
+                        minLength: 2,
+                        select: function(event, ui) {
+                            // Store data for submission
+                            $(this).data('playerName', ui.item.value);
+                            $(this).data('playerPrice', ui.item.price);
+                            
+                            // Create formatted string with name and price
+                            const formattedValue = `<strong>${ui.item.label}</strong> $${ui.item.price}k`;
+                            
+                            // Set the display value with name in bold
+                            $(this).val(ui.item.label + " $" + ui.item.price + "k");
+                            
+                            // Apply bold to player name only using CSS classes
+                            const parts = $(this).val().split('$');
+                            const nameElement = $('<span>').addClass('selected-name').text(parts[0].trim());
+                            const priceElement = $('<span>').addClass('selected-price').text('$' + parts[1]);
+                            
+                            // Apply styling using CSS class
+                            $(this).addClass('player-field-selected');
+                            
+                            return false;
+                        }
+                    }).each(function() {
+                        $(this).autocomplete("instance")._renderItem = function(ul, item) {
+                            return $("<li>")
+                                .append("<div class='player-name-price'><span class='player-name'>" + 
+                                       item.label + "</span><span class='player-price'>$" + 
+                                       item.price + "k</span></div>")
+                                .appendTo(ul);
+                        };
                     });
                 },
                 error: function(xhr) {
-                    console.error('Error fetching player names:', xhr.responseText);
+                    console.error('Error fetching player names with prices:', xhr.responseText);
                 }
             });
+
+            // Add styles for selected player formatting
+            $("<style>")
+                .prop("type", "text/css")
+                .html(`
+                    .player-field-selected::placeholder {
+                        font-weight: normal;
+                    }
+                    .player-field-selected {
+                        font-weight: normal;
+                    }
+                    /* Format only player name part in bold */
+                    .player-field-selected::first-line {
+                        font-weight: bold;
+                    }
+                `)
+                .appendTo("head");
 
             // Updated Strategy buttons event listener
             $('.settings-panel .setting-box[data-strategy]').click(function() {
@@ -1279,18 +1661,37 @@
                 }
             });
 
+            // Update form submission to extract player names from data attributes
             $('#tradeForm').on('submit', function(e) {
                 e.preventDefault();
                 $('#results').html('<div class="loading"></div>');
                 
-                // Serialize form data
+                // Create a new FormData object
                 let formData = new FormData(this);
                 
-                // Remove player2 from formData if it's empty
-                if (!formData.get('player2')) {
+                // Get the cash value and convert from "k" to actual number
+                let cashValue = formData.get('cashInBank');
+                if (cashValue) {
+                    // Extract just the number part and multiply by 1000
+                    cashValue = parseInt(cashValue.replace(/\D/g, '') || 0) * 1000;
+                    formData.set('cashInBank', cashValue);
+                } else {
+                    formData.set('cashInBank', 0);
+                }
+                
+                // Get actual player names from data attributes
+                const player1Name = $('#player1').data('playerName') || $('#player1').val();
+                formData.set('player1', player1Name);
+                
+                const player2 = $('#player2');
+                if (player2.val()) {
+                    const player2Name = player2.data('playerName') || player2.val();
+                    formData.set('player2', player2Name);
+                } else {
                     formData.delete('player2');
                 }
                 
+                // Continue with your AJAX call
                 $.ajax({
                     url: '/calculate',
                     method: 'POST',
@@ -1634,6 +2035,42 @@
                         }
                     }
                 }, 300);
+            });
+
+            // Cash in Bank input handling with "k" suffix
+            const cashInput = $('#cashInBank');
+            
+            // Process input to handle the "k" suffix
+            cashInput.on('input', function() {
+                // Remove all non-numeric characters
+                let value = $(this).val().replace(/\D/g, '');
+                
+                // If there's a value, append " k"
+                if (value) {
+                    $(this).val(value + ' k');
+                    
+                    // Move cursor back before the " k"
+                    const cursorPos = value.length;
+                    setTimeout(function() {
+                        cashInput[0].setSelectionRange(cursorPos, cursorPos);
+                    }, 0);
+                }
+            });
+            
+            // Format on focus
+            cashInput.on('focus', function() {
+                let value = $(this).val().replace(/\D/g, '');
+                $(this).val(value);
+            });
+            
+            // Format on blur
+            cashInput.on('blur', function() {
+                let value = $(this).val().replace(/\D/g, '');
+                if (value) {
+                    $(this).val(value + ' k');
+                } else {
+                    $(this).val('');
+                }
             });
         });
     </script>

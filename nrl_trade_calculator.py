@@ -477,7 +477,8 @@ def calculate_trade_options(
     team_list: List[str] = None,
     simulate_datetime: str = None,
     apply_lockout: bool = False,
-    excluded_players: List[str] = None
+    excluded_players: List[str] = None,
+    cash_in_bank: int = 0
 ) -> List[Dict]:
     """
     Calculate trade options based on the selected strategy.
@@ -495,6 +496,7 @@ def calculate_trade_options(
     simulate_datetime (str): Optional datetime string for lockout simulation
     apply_lockout (bool): Whether to apply lockout restrictions
     excluded_players (List[str]): Optional list of players to exclude from trade options
+    cash_in_bank (int): Additional cash to add to the salary freed up
     
     Returns:
     List[Dict]: List of trade option dictionaries
@@ -521,7 +523,7 @@ def calculate_trade_options(
     num_players_needed = len(traded_out_players)
     
     # Calculate total salary freed up from traded out players
-    salary_freed = 0
+    salary_freed = cash_in_bank  # Start with cash in bank value
     for player in traded_out_players:
         player_data = consolidated_data[consolidated_data['Player'] == player].sort_values('Round', ascending=False)
         if not player_data.empty:
@@ -529,7 +531,7 @@ def calculate_trade_options(
         else:
             print(f"Warning: Could not find price data for {player}")
     
-    print(f"Total salary freed up: ${salary_freed:,}")
+    print(f"Total salary freed up: ${salary_freed:,} (including ${cash_in_bank:,} cash in bank)")
     
     # Get all players from the latest round
     latest_round_data = consolidated_data[consolidated_data['Round'] == latest_round]
