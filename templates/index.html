@@ -812,6 +812,16 @@
             width: 70%;
             margin-left: auto;
             margin-right: auto;
+            margin-bottom: 40px;
+        }
+
+        /* Make both panels full width on mobile */
+        @media (max-width: 768px) {
+            .settings-panel,
+            .trade-panel {
+                width: 100%;
+                padding: 20px;
+            }
         }
     </style>
     <!-- Hotjar Tracking Code -->
@@ -850,7 +860,7 @@
     </div>
 
     <div class="container">
-        <h1 class="main-title">Fantasy Trade Calculator</h1>
+        
         
         <!-- Add this mobile-only powered-by section that appears below main title -->
         <div class="mobile-powered-by">
