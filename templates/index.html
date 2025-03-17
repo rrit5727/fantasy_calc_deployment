@@ -10,8 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
+            --primary-color: #3cab0e;
+            --secondary-color: #339a0c;
             --accent-color: #e74c3c;
             --background-color: #f8fafc;
             --text-color: #2d3748;
@@ -54,7 +54,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #3498db; /* Your existing blue color */
+            background-color: #3cab0e;
             color: white;
             padding: 15px 20px;
             z-index: 1000;
@@ -202,7 +202,7 @@
 
         input[type="text"]:focus, input[type="datetime-local"]:focus, select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            box-shadow: 0 0 0 3px rgba(60, 171, 14, 0.1);
             outline: none;
         }
 
@@ -356,7 +356,7 @@
             display: inline-block;
             width: 40px;
             height: 40px;
-            border: 4px solid rgba(52, 152, 219, 0.1);
+            border: 4px solid rgba(60, 171, 14, 0.1);
             border-radius: 50%;
             border-top-color: var(--primary-color);
             border-left-color: var(--primary-color);
@@ -446,7 +446,7 @@
 
         .player-inputs input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            box-shadow: 0 0 0 3px rgba(60, 171, 14, 0.1);
         }
 
         /* Submit button container */
@@ -951,7 +951,7 @@
         /* Focus state for accessibility */
         .remove-player-icon:focus {
             outline: none;
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
+            box-shadow: 0 0 0 2px rgba(60, 171, 14, 0.5);
         }
 
         /* Specifically for highlighted cards */
@@ -1322,6 +1322,38 @@
         }
 
         /* Styling for the remove player button */
+        .remove-player-button {
+            display: inline-block;
+            background-color: #4a6fa5;
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .remove-player-button:hover {
+            background-color: #e53e3e;
+        }
+
+        /* For dark mode support */
+        body.dark-mode .remove-player-button {
+            background-color: #e53e3e;
+        }
+
+        body.dark-mode .remove-player-button:hover {
+            background-color: #c53030;
+        }
+
+        /* Change the color of the remove player button when the trade option is highlighted */
+        .trade-option.highlighted .remove-player-button {
+            background-color: #4a6fa5;
+            color: white;
+        }
+
+        /* Ensure the default color remains the same when not highlighted */
         .remove-player-button {
             display: inline-block;
             background-color: var(--accent-color);
