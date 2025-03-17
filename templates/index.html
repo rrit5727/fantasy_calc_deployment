@@ -667,11 +667,6 @@
                 margin-right: 50px; /* Make room for dark mode toggle */
             }
 
-            .dark-mode-toggle {
-                top: 15px;
-                right: 15px;
-            }
-
             .checkbox-wrapper {
                 display: inline-flex;
                 margin-right: 15px;
@@ -763,49 +758,6 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: var(--secondary-color);
-        }
-
-        /* Dark mode toggle */
-        .dark-mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1001; /* Ensure it's above the header */
-        }
-
-        .dark-mode-toggle input[type="checkbox"] {
-            display: none;
-        }
-
-        .dark-mode-toggle label {
-            cursor: pointer;
-            width: 50px;
-            height: 25px;
-            background-color: #83d8ff;
-            display: block;
-            border-radius: 25px;
-            position: relative;
-        }
-
-        .dark-mode-toggle label:after {
-            content: '';
-            position: absolute;
-            top: 1px;
-            left: 1px;
-            width: 23px;
-            height: 23px;
-            background-color: #fff;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-
-        .dark-mode-toggle input:checked + label {
-            background-color: #032b43;
-        }
-
-        .dark-mode-toggle input:checked + label:after {
-            left: calc(100% - 1px);
-            transform: translateX(-100%);
         }
 
         /* Dark mode styles */
@@ -1488,10 +1440,6 @@
     </script>
 </head>
 <body>
-    <div class="dark-mode-toggle">
-        <input type="checkbox" id="darkModeToggle">
-        <label for="darkModeToggle"></label>
-    </div>
     <header class="header">
         <div class="header-content">
             <h1>FANTASY TRADE CALCULATOR</h1>
@@ -1647,22 +1595,6 @@
             let lastScrollTop = 0;
             let excludedPlayers = [];
 
-            // Dark mode toggle
-            $('#darkModeToggle').change(function() {
-                $('body').toggleClass('dark-mode');
-            });
-
-            // Detect scroll direction
-            window.addEventListener('scroll', function() {
-                let st = window.pageYOffset || document.documentElement.scrollTop;
-                if (st > lastScrollTop) {
-                    scrollDirection = 'down';
-                } else if (st < lastScrollTop) {
-                    scrollDirection = 'up';
-                }
-                lastScrollTop = st;
-            });
-
             // Initialize intersection observer
             function initializeIntersectionObserver() {
                 if (observer) observer.disconnect();
@@ -1751,23 +1683,6 @@
                     console.error('Error fetching player names with prices:', xhr.responseText);
                 }
             });
-
-            // Add styles for selected player formatting
-            $("<style>")
-                .prop("type", "text/css")
-                .html(`
-                    .player-field-selected::placeholder {
-                        font-weight: normal;
-                    }
-                    .player-field-selected {
-                        font-weight: normal;
-                    }
-                    /* Format only player name part in bold */
-                    .player-field-selected::first-line {
-                        font-weight: bold;
-                    }
-                `)
-                .appendTo("head");
 
             // Updated Strategy buttons event listener
             $('.settings-panel .setting-box[data-strategy]').click(function() {
@@ -1896,79 +1811,6 @@
                         $('#results').html(`<div class="error">${errorMessage}</div>`);
                     }
                 });
-            });
-
-            function checkPlayerLockout(playerInput) {
-                const playerName = playerInput.val();
-                const simulateDateTime = $('#simulateDateTime').val();
-                
-                if (!playerName || !$('#applyLockout').is(':checked')) {
-                    removeErrorMessage(playerInput);
-                    return;
-                }
-                
-                $.ajax({
-                    url: '/check_player_lockout',
-                    method: 'POST',
-                    data: {
-                        player_name: playerName,
-                        simulateDateTime: simulateDateTime
-                    },
-                    success: function(response) {
-                        if (response.is_locked) {
-                            showErrorMessage(playerInput, `${playerName}'s lockout has passed`);
-                        } else {
-                            removeErrorMessage(playerInput);
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error('Error checking player lockout:', xhr.responseText);
-                    }
-                });
-            }
-            
-            function showErrorMessage(element, message) {
-                // Remove any existing error message
-                removeErrorMessage(element);
-                
-                // Add new error message
-                const errorDiv = $('<div>')
-                    .addClass('player-error')
-                    .css({
-                        'color': 'var(--accent-color)',
-                        'font-size': '0.9em',
-                        'margin-top': '5px'
-                    })
-                    .text(message);
-                
-                element.parent().append(errorDiv);
-            }
-            
-            function removeErrorMessage(element) {
-                element.parent().find('.player-error').remove();
-            }
-            
-            // Check lockout when player name is selected from autocomplete
-            $('#player1, #player2').on('autocompleteselect', function(event, ui) {
-                checkPlayerLockout($(this));
-            });
-            
-            // Check lockout when player name is manually entered
-            $('#player1, #player2').on('change', function() {
-                checkPlayerLockout($(this));
-            });
-            
-            // Clear error messages when lockout checkbox is unchecked
-            $('#applyLockout').on('change', function() {
-                if (!$(this).is(':checked')) {
-                    removeErrorMessage($('#player1'));
-                    removeErrorMessage($('#player2'));
-                    $('#results').find('.error').remove();
-                } else {
-                    // Recheck current players when lockout is enabled
-                    if ($('#player1').val()) checkPlayerLockout($('#player1'));
-                    if ($('#player2').val()) checkPlayerLockout($('#player2'));
-                }
             });
 
             // Handle tooltip clicks on mobile
