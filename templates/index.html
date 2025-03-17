@@ -1427,6 +1427,53 @@
                 max-width: 180px;
             }
         }
+
+        /* Hide the mobile version on desktop */
+        .mobile-powered-by {
+            display: none;
+        }
+        
+        /* Main title alignment */
+        .main-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive adjustments for mobile */
+        @media (max-width: 768px) {
+            /* Hide desktop powered-by in header */
+            .header-right {
+                display: none;
+            }
+            
+            /* Show mobile powered-by below main title */
+            .mobile-powered-by {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0 auto 30px auto;
+                width: 100%;
+                gap: 10px;
+            }
+            
+            .mobile-powered-by .powered-by-text {
+                color: var(--text-color);
+                font-size: 1rem;
+                margin: 0;
+                white-space: nowrap;
+            }
+            
+            .mobile-powered-by .powered-by-logo {
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+                object-fit: contain;
+                background-color: white;
+                padding: 2px;
+                margin: 0 5px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            }
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -1469,6 +1516,13 @@
 
     <div class="container">
         <h1 class="main-title">Fantasy Trade Calculator</h1>
+        
+        <!-- Add this mobile-only powered-by section that appears below main title -->
+        <div class="mobile-powered-by">
+            <span class="powered-by-text">Powered by:</span>
+            <img src="{{ url_for('static', filename='images/Amateurs.png') }}" alt="NRL Amateurs Fantasy Sports" class="powered-by-logo">
+            <img src="{{ url_for('static', filename='images/FFQ.png') }}" alt="FFQ Logo" class="powered-by-logo">
+        </div>
         
         <form id="tradeForm">
             <div class="settings-panel">
