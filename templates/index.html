@@ -597,7 +597,6 @@
             .panel-title {
                 margin-bottom: 20px;
                 text-align: center;
-                font-weight: 200;
             }
 
             /* Match button styling with trade options */
@@ -666,6 +665,11 @@
             .header h1 {
                 font-size: 20px; /* Smaller text on mobile */
                 margin-right: 50px; /* Make room for dark mode toggle */
+            }
+
+            .dark-mode-toggle {
+                top: 15px;
+                right: 15px;
             }
 
             .checkbox-wrapper {
@@ -761,6 +765,669 @@
             background: var(--secondary-color);
         }
 
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001; /* Ensure it's above the header */
+        }
+
+        .dark-mode-toggle input[type="checkbox"] {
+            display: none;
+        }
+
+        .dark-mode-toggle label {
+            cursor: pointer;
+            width: 50px;
+            height: 25px;
+            background-color: #83d8ff;
+            display: block;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .dark-mode-toggle label:after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 23px;
+            height: 23px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .dark-mode-toggle input:checked + label {
+            background-color: #032b43;
+        }
+
+        .dark-mode-toggle input:checked + label:after {
+            left: calc(100% - 1px);
+            transform: translateX(-100%);
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .panel,
+        body.dark-mode .trade-option,
+        body.dark-mode .settings-panel {
+            background-color: #2d3748;
+            border-color: #4a5568;
+        }
+
+        body.dark-mode input[type="text"],
+        body.dark-mode input[type="datetime-local"],
+        body.dark-mode select {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+
+        body.dark-mode .setting-box {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+
+        /* Ensure text is visible in dark mode */
+        body.dark-mode label,
+        body.dark-mode .panel-title,
+        body.dark-mode .main-title,
+        body.dark-mode .trade-option,
+        body.dark-mode .setting-box,
+        body.dark-mode select,
+        body.dark-mode option {
+            color: #e2e8f0;
+        }
+
+        /* Ensure selected/active buttons remain visible */
+        body.dark-mode .setting-box.selected {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Position selection text in dark mode */
+        body.dark-mode .position-swap-group select,
+        body.dark-mode .position-swap-group option {
+            color: #e2e8f0;
+            background-color: #2d3748;
+        }
+
+        /* Additional Options text in dark mode */
+        body.dark-mode .checkbox-wrapper label {
+            color: #e2e8f0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 36px;
+            }
+            
+            .panel-title {
+                font-size: 20px;
+            }
+
+            .button-row {
+                grid-template-columns: 1fr;
+            }
+
+            .player-inputs {
+                flex-direction: column;
+            }
+        }
+
+        /* Dark mode header styles */
+        body.dark-mode .header {
+            background: rgba(26, 32, 44, 0.95);
+        }
+
+        body.dark-mode .header:not(.scrolled) h1 {
+            color: #e2e8f0;
+        }
+
+        /* Add to your CSS section */
+        #excluded-players-pane {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            z-index: 1100; /* Higher than header's z-index of 1000 */
+            height: 20vh;
+            display: none;
+        }
+
+        .excluded-players-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            height: 100%; /* Take full height of parent */
+        }
+
+        #excluded-players-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .excluded-player-tag {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 5px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .excluded-player-tag .remove-excluded {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Improved remove player icon - elegant circular design */
+        .remove-player-icon {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+            /* Better touch target */
+            min-width: 20px;
+            min-height: 20px;
+            /* Remove the text character */
+            font-size: 0;
+        }
+
+        /* Create the X using pseudo-elements for smooth lines */
+        .remove-player-icon::before,
+        .remove-player-icon::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 2px;
+            border-radius: 1px;
+            background-color: #333;
+            transition: all 0.2s ease;
+        }
+
+        /* Rotate to create X */
+        .remove-player-icon::before {
+            transform: rotate(45deg);
+        }
+
+        .remove-player-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        /* Hover effects */
+        .remove-player-icon:hover {
+            transform: scale(1.15);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .remove-player-icon:hover::before,
+        .remove-player-icon:hover::after {
+            background-color: #e74c3c;
+            width: 12px;
+        }
+
+        /* Active state */
+        .remove-player-icon:active {
+            transform: scale(0.95);
+        }
+
+        /* Focus state for accessibility */
+        .remove-player-icon:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
+        }
+
+        /* Specifically for highlighted cards */
+        .trade-option.highlighted .remove-player-icon {
+            background-color: white;
+        }
+
+        .trade-option.highlighted .remove-player-icon::before,
+        .trade-option.highlighted .remove-player-icon::after {
+            background-color: #333;
+        }
+
+        .trade-option.highlighted .remove-player-icon:hover::before,
+        .trade-option.highlighted .remove-player-icon:hover::after {
+            background-color: #e74c3c;
+        }
+
+        /* Mobile optimization for excluded players pane */
+        @media (max-width: 768px) {
+            #excluded-players-pane {
+                height: 20vh;
+                padding: 8px;
+                overflow: visible; /* Allow content to be seen immediately */
+            }
+            
+            .excluded-players-container {
+                justify-content: center;
+            }
+            
+            #excluded-players-pane h3 {
+                font-size: 14px;
+                margin: 3px 0;
+                text-align: center;
+            }
+            
+            #excluded-players-list {
+                gap: 6px;
+                margin: 5px 0;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center; /* Center tags horizontally */
+                max-height: 10vh; /* Ensure list doesn't overflow */
+                overflow-y: auto;
+            }
+            
+            .excluded-player-tag {
+                padding: 3px 8px;
+                font-size: 12px;
+                border-radius: 10px;
+            }
+            
+            .excluded-player-tag .remove-excluded {
+                font-size: 10px;
+                padding: 2px;
+            }
+            
+            .excluded-players-actions {
+                display: flex;
+                gap: 6px;
+                justify-content: center; /* Center buttons */
+                margin-top: 5px;
+            }
+            
+            #recalculate-btn, #clear-excluded-btn {
+                font-size: 12px;
+                padding: 5px 8px;
+                min-height: unset;
+                line-height: 1.2;
+            }
+        }
+
+        /* Adjust body padding when excluded players pane is visible */
+        body.has-excluded-players {
+            padding-top: calc(20vh + 60px); /* Adjust top padding based on header plus pane height */
+        }
+
+        /* Add this to your CSS section */
+        #cashInBank {
+            -moz-appearance: textfield; /* Firefox */
+        }
+
+        #cashInBank::-webkit-inner-spin-button,
+        #cashInBank::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* For consistency in Firefox */
+        @-moz-document url-prefix() {
+            #cashInBank {
+                padding-right: 10px; /* Add some space on the right in Firefox */
+            }
+        }
+
+        /* Match spacing between input groups */
+        .form-group + .form-group {
+            margin-top: 15px;
+        }
+
+        /* For Dark Mode */
+        body.dark-mode #cashInBank {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+
+        /* Cash in Bank styling fixes */
+        .cash-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .cash-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            z-index: 1;
+        }
+
+        .cash-input {
+            width: 100%;
+            padding: 12px 15px 12px 30px !important;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Player autocomplete styling fixes */
+        .ui-autocomplete {
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            width: auto !important;  /* Allow enough width for prices */
+            box-sizing: border-box;
+        }
+
+        .player-name-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 8px 10px;
+            box-sizing: border-box;
+        }
+
+        .player-name {
+            font-weight: bold;
+            margin-right: 20px; /* Add space between name and price */
+        }
+
+        .player-price {
+            font-weight: normal;
+            color: #718096;
+            white-space: nowrap;
+        }
+
+        /* Dark mode support */
+        body.dark-mode .player-price {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .ui-autocomplete {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+
+        body.dark-mode .ui-autocomplete .ui-menu-item-wrapper {
+            color: #e2e8f0;
+        }
+
+        /* Fix for label positioning */
+        .form-group.cash-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.cash-group label {
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Style for input labels above fields */
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        /* Dark mode support */
+        body.dark-mode .input-label {
+            color: #e2e8f0;
+        }
+
+        /* Section headings for trade panel */
+        .section-heading {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-color);
+            text-align: left;
+            width: 100%;
+        }
+
+        /* Dark mode support */
+        body.dark-mode .section-heading {
+            color: #e2e8f0;
+        }
+
+        /* Ensure cash and player inputs are properly aligned */
+        .player-inputs {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cash-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .cash-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            z-index: 1;
+        }
+
+        .cash-input {
+            width: 100%;
+            padding: 12px 15px 12px 30px !important;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Cash title styling */
+        .panel-title.cash-title {
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+        /* Ensure player inputs are properly aligned */
+        .player-inputs {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cash-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .cash-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            z-index: 1;
+        }
+
+        .cash-input {
+            width: 100%;
+            padding: 12px 15px 12px 30px !important;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Formatting for selected players */
+        input[type="text"] {
+            font-weight: normal;
+        }
+
+        /* Add this to your existing CSS */
+        .ui-autocomplete .player-name {
+            font-weight: bold;
+        }
+
+        .ui-autocomplete .player-price {
+            font-weight: normal;
+        }
+
+        /* Make sure the input text is properly styled when a player is selected */
+        #player1::first-line, #player2::first-line {
+            font-weight: bold;
+        }
+
+        /* Field containers with proper alignment */
+        .trade-inputs-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .field-container {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .field-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        /* Input styling for consistent width */
+        .input-field {
+            position: relative;
+            width: 100%;
+        }
+
+        .player-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .cash-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .cash-input {
+            width: 100%;
+            padding: 12px 15px 12px 30px !important;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Player selection styling */
+        .player-name {
+            font-weight: bold;
+        }
+
+        .player-price {
+            font-weight: normal;
+            color: #718096;
+        }
+
+        /* Center align the panel title */
+        .panel-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        /* Styling for the remove player button */
+        .remove-player-button {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .remove-player-button:hover {
+            background-color: #e53e3e;
+        }
+
+        /* For dark mode support */
+        body.dark-mode .remove-player-button {
+            background-color: #e53e3e;
+        }
+
+        body.dark-mode .remove-player-button:hover {
+            background-color: #c53030;
+        }
+
+        /* Powered by styling */
+        .powered-by-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px auto 30px;
+            text-align: center;
+        }
+
+        .powered-by-text {
+            font-size: 16px;
+            color: white;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .powered-by-logo {
+            max-width: 220px;
+            height: auto;
+        }
+
+        /* For dark mode */
+        body.dark-mode .powered-by-text {
+            color: #e2e8f0;
+        }
+
+        /* Responsive adjustment */
+        @media (max-width: 768px) {
+            .powered-by-logo {
+                max-width: 180px;
+            }
+        }
+
         /* Hide the mobile version on desktop */
         .mobile-powered-by {
             display: none;
@@ -797,30 +1464,14 @@
             }
             
             .mobile-powered-by .powered-by-logo {
-                height: 80px;
-                width: 80px;
+                height: 40px;
+                width: 40px;
                 border-radius: 50%;
                 object-fit: contain;
                 background-color: white;
                 padding: 2px;
                 margin: 0 5px;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            }
-        }
-
-        .trade-panel {
-            width: 70%;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 40px;
-        }
-
-        /* Make both panels full width on mobile */
-        @media (max-width: 768px) {
-            .settings-panel,
-            .trade-panel {
-                width: 100%;
-                padding: 20px;
             }
         }
     </style>
@@ -837,6 +1488,10 @@
     </script>
 </head>
 <body>
+    <div class="dark-mode-toggle">
+        <input type="checkbox" id="darkModeToggle">
+        <label for="darkModeToggle"></label>
+    </div>
     <header class="header">
         <div class="header-content">
             <h1>FANTASY TRADE CALCULATOR</h1>
@@ -860,7 +1515,7 @@
     </div>
 
     <div class="container">
-        
+        <h1 class="main-title">Fantasy Trade Calculator</h1>
         
         <!-- Add this mobile-only powered-by section that appears below main title -->
         <div class="mobile-powered-by">
@@ -954,20 +1609,19 @@
 
             <div class="trade-panel">
                 <div class="panel">
-                    <div class="panel-title" style="text-align: center; font-weight: bold;">Players to Trade Out</div>
+                    <div class="panel-title" style="text-align: center;">Players to Trade Out</div>
 
                     <div class="trade-inputs-container">
                         <div class="field-container">
-                            <div class="player-inputs">
-                                <label for="cashInBank">Cash in Bank</label>
-                                <div class="cash-input-wrapper">
-                                    <span class="cash-symbol">$</span>
-                                    <input type="text" id="cashInBank" name="cashInBank" class="cash-input" placeholder="0 k">
-                                </div>
+                            <div class="field-label">Cash in Bank</div>
+                            <div class="input-field">
+                                <span class="cash-symbol">$</span>
+                                <input type="text" id="cashInBank" name="cashInBank" placeholder="000 k" class="cash-input">
                             </div>
                         </div>
                         
                         <div class="field-container">
+                            <div class="field-label">Players</div>
                             <div class="player-inputs">
                                 <input type="text" id="player1" name="player1" placeholder="Player 1" required>
                                 <input type="text" id="player2" name="player2" placeholder="Player 2 (Optional)">
@@ -992,6 +1646,22 @@
             let scrollDirection = 'down';
             let lastScrollTop = 0;
             let excludedPlayers = [];
+
+            // Dark mode toggle
+            $('#darkModeToggle').change(function() {
+                $('body').toggleClass('dark-mode');
+            });
+
+            // Detect scroll direction
+            window.addEventListener('scroll', function() {
+                let st = window.pageYOffset || document.documentElement.scrollTop;
+                if (st > lastScrollTop) {
+                    scrollDirection = 'down';
+                } else if (st < lastScrollTop) {
+                    scrollDirection = 'up';
+                }
+                lastScrollTop = st;
+            });
 
             // Initialize intersection observer
             function initializeIntersectionObserver() {
@@ -1081,6 +1751,23 @@
                     console.error('Error fetching player names with prices:', xhr.responseText);
                 }
             });
+
+            // Add styles for selected player formatting
+            $("<style>")
+                .prop("type", "text/css")
+                .html(`
+                    .player-field-selected::placeholder {
+                        font-weight: normal;
+                    }
+                    .player-field-selected {
+                        font-weight: normal;
+                    }
+                    /* Format only player name part in bold */
+                    .player-field-selected::first-line {
+                        font-weight: bold;
+                    }
+                `)
+                .appendTo("head");
 
             // Updated Strategy buttons event listener
             $('.settings-panel .setting-box[data-strategy]').click(function() {
@@ -1209,6 +1896,79 @@
                         $('#results').html(`<div class="error">${errorMessage}</div>`);
                     }
                 });
+            });
+
+            function checkPlayerLockout(playerInput) {
+                const playerName = playerInput.val();
+                const simulateDateTime = $('#simulateDateTime').val();
+                
+                if (!playerName || !$('#applyLockout').is(':checked')) {
+                    removeErrorMessage(playerInput);
+                    return;
+                }
+                
+                $.ajax({
+                    url: '/check_player_lockout',
+                    method: 'POST',
+                    data: {
+                        player_name: playerName,
+                        simulateDateTime: simulateDateTime
+                    },
+                    success: function(response) {
+                        if (response.is_locked) {
+                            showErrorMessage(playerInput, `${playerName}'s lockout has passed`);
+                        } else {
+                            removeErrorMessage(playerInput);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error checking player lockout:', xhr.responseText);
+                    }
+                });
+            }
+            
+            function showErrorMessage(element, message) {
+                // Remove any existing error message
+                removeErrorMessage(element);
+                
+                // Add new error message
+                const errorDiv = $('<div>')
+                    .addClass('player-error')
+                    .css({
+                        'color': 'var(--accent-color)',
+                        'font-size': '0.9em',
+                        'margin-top': '5px'
+                    })
+                    .text(message);
+                
+                element.parent().append(errorDiv);
+            }
+            
+            function removeErrorMessage(element) {
+                element.parent().find('.player-error').remove();
+            }
+            
+            // Check lockout when player name is selected from autocomplete
+            $('#player1, #player2').on('autocompleteselect', function(event, ui) {
+                checkPlayerLockout($(this));
+            });
+            
+            // Check lockout when player name is manually entered
+            $('#player1, #player2').on('change', function() {
+                checkPlayerLockout($(this));
+            });
+            
+            // Clear error messages when lockout checkbox is unchecked
+            $('#applyLockout').on('change', function() {
+                if (!$(this).is(':checked')) {
+                    removeErrorMessage($('#player1'));
+                    removeErrorMessage($('#player2'));
+                    $('#results').find('.error').remove();
+                } else {
+                    // Recheck current players when lockout is enabled
+                    if ($('#player1').val()) checkPlayerLockout($('#player1'));
+                    if ($('#player2').val()) checkPlayerLockout($('#player2'));
+                }
             });
 
             // Handle tooltip clicks on mobile
