@@ -597,6 +597,7 @@
             .panel-title {
                 margin-bottom: 20px;
                 text-align: center;
+                font-weight: 200;
             }
 
             /* Match button styling with trade options */
@@ -806,6 +807,12 @@
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             }
         }
+
+        .trade-panel {
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -937,19 +944,20 @@
 
             <div class="trade-panel">
                 <div class="panel">
-                    <div class="panel-title" style="text-align: center;">Players to Trade Out</div>
+                    <div class="panel-title" style="text-align: center; font-weight: bold;">Players to Trade Out</div>
 
                     <div class="trade-inputs-container">
                         <div class="field-container">
-                            <div class="field-label">Cash in Bank</div>
-                            <div class="input-field">
-                                <span class="cash-symbol">$</span>
-                                <input type="text" id="cashInBank" name="cashInBank" placeholder="000 k" class="cash-input">
+                            <div class="player-inputs">
+                                <label for="cashInBank">Cash in Bank</label>
+                                <div class="cash-input-wrapper">
+                                    <span class="cash-symbol">$</span>
+                                    <input type="text" id="cashInBank" name="cashInBank" class="cash-input" placeholder="0 k">
+                                </div>
                             </div>
                         </div>
                         
                         <div class="field-container">
-                            <div class="field-label">Players</div>
                             <div class="player-inputs">
                                 <input type="text" id="player1" name="player1" placeholder="Player 1" required>
                                 <input type="text" id="player2" name="player2" placeholder="Player 2 (Optional)">
