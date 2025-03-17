@@ -1458,6 +1458,44 @@
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             }
         }
+
+        .member-benefits-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        .member-benefits-image {
+            width: 100%;
+            max-width: 750px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .member-benefits-container {
+                margin: 20px auto;
+            }
+        }
+
+        .coffee-support-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .coffee-image {
+            max-width: 200px;
+            transition: transform 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .coffee-image:hover {
+            transform: scale(1.05);
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -1617,6 +1655,17 @@
         </form>
 
         <div id="results" class="results"></div>
+
+        <!-- Amateurs images -->
+        <div class="member-benefits-container">
+          <a href="https://buymeacoffee.com/fantasyamateurs/membership" target="_blank" rel="noopener noreferrer">
+            <img src="{{ url_for('static', filename='images/buy_me_a_coffee.png') }}" alt="Exclusive Member Benefits" class="member-benefits-image">
+          </a>
+        </div>
+        <div class="member-benefits-container">
+            <img src="{{ url_for('static', filename='images/members_benefits.png') }}" alt="Exclusive Member Benefits" class="member-benefits-image">
+        </div>
+        
     </div>
 
     <script>
@@ -2107,6 +2156,28 @@
                     $(this).val('');
                 }
             });
+
+            // Initially show member benefits below the form
+            positionMemberBenefits();
+            
+            // Reposition after calculation
+            $('#tradeForm').on('submit', function() {
+                // This will execute after trade calculation
+                setTimeout(positionMemberBenefits, 1000);
+            });
+            
+            function positionMemberBenefits() {
+                const $results = $('#results');
+                const $memberBenefits = $('.member-benefits-container');
+                
+                // If there are results, move the member benefits after the results
+                if ($results.children().length > 0) {
+                    $memberBenefits.insertAfter($results);
+                } else {
+                    // Otherwise keep it after the form
+                    $memberBenefits.insertAfter('#tradeForm');
+                }
+            }
         });
     </script>
 </body>
