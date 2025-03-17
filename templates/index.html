@@ -1360,6 +1360,39 @@
         body.dark-mode .remove-player-button:hover {
             background-color: #c53030;
         }
+
+        /* Powered by styling */
+        .powered-by-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px auto 30px;
+            text-align: center;
+        }
+
+        .powered-by-text {
+            font-size: 16px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .powered-by-logo {
+            max-width: 220px;
+            height: auto;
+        }
+
+        /* For dark mode */
+        body.dark-mode .powered-by-text {
+            color: #e2e8f0;
+        }
+
+        /* Responsive adjustment */
+        @media (max-width: 768px) {
+            .powered-by-logo {
+                max-width: 180px;
+            }
+        }
     </style>
     <!-- Hotjar Tracking Code -->
     <script>
@@ -1379,7 +1412,7 @@
         <label for="darkModeToggle"></label>
     </div>
     <header class="header">
-        <h1>FANTASY FOOTY QUANT</h1>
+        <h1>FANTASY TRADE CALCULATOR</h1>
     </header>
 
     <div id="excluded-players-pane" style="display: none;">
@@ -1394,10 +1427,13 @@
     </div>
 
     <div class="container">
-        <h1 class="main-title">NRL Trade Calculator</h1>              
+        <h1 class="main-title">Fantasy Trade Calculator</h1>
+        <div class="powered-by-container">
+            <p class="powered-by-text">Powered by:</p>
+            <img src="{{ url_for('static', filename='images/Amateurs.png') }}" alt="NRL Amateurs Fantasy Sports" class="powered-by-logo">
+            <img src="{{ url_for('static', filename='images/FFQ.png') }}" alt="FFQ Logo" class="powered-by-logo">
+        </div>
         
-        
-
         <form id="tradeForm">
             <div class="settings-panel">
                 <div class="panel">
