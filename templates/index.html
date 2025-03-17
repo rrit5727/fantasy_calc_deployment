@@ -48,35 +48,71 @@
             box-sizing: border-box;
         }
 
-        /* Header styling - inverted colors at top of page */
+        /* Header styling update */
         .header {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
+            width: 100%;
+            background-color: #3498db; /* Your existing blue color */
+            color: white;
+            padding: 15px 20px;
             z-index: 1000;
-            padding: 20px;
-            background: white; /* White background when at the top */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .header h1 {
             margin: 0;
-            font-size: 28px;
-            color: var(--primary-color); /* Blue text when at the top */
+            font-size: 1.8rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
-            transition: all 0.3s ease;
         }
 
-        /* When scrolled, invert colors */
-        .header.scrolled {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .header.scrolled h1 {
+        .powered-by-text {
             color: white;
+            font-size: 1rem;
+            margin: 0;
+            white-space: nowrap;
+            font-weight: 200;
+        }
+
+        .powered-by-logo {
+            height: 80px; /* Increased by 60% from your current size */
+            width: 80px;
+            border-radius: 50%;
+            object-fit: contain;
+            background-color: white;
+            padding: 2px;
+            margin: 0 5px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .powered-by-text {
+                font-size: 0.9rem;
+            }
+            
+            .powered-by-logo {
+                height: 80px;
+                width: 80px;
+            }
         }
 
         /* Main title styling */
@@ -834,9 +870,7 @@
             .main-title {
                 font-size: 36px;
             }
-
             
-
             .panel-title {
                 font-size: 20px;
             }
@@ -1372,7 +1406,7 @@
 
         .powered-by-text {
             font-size: 16px;
-            color: var(--text-color);
+            color: white;
             margin-bottom: 8px;
             font-weight: 500;
         }
@@ -1412,7 +1446,14 @@
         <label for="darkModeToggle"></label>
     </div>
     <header class="header">
-        <h1>FANTASY TRADE CALCULATOR</h1>
+        <div class="header-content">
+            <h1>FANTASY TRADE CALCULATOR</h1>
+            <div class="header-right">
+                <span class="powered-by-text">Powered by:</span>
+                <img src="{{ url_for('static', filename='images/Amateurs.png') }}" alt="NRL Amateurs Fantasy Sports" class="powered-by-logo">
+                <img src="{{ url_for('static', filename='images/FFQ.png') }}" alt="FFQ Logo" class="powered-by-logo">
+            </div>
+        </div>
     </header>
 
     <div id="excluded-players-pane" style="display: none;">
@@ -1428,11 +1469,6 @@
 
     <div class="container">
         <h1 class="main-title">Fantasy Trade Calculator</h1>
-        <div class="powered-by-container">
-            <p class="powered-by-text">Powered by:</p>
-            <img src="{{ url_for('static', filename='images/Amateurs.png') }}" alt="NRL Amateurs Fantasy Sports" class="powered-by-logo">
-            <img src="{{ url_for('static', filename='images/FFQ.png') }}" alt="FFQ Logo" class="powered-by-logo">
-        </div>
         
         <form id="tradeForm">
             <div class="settings-panel">
