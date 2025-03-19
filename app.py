@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 import time
+from datetime import datetime, timedelta
 
 # Load environment variables
 load_dotenv()
@@ -70,7 +71,11 @@ def index():
 def check_player_lockout():
     try:
         player_name = request.form['player_name']
-        simulate_datetime = request.form.get('simulateDateTime')
+        
+        # Get standardized time from user's local time
+        user_local_time = request.form.get('userLocalTime')
+        user_timezone_offset = request.form.get('userTimezone')
+        simulate_datetime = standardize_user_time(user_local_time, user_timezone_offset)
         
         # Use cached data
         consolidated_data = cached_load_data()
@@ -145,11 +150,25 @@ def calculate():
             'positions': request.form.getlist('positions') if request.form['tradeType'] == 'positionalSwap' else [],
             'restrictToTeamList': 'restrictToTeamList' in request.form,
             'applyLockout': 'applyLockout' in request.form,
-            'simulateDateTime': request.form.get('simulateDateTime'),
-            'excludedPlayers': request.form.getlist('excludedPlayers'),  # Get all excluded players
-            'cashInBank': int(request.form.get('cashInBank', 0))  # Get cash in bank with default of 0
+            'excludedPlayers': request.form.getlist('excludedPlayers'),
+            'cashInBank': int(request.form.get('cashInBank', 0))
         }
-
+        
+        # Get user time information if lockout is applied
+        simulate_datetime = None
+        if form_data['applyLockout']:
+            user_local_time = request.form.get('userLocalTime')
+            user_timezone_offset = request.form.get('userTimezone')
+            simulate_datetime = standardize_user_time(user_local_time, user_timezone_offset)
+            
+            # If we couldn't get a valid time, return an error
+            if not simulate_datetime:
+                return jsonify({
+                    'error': "Could not determine your current time. Please try again."
+                }), 400
+                
+            app.logger.info(f"Using standardized time for lockout: {simulate_datetime}")
+        
         # Use cached data load
         consolidated_data = cached_load_data()
 
@@ -162,7 +181,7 @@ def calculate():
         if form_data['applyLockout']:
             locked_players = []
             for player in traded_out_players:
-                if is_player_locked(player, consolidated_data, form_data['simulateDateTime']):
+                if is_player_locked(player, consolidated_data, simulate_datetime):
                     locked_players.append(player)
             
             if locked_players:
@@ -192,7 +211,7 @@ def calculate():
             allowed_positions=form_data['positions'] if form_data['positions'] else None,
             trade_type=form_data['tradeType'],
             team_list=team_list,
-            simulate_datetime=form_data['simulateDateTime'],
+            simulate_datetime=simulate_datetime,
             apply_lockout=form_data['applyLockout'],
             excluded_players=form_data['excludedPlayers'],
             cash_in_bank=form_data['cashInBank']  # Pass the cash in bank value
@@ -322,6 +341,41 @@ def init_app(app):
 
 # Initialize the database when the app starts
 init_app(app)
+
+def standardize_user_time(user_local_time, user_timezone_offset):
+    """
+    Convert user's local time to a standardized time (AEDT/AEST) for fixture comparisons.
+    
+    Parameters:
+    user_local_time (str): ISO format timestamp from client
+    user_timezone_offset (int): Minutes offset from UTC
+    
+    Returns:
+    str: Standardized datetime string in format 'YYYY-MM-DDTHH:MM'
+    """
+    if not user_local_time or user_timezone_offset is None:
+        return None
+        
+    try:
+        # Parse the user's local time
+        user_dt = datetime.fromisoformat(user_local_time.replace('Z', '+00:00'))
+        
+        # Calculate the user's UTC time by applying their timezone offset
+        # Timezone offset from JavaScript is in minutes (negative for east of UTC)
+        user_utc = user_dt + timedelta(minutes=int(user_timezone_offset))
+        
+        # AEDT is UTC+11, AEST is UTC+10
+        # For simplicity, we're using AEDT (UTC+11) as our standard
+        # In a production app, you'd want to handle DST switches
+        aest_offset = timedelta(hours=11)  # Using AEDT (UTC+11)
+        standardized_time = user_utc + aest_offset
+        
+        # Return in the format expected by the lockout functions
+        return standardized_time.strftime('%Y-%m-%dT%H:%M')
+        
+    except Exception as e:
+        app.logger.error(f"Error standardizing user time: {str(e)}")
+        return None
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5002, debug=True)

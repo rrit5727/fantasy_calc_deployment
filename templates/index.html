@@ -1622,13 +1622,17 @@
                             <input type="checkbox" id="restrictToTeamList" name="restrictToTeamList">
                             <label for="restrictToTeamList">Team List Only</label>
                         </div>
-                        <div class="checkbox-wrapper">
-                            <input type="checkbox" id="applyLockout" name="applyLockout">
-                            <label for="applyLockout">Apply Lockout</label>
-                        </div>
-                        <div class="form-group" id="simulateDateTimeGroup" style="display: none;">
-                            <label for="simulateDateTime">Simulate Current Date/Time:</label>
-                            <input type="datetime-local" id="simulateDateTime" name="simulateDateTime">
+                        <div class="form-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="applyLockout" name="applyLockout">
+                                <span class="checkmark"></span>
+                                Apply lockout restriction based on current time
+                            </label>
+                            <div class="help-text">Prevents trades involving players whose matches have already started</div>
+                            
+                            <!-- Hidden fields to store time info -->
+                            <input type="hidden" id="userLocalTime" name="userLocalTime">
+                            <input type="hidden" id="userTimezone" name="userTimezone">
                         </div>
                     </div>
                 </div>
@@ -2186,6 +2190,46 @@
                     // Otherwise keep it after the form
                     $memberBenefits.insertAfter('#tradeForm');
                 }
+            }
+
+            // Function to update time fields
+            function updateTimeFields() {
+                // Get current local time in ISO format
+                const now = new Date();
+                const localTime = now.toISOString();
+                
+                // Get timezone offset in minutes
+                const timezoneOffset = now.getTimezoneOffset();
+                
+                // Update hidden fields
+                $('#userLocalTime').val(localTime);
+                $('#userTimezone').val(timezoneOffset);
+            }
+            
+            // Update time fields when form is submitted or when lockout is toggled
+            $('#tradeForm').on('submit', updateTimeFields);
+            $('#applyLockout').on('change', function() {
+                if($(this).is(':checked')) {
+                    updateTimeFields();
+                }
+            });
+
+            // Modify any existing player lockout check code like this
+            function checkPlayerLockout(playerName) {
+                // Get current time info
+                const now = new Date();
+                const localTime = now.toISOString();
+                const timezoneOffset = now.getTimezoneOffset();
+                
+                return $.ajax({
+                    url: '/check_player_lockout',
+                    type: 'POST',
+                    data: {
+                        player_name: playerName,
+                        userLocalTime: localTime,
+                        userTimezone: timezoneOffset
+                    }
+                });
             }
         });
     </script>
