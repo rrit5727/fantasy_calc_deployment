@@ -1633,6 +1633,9 @@
                             <!-- Hidden fields to store time info -->
                             <input type="hidden" id="userLocalTime" name="userLocalTime">
                             <input type="hidden" id="userTimezone" name="userTimezone">
+                            
+                            <!-- Add this new element for displaying the standardized time -->
+                            <div id="standardizedTimeDisplay" style="display: none; margin-top: 8px; font-size: 0.9em; color: #666; padding-left: 10px; border-left: 3px solid #ddd;"></div>
                         </div>
                     </div>
                 </div>
@@ -2211,25 +2214,43 @@
             $('#applyLockout').on('change', function() {
                 if($(this).is(':checked')) {
                     updateTimeFields();
+                    displayStandardizedTime();
+                    $('#standardizedTimeDisplay').slideDown(200);
+                } else {
+                    $('#standardizedTimeDisplay').slideUp(200);
                 }
             });
 
-            // Modify any existing player lockout check code like this
-            function checkPlayerLockout(playerName) {
-                // Get current time info
+            // Add function to calculate and display the standardized time
+            function displayStandardizedTime() {
                 const now = new Date();
-                const localTime = now.toISOString();
-                const timezoneOffset = now.getTimezoneOffset();
+                const userTimezoneOffset = now.getTimezoneOffset();
                 
-                return $.ajax({
-                    url: '/check_player_lockout',
-                    type: 'POST',
-                    data: {
-                        player_name: playerName,
-                        userLocalTime: localTime,
-                        userTimezone: timezoneOffset
-                    }
-                });
+                // Convert to UTC by applying timezone offset
+                const utcTime = new Date(now.getTime() + userTimezoneOffset * 60000);
+                
+                // Apply AEDT offset (UTC+11)
+                const aedtTime = new Date(utcTime.getTime() + (11 * 60 * 60000));
+                
+                // Format the time nicely
+                const options = { 
+                    weekday: 'short',
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    timeZoneName: 'short'
+                };
+                
+                // Create a nicely formatted time string with AEDT designation
+                let timeString = aedtTime.toLocaleDateString('en-AU', options);
+                timeString = timeString.replace(/GMT\+\d+/, 'AEDT'); // Replace GMT+xx with AEDT
+                
+                // Update the display
+                $('#standardizedTimeDisplay').html(
+                    `<span>Calculations based on: <strong>${timeString}</strong></span>`
+                );
             }
         });
     </script>
