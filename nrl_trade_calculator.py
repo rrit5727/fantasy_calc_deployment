@@ -302,324 +302,261 @@ def generate_trade_options(
         
         return True  # If not a position-balanced scenario, return True
     
-    # Helper function to create a combination dictionary
-    def create_combination(player_list, total_price, salary_freed):
-        players_info = []
-        total_diff = 0
-        total_projection = 0
-        
-        for p in player_list:
-            player_info = {
-                'name': p['Player'],
-                'team': p['Team'] if 'Team' in p else 'Unknown',
-                'price': p['Price'],
-                'position': p['POS1'],
-                'secondary_position': p['POS2'] if pd.notna(p.get('POS2')) else None
-            }
-            
-            if 'Diff' in p:
-                player_info['diff'] = p['Diff']
-                total_diff += p['Diff']
-                
-            if 'Projection' in p:
-                player_info['projection'] = p['Projection']
-                total_projection += p['Projection']
-                
-            players_info.append(player_info)
-            
-        return {
-            'players': players_info,
-            'total_price': total_price,
-            'salary_remaining': salary_freed - total_price,
-            'total_diff': total_diff,
-            'total_projection': total_projection
-        }
-
-    # Function to determine a player's price bracket (1-9)
+    # Function to get price bracket for a player
     def get_price_bracket(price):
         brackets = [
-            (250000, 317500),  # Bracket 1
-            (317501, 385000),  # Bracket 2
-            (385001, 452500),  # Bracket 3
-            (452501, 520000),  # Bracket 4
-            (520001, 587500),  # Bracket 5
-            (587501, 655000),  # Bracket 6
-            (655001, 722500),  # Bracket 7
-            (722501, 790000),  # Bracket 8
-            (790001, 857500)   # Bracket 9
+            (250000, 317500),   # Bracket 1
+            (317501, 385000),   # Bracket 2
+            (385001, 452500),   # Bracket 3
+            (452501, 520000),   # Bracket 4
+            (520001, 587500),   # Bracket 5
+            (587501, 655000),   # Bracket 6
+            (655001, 722500),   # Bracket 7
+            (722501, 790000),   # Bracket 8
+            (790001, 857500)    # Bracket 9
         ]
         
         for i, (min_price, max_price) in enumerate(brackets):
             if min_price <= price <= max_price:
                 return i + 1
-        
-        # If price is outside all brackets, return None
-        return None
-
-    # Function to check if player meets upside requirements for a specific level and bracket
-    def meets_level_requirements(diff, bracket, level):
-        # Level 1 requirements
-        if level == 1:
-            requirements = [
-                diff >= 32.50,                   # Bracket 1
-                29.58 <= diff <= 32.49,          # Bracket 2
-                26.67 <= diff <= 29.57,          # Bracket 3
-                23.75 <= diff <= 26.66,          # Bracket 4
-                20.83 <= diff <= 23.74,          # Bracket 5
-                17.92 <= diff <= 20.82,          # Bracket 6
-                15.00 <= diff <= 17.91,          # Bracket 7
-                12.08 <= diff <= 14.99,          # Bracket 8
-                9.17 <= diff <= 12.07            # Bracket 9
-            ]
-        # Level 2 requirements
-        elif level == 2:
-            requirements = [
-                29.58 <= diff <= 32.49,          # Bracket 1
-                26.67 <= diff <= 29.57,          # Bracket 2
-                23.75 <= diff <= 26.66,          # Bracket 3
-                20.83 <= diff <= 23.74,          # Bracket 4
-                17.92 <= diff <= 20.82,          # Bracket 5
-                15.00 <= diff <= 17.91,          # Bracket 6
-                12.08 <= diff <= 14.99,          # Bracket 7
-                9.17 <= diff <= 12.07,           # Bracket 8
-                7.80 <= diff <= 9.16             # Bracket 9
-            ]
-        # Level 3 requirements
-        elif level == 3:
-            requirements = [
-                26.67 <= diff <= 29.57,          # Bracket 1
-                23.75 <= diff <= 26.66,          # Bracket 2
-                20.83 <= diff <= 23.74,          # Bracket 3
-                17.92 <= diff <= 20.82,          # Bracket 4
-                15.00 <= diff <= 17.91,          # Bracket 5
-                12.08 <= diff <= 14.99,          # Bracket 6
-                9.17 <= diff <= 12.07,           # Bracket 7
-                7.80 <= diff <= 9.16,            # Bracket 8
-                False                            # Bracket 9 - excluded
-            ]
-        # Level 4 requirements
-        elif level == 4:
-            requirements = [
-                23.75 <= diff <= 26.66,          # Bracket 1
-                20.83 <= diff <= 23.74,          # Bracket 2
-                17.92 <= diff <= 20.82,          # Bracket 3
-                15.00 <= diff <= 17.91,          # Bracket 4
-                12.08 <= diff <= 14.99,          # Bracket 5
-                9.17 <= diff <= 12.07,           # Bracket 6
-                7.80 <= diff <= 9.16,            # Bracket 7
-                False,                           # Bracket 8 - excluded
-                False                            # Bracket 9 - excluded
-            ]
-        # Level 5 requirements
-        elif level == 5:
-            requirements = [
-                20.83 <= diff <= 23.74,          # Bracket 1
-                17.92 <= diff <= 20.82,          # Bracket 2
-                15.00 <= diff <= 17.91,          # Bracket 3
-                12.08 <= diff <= 14.99,          # Bracket 4
-                9.17 <= diff <= 12.07,           # Bracket 5
-                7.80 <= diff <= 9.16,            # Bracket 6
-                False,                           # Bracket 7 - excluded
-                False,                           # Bracket 8 - excluded
-                False                            # Bracket 9 - excluded
-            ]
-        # Level 6 requirements
-        elif level == 6:
-            requirements = [
-                17.92 <= diff <= 20.82,          # Bracket 1
-                15.00 <= diff <= 17.91,          # Bracket 2
-                12.08 <= diff <= 14.99,          # Bracket 3
-                9.17 <= diff <= 12.07,           # Bracket 4
-                7.80 <= diff <= 9.16,            # Bracket 5
-                False,                           # Bracket 6 - excluded
-                False,                           # Bracket 7 - excluded
-                False,                           # Bracket 8 - excluded
-                False                            # Bracket 9 - excluded
-            ]
-        # Level 7 requirements
-        elif level == 7:
-            requirements = [
-                15.00 <= diff <= 17.91,          # Bracket 1
-                12.08 <= diff <= 14.99,          # Bracket 2
-                9.17 <= diff <= 12.07,           # Bracket 3
-                7.80 <= diff <= 9.16,            # Bracket 4
-                False,                           # Bracket 5 - excluded
-                False,                           # Bracket 6 - excluded
-                False,                           # Bracket 7 - excluded
-                False,                           # Bracket 8 - excluded
-                False                            # Bracket 9 - excluded
-            ]
-        # Level 8 requirements
-        elif level == 8:
-            requirements = [
-                12.08 <= diff <= 14.99,          # Bracket 1
-                9.17 <= diff <= 12.07,           # Bracket 2
-                7.80 <= diff <= 9.16,            # Bracket 3
-                False,                           # Bracket 4 - excluded
-                False,                           # Bracket 5 - excluded
-                False,                           # Bracket 6 - excluded
-                False,                           # Bracket 7 - excluded
-                False,                           # Bracket 8 - excluded
-                False                            # Bracket 9 - excluded
-            ]
-        # Level 9 requirements
-        elif level == 9:
-            requirements = [
-                9.17 <= diff <= 12.07,           # Bracket 1
-                7.80 <= diff <= 9.16,            # Bracket 2
-                False,                           # Bracket 3 - excluded
-                False,                           # Bracket 4 - excluded
-                False,                           # Bracket 5 - excluded
-                False,                           # Bracket 6 - excluded
-                False,                           # Bracket 7 - excluded
-                False,                           # Bracket 8 - excluded
-                False                            # Bracket 9 - excluded
-            ]
-        # Level 10 requirements
-        elif level == 10:
-            requirements = [
-                7.80 <= diff <= 9.16,            # Bracket 1
-                False,                           # Bracket 2 - excluded
-                False,                           # Bracket 3 - excluded
-                False,                           # Bracket 4 - excluded
-                False,                           # Bracket 5 - excluded
-                False,                           # Bracket 6 - excluded
-                False,                           # Bracket 7 - excluded
-                False,                           # Bracket 8 - excluded
-                False                            # Bracket 9 - excluded
-            ]
-        else:
-            # For any level beyond 10, all brackets are excluded
+        return None  # Price out of all defined brackets
+    
+    # Function to check if a player meets requirements for a specific level
+    def meets_level_requirements(diff, price, level):
+        bracket = get_price_bracket(price)
+        if bracket is None:
             return False
         
-        # Check if the player's bracket is valid and meets the requirement
-        if 1 <= bracket <= len(requirements):
-            return requirements[bracket - 1]
-        
+        # Level 1 Requirements
+        if level == 1:
+            if bracket == 1 and diff >= 32.50: return True
+            if bracket == 2 and 29.58 <= diff <= 32.49: return True
+            if bracket == 3 and 26.67 <= diff <= 29.57: return True
+            if bracket == 4 and 23.75 <= diff <= 26.66: return True
+            if bracket == 5 and 20.83 <= diff <= 23.74: return True
+            if bracket == 6 and 17.92 <= diff <= 20.82: return True
+            if bracket == 7 and 15.00 <= diff <= 17.91: return True
+            if bracket == 8 and 12.08 <= diff <= 14.99: return True
+            if bracket == 9 and 9.17 <= diff <= 12.07: return True
+            
+        # Level 2 Requirements
+        elif level == 2:
+            if bracket == 1 and 29.58 <= diff <= 32.49: return True
+            if bracket == 2 and 26.67 <= diff <= 29.57: return True
+            if bracket == 3 and 23.75 <= diff <= 26.66: return True
+            if bracket == 4 and 20.83 <= diff <= 23.74: return True
+            if bracket == 5 and 17.92 <= diff <= 20.82: return True
+            if bracket == 6 and 15.00 <= diff <= 17.91: return True
+            if bracket == 7 and 12.08 <= diff <= 14.99: return True
+            if bracket == 8 and 9.17 <= diff <= 12.07: return True
+            if bracket == 9 and 7.80 <= diff <= 9.16: return True
+            
+        # Level 3 Requirements
+        elif level == 3:
+            if bracket == 1 and 26.67 <= diff <= 29.57: return True
+            if bracket == 2 and 23.75 <= diff <= 26.66: return True
+            if bracket == 3 and 20.83 <= diff <= 23.74: return True
+            if bracket == 4 and 17.92 <= diff <= 20.82: return True
+            if bracket == 5 and 15.00 <= diff <= 17.91: return True
+            if bracket == 6 and 12.08 <= diff <= 14.99: return True
+            if bracket == 7 and 9.17 <= diff <= 12.07: return True
+            if bracket == 8 and 7.80 <= diff <= 9.16: return True
+            # Bracket 9 excluded for level 3
+            
+        # Level 4 Requirements
+        elif level == 4:
+            if bracket == 1 and 23.75 <= diff <= 26.66: return True
+            if bracket == 2 and 20.83 <= diff <= 23.74: return True
+            if bracket == 3 and 17.92 <= diff <= 20.82: return True
+            if bracket == 4 and 15.00 <= diff <= 17.91: return True
+            if bracket == 5 and 12.08 <= diff <= 14.99: return True
+            if bracket == 6 and 9.17 <= diff <= 12.07: return True
+            if bracket == 7 and 7.80 <= diff <= 9.16: return True
+            # Brackets 8 and 9 excluded for level 4
+            
+        # Level 5 Requirements
+        elif level == 5:
+            if bracket == 1 and 20.83 <= diff <= 23.74: return True
+            if bracket == 2 and 17.92 <= diff <= 20.82: return True
+            if bracket == 3 and 15.00 <= diff <= 17.91: return True
+            if bracket == 4 and 12.08 <= diff <= 14.99: return True
+            if bracket == 5 and 9.17 <= diff <= 12.07: return True
+            if bracket == 6 and 7.80 <= diff <= 9.16: return True
+            # Brackets 7, 8, and 9 excluded for level 5
+            
+        # Level 6 Requirements
+        elif level == 6:
+            if bracket == 1 and 17.92 <= diff <= 20.82: return True
+            if bracket == 2 and 15.00 <= diff <= 17.91: return True
+            if bracket == 3 and 12.08 <= diff <= 14.99: return True
+            if bracket == 4 and 9.17 <= diff <= 12.07: return True
+            if bracket == 5 and 7.80 <= diff <= 9.16: return True
+            # Brackets 6, 7, 8, and 9 excluded for level 6
+            
+        # Level 7 Requirements
+        elif level == 7:
+            if bracket == 1 and 15.00 <= diff <= 17.91: return True
+            if bracket == 2 and 12.08 <= diff <= 14.99: return True
+            if bracket == 3 and 9.17 <= diff <= 12.07: return True
+            if bracket == 4 and 7.80 <= diff <= 9.16: return True
+            # Brackets 5, 6, 7, 8, and 9 excluded for level 7
+            
+        # Level 8 Requirements
+        elif level == 8:
+            if bracket == 1 and 12.08 <= diff <= 14.99: return True
+            if bracket == 2 and 9.17 <= diff <= 12.07: return True
+            if bracket == 3 and 7.80 <= diff <= 9.16: return True
+            # Brackets 4, 5, 6, 7, 8, and 9 excluded for level 8
+            
+        # Level 9 Requirements
+        elif level == 9:
+            if bracket == 1 and 9.17 <= diff <= 12.07: return True
+            if bracket == 2 and 7.80 <= diff <= 9.16: return True
+            # Brackets 3, 4, 5, 6, 7, 8, and 9 excluded for level 9
+            
+        # Level 10 Requirements
+        elif level == 10:
+            if bracket == 1 and 7.80 <= diff <= 9.16: return True
+            # All other brackets excluded for level 10
+            
         return False
     
-    # Function to assign a priority score to a player based on level and bracket
-    def get_player_priority(player):
+    # Function to calculate player priority
+    def calculate_player_priority(player):
         diff = player['Diff']
         price = player['Price']
-        bracket = get_price_bracket(price)
         
-        # If no valid bracket or upside < 7.80, exclude player
-        if bracket is None or diff < 7.80:
-            return float('inf')  # Lower priority = better, so infinity is worst
-            
-        # Find the highest level (1-10) the player meets requirements for
+        # Players with upside below 7.80 points are excluded
+        if diff < 7.80:
+            return None
+        
+        # Check which level the player meets requirements for (starting from most valuable)
         for level in range(1, 11):
-            if meets_level_requirements(diff, bracket, level):
-                # Priority score: level * 100 + bracket * 10 - diff
-                # Lower score = higher priority
-                return level * 100 + bracket * 10 - diff
-                
+            if meets_level_requirements(diff, price, level):
+                bracket = get_price_bracket(price)
+                # Return tuple for sorting: (level, bracket, diff)
+                # Lower level = higher priority, lower bracket = higher priority within level
+                return (level, bracket, -diff)  # Negative diff so higher diff = higher priority
+        
         # Player doesn't meet any level requirements
-        return float('inf')
+        return None
     
-    # Create combinations based on strategy
+    # Sort players based on strategy
     if maximize_base:
-        # Sort players by Projection in descending order
         players.sort(key=lambda x: x['Projection'], reverse=True)
     elif hybrid_approach:
-        # For hybrid, sort players by combination of Diff and Projection
-        players.sort(key=lambda x: x['Diff'] + x['Projection'], reverse=True)
-    else:  # maximize_value
-        # Apply prioritization for maximize_value strategy
-        players.sort(key=get_player_priority)
+        # Calculate priority for each player and filter out players that don't meet any requirements
+        players_with_priority = [(player, calculate_player_priority(player)) for player in players]
+        valid_players = [p for p, priority in players_with_priority if priority is not None]
+        valid_players.sort(key=lambda x: calculate_player_priority(x))
+        players = valid_players
+    else:  # maximize_value - use Diff
+        players.sort(key=lambda x: x['Diff'], reverse=True)
     
+    # Handle single player trades
     if num_players_needed == 1:
         for player in players:
             if player['Player'] in used_players:
                 continue
-                
+            
             if player['Price'] <= salary_freed and (is_valid_like_for_like_combo([player]) or trade_type == 'positionalSwap'):
                 combo = create_combination([player], player['Price'], salary_freed)
                 valid_combinations.append(combo)
                 used_players.add(player['Player'])
-                
                 if len(valid_combinations) >= max_options:
                     break
-    else:  # 2+ players needed
+    # Handle 2+ player trades
+    else:
         if maximize_base:
-            # For base maximization, find highest projected player first
-            for i, first_player in enumerate(players):
-                if first_player['Player'] in used_players or first_player['Price'] > salary_freed:
-                    continue
-                    
-                remaining_salary = salary_freed - first_player['Price']
-                
-                # Find a suitable second player
-                found_match = False
-                for second_player in players[i+1:]:
-                    if second_player['Player'] in used_players or second_player['Price'] > remaining_salary:
-                        continue
-                        
-                    # Check position requirements based on trade type
-                    position_valid = (trade_type == 'likeForLike' and is_valid_like_for_like_combo([first_player, second_player])) or \
-                                    (trade_type == 'positionalSwap' and is_position_balanced_combo(first_player, second_player))
-                    
-                    if not position_valid:
-                        continue
-                        
-                    combo = create_combination([first_player, second_player], first_player['Price'] + second_player['Price'], salary_freed)
-                    valid_combinations.append(combo)
-                    used_players.add(first_player['Player'])
-                    used_players.add(second_player['Player'])
-                    found_match = True
-                    break  # Found a valid second player, move to next first player
-                
-                if found_match and len(valid_combinations) >= max_options:
-                    break
-                    
-        elif hybrid_approach:
-            # Create two sorted lists
-            value_players = sorted(players, key=lambda x: x['Diff'], reverse=True)
-            projection_players = sorted(players, key=lambda x: x['Projection'], reverse=True)
-            
-            # For 2+ player trades, pair a value player with a projection player
-            for value_player in value_players:
-                if value_player['Player'] in used_players or value_player['Price'] > salary_freed:
-                    continue
-                    
-                remaining_salary = salary_freed - value_player['Price']
-                
-                # Find a valid projection player
-                found_match = False
-                for projection_player in projection_players:
-                    if (projection_player['Player'] not in used_players and 
-                        projection_player['Player'] != value_player['Player'] and 
-                        projection_player['Price'] <= remaining_salary):
-                        
-                        # Check position requirements based on trade type
-                        position_valid = (trade_type == 'likeForLike' and is_valid_like_for_like_combo([value_player, projection_player])) or \
-                                        (trade_type == 'positionalSwap' and is_position_balanced_combo(value_player, projection_player))
-                        
-                        if not position_valid:
-                            continue
-                        
-                        combo = create_combination(
-                            [value_player, projection_player],
-                            value_player['Price'] + projection_player['Price'],
-                            salary_freed
-                        )
-                        valid_combinations.append(combo)
-                        used_players.add(value_player['Player'])
-                        used_players.add(projection_player['Player'])
-                        found_match = True
-                        break
-                
-                if found_match and len(valid_combinations) >= max_options:
-                    break
-                    
-        else:  # maximize_value - use Diff with prioritization
-            # For 2+ player trades, use the priority-ordered player list
+            # For 2+ player trades, find combinations with highest total Projection
             for i in range(len(players)):
                 if players[i]['Player'] in used_players:
                     continue
                     
                 first_player = players[i]
+                
+                # Find a valid second player
+                for j in range(len(players)):
+                    if j == i or players[j]['Player'] in used_players:
+                        continue
+                        
+                    second_player = players[j]
+                    
+                    # Check if the combination is valid based on trade type
+                    position_valid = (trade_type == 'likeForLike' and is_valid_like_for_like_combo([first_player, second_player])) or \
+                                    (trade_type == 'positionalSwap' and is_position_balanced_combo(first_player, second_player))
+                    
+                    if not position_valid:
+                        continue
+                    
+                    total_price = first_player['Price'] + second_player['Price']
+                    if total_price <= salary_freed:
+                        combo = create_combination([first_player, second_player], total_price, salary_freed)
+                        valid_combinations.append(combo)
+                        used_players.add(first_player['Player'])
+                        used_players.add(second_player['Player'])
+                        break  # Found a valid second player, move to next first player
+                
+                if len(valid_combinations) >= max_options:
+                    break
+                    
+        elif hybrid_approach:
+            # For hybrid approach, use the prioritized players in order
+            for i, first_player in enumerate(players):
+                if first_player['Player'] in used_players or first_player['Price'] > salary_freed:
+                    continue
+                
+                remaining_salary = salary_freed - first_player['Price']
+                
+                # If using position-balanced approach, determine the needed complementary position
+                if (trade_type == 'positionalSwap' and traded_out_positions and len(traded_out_positions) == 2):
+                    # Identify which position the first player covers
+                    first_player_positions = position_mapping[first_player['Player']]
+                    first_player_pos1 = any(pos == traded_out_positions[0] for pos in first_player_positions)
+                    
+                    # Filter second player candidates to only those covering the other position
+                    needed_position = traded_out_positions[1] if first_player_pos1 else traded_out_positions[0]
+                    filtered_players = [p for p in players if 
+                                      p['Player'] != first_player['Player'] and 
+                                      p['Player'] not in used_players and
+                                      (p['POS1'] == needed_position or 
+                                       (pd.notna(p.get('POS2')) and p['POS2'] == needed_position))]
+                    
+                    second_player_candidates = filtered_players
+                else:
+                    # Use all available players if not using position-balanced approach
+                    second_player_candidates = players
+                
+                # Find a valid second player
+                found_match = False
+                for second_player in second_player_candidates:
+                    if second_player['Player'] == first_player['Player'] or second_player['Player'] in used_players:
+                        continue
+                    
+                    # Check if the combination is valid based on trade type
+                    position_valid = (trade_type == 'likeForLike' and is_valid_like_for_like_combo([first_player, second_player])) or \
+                                    (trade_type == 'positionalSwap' and is_position_balanced_combo(first_player, second_player))
+                    
+                    if not position_valid:
+                        continue
+                    
+                    total_price = first_player['Price'] + second_player['Price']
+                    if total_price <= salary_freed:
+                        combo = create_combination([first_player, second_player], total_price, salary_freed)
+                        valid_combinations.append(combo)
+                        used_players.add(first_player['Player'])
+                        used_players.add(second_player['Player'])
+                        found_match = True
+                        break  # Found a valid second player, move to next first player
+                
+                if found_match and len(valid_combinations) >= max_options:
+                    break
+                    
+        else:  # maximize_value - use Diff
+            # For 2+ player trades, find combinations with highest total Diff
+            for i, first_player in enumerate(players):
+                if first_player['Player'] in used_players or first_player['Price'] > salary_freed:
+                    continue
                 
                 # If using position-balanced approach, determine the needed complementary position
                 if (trade_type == 'positionalSwap' and traded_out_positions and len(traded_out_positions) == 2):
@@ -669,11 +606,10 @@ def generate_trade_options(
     if maximize_base:
         valid_combinations.sort(key=lambda x: x['total_projection'], reverse=True)
     elif hybrid_approach:
-        # For hybrid, sort by combination of metrics
-        valid_combinations.sort(key=lambda x: x['total_diff'] + x['total_projection'], reverse=True)
-    else:  # maximize_value - combinations are already prioritized by player selection
-        # No need to re-sort as we built them in priority order
+        # For hybrid, combinations are already prioritized by player selection
         pass
+    else:  # maximize_value
+        valid_combinations.sort(key=lambda x: x['total_diff'], reverse=True)
     
     return valid_combinations[:max_options]
 
