@@ -22,7 +22,7 @@ def init_heroku_database():
     engine = create_engine(database_url)
     
     try:
-        # Read your Excel file
+        # Read the Excel file
         df = pd.read_excel('NRL_stats.xlsx')
         
         # Define the required columns using exact names from Excel

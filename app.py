@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from flask_caching import Cache  # Added for caching
+from flask_caching import Cache  
 from nrl_trade_calculator import calculate_trade_options, load_data, is_player_locked
 from typing import List, Dict, Any
 import traceback
@@ -20,7 +20,7 @@ cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
 cache.init_app(app)
 CACHE_TIMEOUT = 300  # 5 minutes cache
 
-# Add these global variables at the top of the file, after the app initialization
+
 _cached_data = None
 _last_cache_time = 0
 
@@ -120,7 +120,7 @@ def simulate_rule_levels(consolidated_data: pd.DataFrame, rounds: List[int]) -> 
 
     rule_descriptions = {
         1: "BPRE >= 14 for last 3 weeks",
-        # ... rest of rule descriptions unchanged ...
+        
         25: "No rules satisfied"
     }
 
@@ -161,7 +161,7 @@ def calculate():
             user_timezone_offset = request.form.get('userTimezone')
             simulate_datetime = standardize_user_time(user_local_time, user_timezone_offset)
             
-            # If we couldn't get a valid time, return an error
+            # If valid time not found, return an error
             if not simulate_datetime:
                 return jsonify({
                     'error': "Could not determine your current time. Please try again."
@@ -299,7 +299,7 @@ def get_player_names_with_prices():
 def init_app(app):
     try:
         with app.app_context():
-            # Check if we're in development environment
+            # Check if in development environment
             is_development = os.getenv('FLASK_ENV') == 'development'
             
             if is_development:

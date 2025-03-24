@@ -53,7 +53,7 @@ def load_data() -> pd.DataFrame:
         engine = create_engine(conn_str)
     
     try:
-        # First, let's see what columns we actually have in the database
+        # See what columns are actually in the database
         with engine.connect() as connection:
             # Get column names from the table
             query = """
@@ -298,7 +298,7 @@ def generate_trade_options(
             second_player_covers_pos1 = any(pos == traded_out_positions[0] for pos in second_player_positions)
             second_player_covers_pos2 = any(pos == traded_out_positions[1] for pos in second_player_positions)
             
-            # For a balanced combination, we need one player covering pos1 and the other covering pos2
+            # For a balanced combination, one player covering pos1 is needed and the other covering pos2
             return ((first_player_covers_pos1 and second_player_covers_pos2) or 
                     (first_player_covers_pos2 and second_player_covers_pos1))
         
@@ -456,8 +456,8 @@ def generate_trade_options(
     if maximize_base:
         valid_combinations.sort(key=lambda x: x['total_projection'], reverse=True)
     elif hybrid_approach:
-        # For hybrid, you might want to sort by a combination of metrics
-        # This example uses sum of diff and projection
+        # For hybrid, might want to sort by a combination of metrics
+        
         valid_combinations.sort(key=lambda x: x['total_diff'] + x['total_projection'], reverse=True)
     else:  # maximize_value - use Diff
         valid_combinations.sort(key=lambda x: x['total_diff'], reverse=True)

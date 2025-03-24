@@ -90,7 +90,7 @@
         }
 
         .powered-by-logo {
-            height: 80px; /* Increased by 60% from your current size */
+            height: 80px; 
             width: 80px;
             border-radius: 50%;
             object-fit: contain;
@@ -845,7 +845,7 @@
             color: #e2e8f0;
         }
 
-        /* Add to your CSS section */
+        
         #excluded-players-pane {
             position: sticky;
             top: 0;
@@ -1028,7 +1028,7 @@
             padding-top: calc(20vh + 60px); /* Adjust top padding based on header plus pane height */
         }
 
-        /* Add this to your CSS section */
+        
         #cashInBank {
             -moz-appearance: textfield; /* Firefox */
         }
@@ -1240,7 +1240,7 @@
             font-weight: normal;
         }
 
-        /* Add this to your existing CSS */
+        
         .ui-autocomplete .player-name {
             font-weight: bold;
         }
@@ -1785,14 +1785,14 @@
                 }
             });
 
-            // Updated Strategy buttons event listener
+            // Strategy buttons event listener
             $('.settings-panel .setting-box[data-strategy]').click(function() {
                 $('.settings-panel .setting-box[data-strategy]').removeClass('selected');
                 $(this).addClass('selected');
                 $('#strategy').val($(this).data('strategy'));
             });
 
-            // Updated Trade type buttons event listener
+            // Trade type buttons event listener
             $('.settings-panel .setting-box[data-type]').click(function() {
                 $('.settings-panel .setting-box[data-type]').removeClass('selected');
                 $(this).addClass('selected');
@@ -1816,7 +1816,7 @@
                 }
             });
 
-            // Update form submission to extract player names from data attributes
+            // form submission to extract player names from data attributes
             $('#tradeForm').on('submit', function(e) {
                 e.preventDefault();
                 $('#results').html('<div class="loading"></div>');
@@ -1846,7 +1846,7 @@
                     formData.delete('player2');
                 }
                 
-                // Continue with your AJAX call
+                // Continue with AJAX call
                 $.ajax({
                     url: '/calculate',
                     method: 'POST',
@@ -1949,7 +1949,7 @@
                 if (!excludedPlayers.includes(playerName)) {
                     excludedPlayers.push(playerName);
                     
-                    // Update the excluded players list
+                    // Refine the excluded players list
                     updateExcludedPlayersDisplay();
                     
                     // Show the excluded players pane if it's the first player
@@ -2247,7 +2247,7 @@
                     timeZoneName: 'short'
                 };
                 
-                // Create a nicely formatted time string with AEDT designation
+                // Create time string with AEDT designation
                 let timeString = aedtTime.toLocaleDateString('en-AU', options);
                 timeString = timeString.replace(/GMT\+\d+/, 'AEDT'); // Replace GMT+xx with AEDT
                 
