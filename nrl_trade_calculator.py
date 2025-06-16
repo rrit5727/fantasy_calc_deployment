@@ -126,14 +126,11 @@ def get_locked_out_players(simulate_datetime: str, consolidated_data: pd.DataFra
     
     # Define the fixtures
     fixtures = [
-        ("2024-04-03 20:00", ["CAN", "CRO"]),
-        ("2024-04-04 18:00", ["PEN", "NQL"]),
-        ("2024-04-04 20:00", ["SOU", "SYD"]),
-        ("2024-04-05 15:00", ["PAR", "SGI"]),  # Dragons (St. George Illawarra)
-        ("2024-04-05 17:30", ["GLD", "DOL"]),
-        ("2024-04-05 19:35", ["BRI", "WST"]),
-        ("2024-04-06 16:05", ["MAN", "MEL"]),
-        ("2024-04-06 18:15", ["CBY", "NEW"]),
+        ("2025-06-12 16:30", ["CRO", "SGI"]),  # Sharks vs Dragons - Full Time (completed)
+        ("2025-06-13 20:00", ["GLD", "MAN"]),  # Titans vs Sea Eagles
+        ("2025-06-14 17:30", ["NEW", "SYD"]),  # Knights vs Roosters
+        ("2025-06-14 19:35", ["NQL", "DOL"]),  # Cowboys vs Dolphins
+        ("2025-06-15 16:05", ["SOU", "CBY"]),  # Rabbitohs vs Bulldogs
     ]
     
     locked_out_teams = set()
@@ -165,14 +162,11 @@ def is_player_locked(player_name: str, consolidated_data: pd.DataFrame, simulate
     
     # Define the fixtures
     fixtures = [
-        ("2024-04-03 20:00", ["CAN", "CRO"]),
-        ("2024-04-04 18:00", ["PEN", "NQL"]),
-        ("2024-04-04 20:00", ["SOU", "SYD"]),
-        ("2024-04-05 15:00", ["PAR", "SGI"]),  # Dragons (St. George Illawarra)
-        ("2024-04-05 17:30", ["GLD", "DOL"]),
-        ("2024-04-05 19:35", ["BRI", "WST"]),
-        ("2024-04-06 16:05", ["MAN", "MEL"]),
-        ("2024-04-06 18:15", ["CBY", "NEW"]),
+         ("2025-06-12 16:30", ["CRO", "SGI"]),  # Sharks vs Dragons - Full Time (completed)
+        ("2025-06-13 20:00", ["GLD", "MAN"]),  # Titans vs Sea Eagles
+        ("2025-06-14 17:30", ["NEW", "SYD"]),  # Knights vs Roosters
+        ("2025-06-14 19:35", ["NQL", "DOL"]),  # Cowboys vs Dolphins
+        ("2025-06-15 16:05", ["SOU", "CBY"]),  # Rabbitohs vs Bulldogs
     ]
     
     locked_out_teams = set()
