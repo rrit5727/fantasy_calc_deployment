@@ -126,11 +126,14 @@ def get_locked_out_players(simulate_datetime: str, consolidated_data: pd.DataFra
     
     # Define the fixtures
     fixtures = [
-        ("2025-06-12 16:30", ["CRO", "SGI"]),  # Sharks vs Dragons - Full Time (completed)
-        ("2025-06-13 20:00", ["GLD", "MAN"]),  # Titans vs Sea Eagles
-        ("2025-06-14 17:30", ["NEW", "SYD"]),  # Knights vs Roosters
-        ("2025-06-14 19:35", ["NQL", "DOL"]),  # Cowboys vs Dolphins
-        ("2025-06-15 16:05", ["SOU", "CBY"]),  # Rabbitohs vs Bulldogs
+        ("2025-06-26 19:50", ["PEN", "CBY"]),  # Panthers vs Bulldogs
+        ("2025-06-27 18:00", ["MAN", "WST"]),  # Sea Eagles vs Tigers
+        ("2025-06-27 20:00", ["NEW", "CAN"]),  # Knights vs Raiders
+        ("2025-06-28 15:00", ["BRI", "WAR"]),  # Broncos vs Warriors
+        ("2025-06-28 17:30", ["SGI", "PAR"]),  # Dragons vs Eels
+        ("2025-06-28 19:50", ["DOL", "SOU"]),  # Dolphins vs Rabbitohs
+        ("2025-06-29 14:00", ["MEL", "CRO"]),  # Storm vs Sharks
+        ("2025-06-29 16:05", ["GLD", "NQL"]),  # Titans vs Cowboys
     ]
     
     locked_out_teams = set()
@@ -162,11 +165,14 @@ def is_player_locked(player_name: str, consolidated_data: pd.DataFrame, simulate
     
     # Define the fixtures
     fixtures = [
-         ("2025-06-12 16:30", ["CRO", "SGI"]),  # Sharks vs Dragons - Full Time (completed)
-        ("2025-06-13 20:00", ["GLD", "MAN"]),  # Titans vs Sea Eagles
-        ("2025-06-14 17:30", ["NEW", "SYD"]),  # Knights vs Roosters
-        ("2025-06-14 19:35", ["NQL", "DOL"]),  # Cowboys vs Dolphins
-        ("2025-06-15 16:05", ["SOU", "CBY"]),  # Rabbitohs vs Bulldogs
+        ("2025-06-26 19:50", ["PEN", "CBY"]),  # Panthers vs Bulldogs
+        ("2025-06-27 18:00", ["MAN", "WST"]),  # Sea Eagles vs Tigers
+        ("2025-06-27 20:00", ["NEW", "CAN"]),  # Knights vs Raiders
+        ("2025-06-28 15:00", ["BRI", "WAR"]),  # Broncos vs Warriors
+        ("2025-06-28 17:30", ["SGI", "PAR"]),  # Dragons vs Eels
+        ("2025-06-28 19:50", ["DOL", "SOU"]),  # Dolphins vs Rabbitohs
+        ("2025-06-29 14:00", ["MEL", "CRO"]),  # Storm vs Sharks
+        ("2025-06-29 16:05", ["GLD", "NQL"]),  # Titans vs Cowboys
     ]
     
     locked_out_teams = set()
