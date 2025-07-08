@@ -126,11 +126,13 @@ def get_locked_out_players(simulate_datetime: str, consolidated_data: pd.DataFra
     
     # Define the fixtures
     fixtures = [
-        ("2025-07-04 20:00", ["CBY", "BRI"]),  # Bulldogs vs Broncos
-        ("2025-07-05 17:30", ["CAN", "SGI"]),  # Raiders vs Dragons
-        ("2025-07-05 19:35", ["NQL", "MEL"]),  # Cowboys vs Storm
-        ("2025-07-06 14:00", ["SYD", "WST"]),  # Roosters vs Tigers
-        ("2025-07-06 16:05", ["MAN", "SOU"]),  # Sea Eagles vs Rabbitohs
+        ("2025-07-11 20:00", ["CRO", "DOL"]),  # Sharks vs Dolphins
+        ("2025-07-12 15:00", ["NEW", "MEL"]),  # Knights vs Storm
+        ("2025-07-12 17:30", ["SGI", "SYD"]),  # Dragons vs Roosters
+        ("2025-07-12 19:35", ["NQL", "CBY"]),  # Cowboys vs Bulldogs
+        ("2025-07-13 14:00", ["WAR", "WST"]),  # Warriors vs Tigers
+        ("2025-07-13 16:05", ["PAR", "PEN"]),  # Eels vs Panthers
+        ("2025-07-13 18:15", ["GLD", "BRI"]),  # Titans vs Broncos
     ]
     
     locked_out_teams = set()
@@ -162,11 +164,13 @@ def is_player_locked(player_name: str, consolidated_data: pd.DataFrame, simulate
     
     # Define the fixtures
     fixtures = [
-        ("2025-07-04 20:00", ["CBY", "BRI"]),  # Bulldogs vs Broncos
-        ("2025-07-05 17:30", ["CAN", "SGI"]),  # Raiders vs Dragons
-        ("2025-07-05 19:35", ["NQL", "MEL"]),  # Cowboys vs Storm
-        ("2025-07-06 14:00", ["SYD", "WST"]),  # Roosters vs Tigers
-        ("2025-07-06 16:05", ["MAN", "SOU"]),  # Sea Eagles vs Rabbitohs
+        ("2025-07-11 20:00", ["CRO", "DOL"]),  # Sharks vs Dolphins
+        ("2025-07-12 15:00", ["NEW", "MEL"]),  # Knights vs Storm
+        ("2025-07-12 17:30", ["SGI", "SYD"]),  # Dragons vs Roosters
+        ("2025-07-12 19:35", ["NQL", "CBY"]),  # Cowboys vs Bulldogs
+        ("2025-07-13 14:00", ["WAR", "WST"]),  # Warriors vs Tigers
+        ("2025-07-13 16:05", ["PAR", "PEN"]),  # Eels vs Panthers
+        ("2025-07-13 18:15", ["GLD", "BRI"]),  # Titans vs Broncos
     ]
     
     locked_out_teams = set()
