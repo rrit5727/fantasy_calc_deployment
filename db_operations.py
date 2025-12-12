@@ -34,7 +34,9 @@ def get_column_definitions(df):
         'Priced_at': 'DECIMAL(12,4)',
         'PTS': 'DECIMAL(12,2)',
         'Total_base': 'DECIMAL(12,2)',
-        'Base_exceeds_price_premium': 'DECIMAL(12,4)'
+        'Base_exceeds_price_premium': 'DECIMAL(12,4)',
+        'Bye_Round_Grading': 'DECIMAL(12,2)',
+        'Injured': 'BOOLEAN'
     }
     
     # Default type for any column not explicitly defined
@@ -71,20 +73,19 @@ def import_excel_data(excel_file_path):
     for col in df.columns:
         print(f"- '{col}'")
     
-    # Define the required columns using exact names from Excel
-    # Updated to only require columns that are essential
+    # Required columns (exact names from Excel)
     required_columns = [
-        'Round', 'Player', 'Team', 'POS1', 'POS2', 
-        'Price', 'Priced at'
+        'Round', 'Player', 'Team', 'POS1', 'POS2',
+        'Price', 'Priced at', 'Bye Round Grading', 'Injured'
     ]
     
-    # Define optional columns that will be used if present
+    # Optional columns
     optional_columns = [
-        'Age', 'PTS', 'Total base', 'Base exceeds price premium', 
+        'Age', 'PTS', 'Total base', 'Base exceeds price premium',
         'Projection', 'Diff'
     ]
     
-    # Check for required columns
+    # Check required
     missing_required = [col for col in required_columns if col not in df.columns]
     if missing_required:
         print("\nMissing required columns:")
@@ -92,41 +93,55 @@ def import_excel_data(excel_file_path):
             print(f"- '{col}'")
         raise ValueError(f"Missing required columns: {missing_required}")
     
-    # Filter DataFrame to include required columns and any available optional columns
+    # Filter to required + optional present
     columns_to_use = required_columns.copy()
     for col in optional_columns:
         if col in df.columns:
             columns_to_use.append(col)
-    
-    # Filter to selected columns
     df = df[columns_to_use].copy()
     
-    # Clean column names after filtering
+    # Clean column names
     df.columns = [col.strip().replace(' ', '_') for col in df.columns]
     
-    # Convert numeric columns to appropriate types and handle NaN values
-    numeric_columns = [col for col in ['Round', 'Age', 'Price', 'Priced_at', 'PTS', 
-                     'Total_base', 'Base_exceeds_price_premium', 'Projection', 'Diff'] 
-                     if col.replace('_', ' ') in columns_to_use or col in df.columns]
+    # Numeric columns
+    numeric_columns = [col for col in [
+        'Round', 'Age', 'Price', 'Priced_at', 'PTS',
+        'Total_base', 'Base_exceeds_price_premium', 'Projection',
+        'Diff', 'Bye_Round_Grading'
+    ] if col.replace('_', ' ') in columns_to_use or col in df.columns]
     
     for col in numeric_columns:
         if col in df.columns:
-            # Convert to float first to handle any decimal values
             df[col] = pd.to_numeric(df[col], errors='coerce')
-            # Replace NaN with None
             df[col] = df[col].where(pd.notnull(df[col]), None)
+
+    def normalize_injured(value):
+        """Convert the Injured column to booleans, preserving blanks as None."""
+        if pd.isna(value):
+            return None
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)):
+            return bool(int(value))
+        val = str(value).strip().lower()
+        if val in {'true', 'yes', 'y', '1', '1.0'}:
+            return True
+        if val in {'false', 'no', 'n', '0', '0.0'}:
+            return False
+        return None
+
+    if 'Injured' in df.columns:
+        df['Injured'] = df['Injured'].apply(normalize_injured)
     
-    # Replace any remaining NaN values with None
+    # Replace remaining NaN/NaT
     df = df.replace({pd.NA: None, pd.NaT: None, float('nan'): None})
     
-    # Create table with matching columns
+    # Create table and insert
     conn = create_db_connection()
     create_table(conn, df)
     
-    # Insert data using cursor
     with conn.cursor() as cur:
         for idx, row in df.iterrows():
-            # Convert row to list and handle any remaining NaN values
             row_values = [None if pd.isna(val) else val for val in row]
             columns = ','.join(f'"{col}"' for col in df.columns)
             values = ','.join('%s' for _ in df.columns)
@@ -137,7 +152,7 @@ def import_excel_data(excel_file_path):
                 print(f"Error at row {idx+1}")
                 print(f"Values being inserted: {row_values}")
                 print(f"Error details: {str(e)}")
-                conn.rollback()  # Rollback the transaction
+                conn.rollback()
                 raise e
     
     conn.commit()
@@ -145,10 +160,8 @@ def import_excel_data(excel_file_path):
 
 def main():
     try:
-        # Import data
         import_excel_data('NRL_stats.xlsx')
         print("Data import completed successfully!")
-        
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
